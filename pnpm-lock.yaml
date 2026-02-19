@@ -79,8 +79,8 @@ catalogs:
       specifier: 1.4.18
       version: 1.4.18
     capnweb:
-      specifier: 0.4.0
-      version: 0.4.0
+      specifier: 0.5.0
+      version: 0.5.0
     geojson:
       specifier: 0.5.0
       version: 0.5.0
@@ -271,7 +271,7 @@ importers:
         version: 19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.99.9)
       rwsdk:
         specifier: 'catalog:'
-        version: 1.0.0-beta.54(@cloudflare/vite-plugin@1.25.1(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(workerd@1.20260217.0)(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)))(capnweb@0.4.0)(react-dom@19.2.4(react@19.2.4))(react-server-dom-webpack@19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.99.9))(react@19.2.4)(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0))
+        version: 1.0.0-beta.54(@cloudflare/vite-plugin@1.25.1(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(workerd@1.20260217.0)(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)))(capnweb@0.5.0)(react-dom@19.2.4(react@19.2.4))(react-server-dom-webpack@19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.99.9))(react@19.2.4)(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0))
       tailwindcss:
         specifier: 'catalog:'
         version: 4.2.0
@@ -299,7 +299,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       capnweb:
         specifier: 'catalog:'
-        version: 0.4.0
+        version: 0.5.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2079,8 +2079,8 @@ packages:
   caniuse-lite@1.0.30001769:
     resolution: {integrity: sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==}
 
-  capnweb@0.4.0:
-    resolution: {integrity: sha512-OgqPQcxnrAIqjrkAuwI4N9MP/mzseM5w9oLWb/oU63KveBJl1c8p41etLSVQUlYFiAYZu+h6/LJxKaDJd93xFw==}
+  capnweb@0.5.0:
+    resolution: {integrity: sha512-fujruGZ4jw3u7mzjqgU+Iad9ms2pS7jwEaAR42bbQe9Eax8Rq+MAOCLT1zmmL5AB/wuKf+0YoCYxfcnSfk2/1Q==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -4385,20 +4385,20 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0)':
+  '@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.11)(nanostores@1.1.0)':
     dependencies:
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
       '@standard-schema/spec': 1.1.0
       better-call: 1.1.8(zod@4.3.6)
       jose: 6.1.3
-      kysely: 0.28.5
+      kysely: 0.28.11
       nanostores: 1.1.0
       zod: 4.3.6
 
   '@better-auth/telemetry@1.4.18(@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0))':
     dependencies:
-      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0)
+      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.11)(nanostores@1.1.0)
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
 
@@ -5664,7 +5664,7 @@ snapshots:
 
   better-auth@1.4.18(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0)
+      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.11)(nanostores@1.1.0)
       '@better-auth/telemetry': 1.4.18(@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0))
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
@@ -5760,7 +5760,7 @@ snapshots:
 
   caniuse-lite@1.0.30001769: {}
 
-  capnweb@0.4.0: {}
+  capnweb@0.5.0: {}
 
   ccount@2.0.1: {}
 
@@ -7590,7 +7590,7 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  rwsdk@1.0.0-beta.54(@cloudflare/vite-plugin@1.25.1(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(workerd@1.20260217.0)(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)))(capnweb@0.4.0)(react-dom@19.2.4(react@19.2.4))(react-server-dom-webpack@19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.99.9))(react@19.2.4)(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)):
+  rwsdk@1.0.0-beta.54(@cloudflare/vite-plugin@1.25.1(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(workerd@1.20260217.0)(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)))(capnweb@0.5.0)(react-dom@19.2.4(react@19.2.4))(react-server-dom-webpack@19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.99.9))(react@19.2.4)(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0)):
     dependencies:
       '@ast-grep/napi': 0.39.9
       '@cloudflare/vite-plugin': 1.25.1(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))(workerd@1.20260217.0)(wrangler@4.66.0(@cloudflare/workers-types@4.20260219.0))
@@ -7604,7 +7604,7 @@ snapshots:
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
       '@types/react-is': 19.0.0
       '@vitejs/plugin-react': 5.0.4(vite@7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.0))
-      capnweb: 0.4.0
+      capnweb: 0.5.0
       chokidar: 4.0.3
       debug: 4.4.3
       decompress: 4.2.1
