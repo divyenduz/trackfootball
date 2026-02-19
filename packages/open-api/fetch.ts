@@ -43,7 +43,7 @@ const client = async <TData, TError = unknown, TVariables = unknown>(
   const options: RequestInit = {
     method: config.method,
     headers: config.headers || {},
-    signal: config.signal,
+    signal: config.signal ?? AbortSignal.timeout(30_000),
   }
 
   // Add body for non-GET requests

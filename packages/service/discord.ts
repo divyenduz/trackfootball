@@ -26,6 +26,7 @@ export async function createDiscordMessage({
     await fetch(env.DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK, {
       method: 'POST',
       body: form,
+      signal: AbortSignal.timeout(10_000),
     })
   } catch (e) {
     console.error(e)

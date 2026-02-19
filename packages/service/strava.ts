@@ -160,6 +160,7 @@ export async function tokenExchange(
   const r = await fetch(link, {
     method: 'POST',
     body: form,
+    signal: AbortSignal.timeout(30_000),
   })
   const tokenExchangeResponse = await r.json()
   return tokenExchangeResponse as TokenExchangeResponse
@@ -184,6 +185,7 @@ export async function tokenRefresh(
   const r = await fetch(link, {
     method: 'POST',
     body: form,
+    signal: AbortSignal.timeout(30_000),
   })
   const tokenRefreshResponse = await r.json()
   return tokenRefreshResponse as TokenExchangeResponse

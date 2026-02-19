@@ -22,12 +22,17 @@ async function cmd(
   ...eventIdArgs: string[]
 ) {
   invariant(process.env.DATABASE_URL, 'DATABASE_URL must be set')
-  const sql = postgres(process.env.DATABASE_URL)
-  const repository = await createRepository(sql)
+  console.log('Connecting to database...')
+  const sql = postgres(process.env.DATABASE_URL, {
+    connect_timeout: 10,
+    idle_timeout: 30,
+  })
+  const repository = createRepository(sql)
 
   let eventIds: number[] = []
 
   if (eventIdArgs.length === 0) {
+    console.log('Querying for PENDING webhook events...')
     const pendingEvents = await sql<
       Array<{ id: number; body: string; status: string }>
     >`
@@ -39,7 +44,7 @@ async function cmd(
 
     if (pendingEvents.length === 0) {
       console.log('No PENDING webhook events found.')
-      sql.end()
+      await sql.end()
       return
     }
 
@@ -64,7 +69,7 @@ async function cmd(
 
       if (answer.toLowerCase() !== 'y') {
         console.log('Operation cancelled.')
-        sql.end()
+        await sql.end()
         return
       }
     }
@@ -89,6 +94,7 @@ async function cmd(
     console.log(`\n[${i + 1}/${eventIds.length}] Processing event ${id}...`)
 
     try {
+      console.log(`  Fetching event ${id} from database...`)
       const rows = await sql<
         Array<{
           id: number
@@ -107,6 +113,7 @@ async function cmd(
       const event = rows[0]
       invariant(event, 'Event should be defined')
 
+      console.log(`  Processing event ${id}...`)
       //@ts-ignore FIXME
       await processStravaWebhookEvent(event, {
         repository,
@@ -124,7 +131,7 @@ async function cmd(
     }
   }
 
-  sql.end()
+  await sql.end({ timeout: 5 })
 
   console.log(
     `\n✓ Completed processing ${eventIds.length} event(s): ${successCount} succeeded, ${errorCount} failed.`,
