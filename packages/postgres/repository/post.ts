@@ -286,13 +286,7 @@ export async function updatePostComplete(
       WHERE "id" = ${input.id}
       RETURNING *
     )
-    SELECT * FROM "Post"
+    SELECT * FROM PostModified
   `
-  if (posts.length > 0) {
-    const post = posts[0]
-    invariant(post, 'expected post to exist')
-    return post
-  } else {
-    return null
-  }
+  return posts[0] ?? null
 }
