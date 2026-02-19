@@ -2,7 +2,7 @@ packages:
   - packages/*
 
 catalog:
-  '@cloudflare/vite-plugin': 1.25.1
+  '@cloudflare/vite-plugin': 1.25.2
   '@cloudflare/workers-types': 4.20260219.0
   '@kubb/cli': 4.24.1
   '@kubb/core': 4.24.1
