@@ -47,3 +47,18 @@ catalog:
   zod: 4.3.6
 
 catalogMode: strict
+
+cleanupUnusedCatalogs: true
+
+minimumReleaseAge: 4320
+
+minimumReleaseAgeExclude:
+  - '@types/*'
+  - '@cloudflare/*'
+  - wrangler
+
+onlyBuiltDependencies:
+  - esbuild
+  - lefthook
+  - sharp
+  - workerd
