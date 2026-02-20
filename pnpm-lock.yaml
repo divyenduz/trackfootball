@@ -13,20 +13,20 @@ catalogs:
       specifier: 4.20260219.0
       version: 4.20260219.0
     '@kubb/cli':
-      specifier: 4.26.1
-      version: 4.26.1
+      specifier: 4.27.0
+      version: 4.27.0
     '@kubb/core':
-      specifier: 4.26.1
-      version: 4.26.1
+      specifier: 4.27.0
+      version: 4.27.0
     '@kubb/plugin-client':
-      specifier: 4.26.1
-      version: 4.26.1
+      specifier: 4.27.0
+      version: 4.27.0
     '@kubb/plugin-oas':
-      specifier: 4.26.1
-      version: 4.26.1
+      specifier: 4.27.0
+      version: 4.27.0
     '@kubb/plugin-ts':
-      specifier: 4.26.1
-      version: 4.26.1
+      specifier: 4.27.0
+      version: 4.27.0
     '@kubb/react-fabric':
       specifier: 0.12.11
       version: 0.12.11
@@ -195,19 +195,19 @@ importers:
     devDependencies:
       '@kubb/cli':
         specifier: 'catalog:'
-        version: 4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
+        version: 4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
       '@kubb/core':
         specifier: 'catalog:'
-        version: 4.26.1(@kubb/react-fabric@0.12.11)
+        version: 4.27.0(@kubb/react-fabric@0.12.11)
       '@kubb/plugin-client':
         specifier: 'catalog:'
-        version: 4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
+        version: 4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
       '@kubb/plugin-oas':
         specifier: 'catalog:'
-        version: 4.26.1(@kubb/react-fabric@0.12.11)
+        version: 4.27.0(@kubb/react-fabric@0.12.11)
       '@kubb/plugin-ts':
         specifier: 'catalog:'
-        version: 4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
+        version: 4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
       '@kubb/react-fabric':
         specifier: 'catalog:'
         version: 0.12.11
@@ -1130,13 +1130,13 @@ packages:
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
 
-  '@kubb/cli@4.26.1':
-    resolution: {integrity: sha512-XczagSC59wqgbKkYUjN01gP4w6I3OaV2UyMlfajC7IGcLckeO4d5HQ1r6cP3f49QjoznapgYCEq7TcrUQA11oA==}
+  '@kubb/cli@4.27.0':
+    resolution: {integrity: sha512-0uLiwV/GmAPAP6RAqyYBvSGPtIQaJ4QUSJlKkOmlLP7N3FC3t9jt+MCq4jAXMb7oJF5LXbjvFcNv+TC5fdy45w==}
     engines: {node: '>=20'}
     hasBin: true
 
-  '@kubb/core@4.26.1':
-    resolution: {integrity: sha512-7+Lo/UwHgp7eJ7GiGU+9MfctdjugDxrTJvkxe3U6Wadvv47oxEdC6c2kFdNnzUU6hP/pWS16NtJBw+hd91SsZg==}
+  '@kubb/core@4.27.0':
+    resolution: {integrity: sha512-Hh2s+sL7fTcs5IPG5HguX/JKX8SElOYq+m3fRjZSAP5gP9p8BIv9x2uASySpkYH+HK3ObV1jjHrBu1nNH4MBFA==}
     engines: {node: '>=20'}
     peerDependencies:
       '@kubb/react-fabric': 0.12.11
@@ -1145,12 +1145,12 @@ packages:
     resolution: {integrity: sha512-RjWEwdglJFc9s4Ph+A2CX1bUAPFhIH9KkRldoUv3VOsmfMpgFKncQIgHYLFU9W0hcGQjvWMkOyU0qxKKcRvQ8Q==}
     engines: {node: '>=20'}
 
-  '@kubb/oas@4.26.1':
-    resolution: {integrity: sha512-6I9ClNqDEgRt8sABWwzr2RtJfCq4PEdypZS/JBQpDIerCrMe1uzT6h3v03211Hkfw9Grou7+FI8M+R2qQORL4g==}
+  '@kubb/oas@4.27.0':
+    resolution: {integrity: sha512-a1z8GNw8VOVAtagw7PkZMNeTqCLGBZD242/2wmW9f0dnHiL5W9L6uGe9v2OAaOPWfKsN1vcUjqrmItsquWLwkg==}
     engines: {node: '>=20'}
 
-  '@kubb/plugin-client@4.26.1':
-    resolution: {integrity: sha512-D6fG6xEgBLTyFHCzGI8F2IejK4IO0osfmFg51EpT4hMs/zzEJ02Vqm8ay2FCynlrBeA9ILDdcdU1XDFCQw85mg==}
+  '@kubb/plugin-client@4.27.0':
+    resolution: {integrity: sha512-n54YGe6DFOf1w+IAjQv6xxSCE4m7a0hjhafmygrY6orv++yl4IgaLSZa1NT1TaRa5dGoCpmG9xQ/LMaHGR9PEA==}
     engines: {node: '>=20'}
     peerDependencies:
       '@kubb/react-fabric': 0.12.11
@@ -1159,21 +1159,21 @@ packages:
       axios:
         optional: true
 
-  '@kubb/plugin-oas@4.26.1':
-    resolution: {integrity: sha512-zVR4X2rQAM8VXVor/oswxwnx7taR6ADSJeRMla1qDGp0mfYBjo7SgGhewDDKZ0xYWWX78VvUzpEO6j85pKWkZg==}
+  '@kubb/plugin-oas@4.27.0':
+    resolution: {integrity: sha512-nCiWO5QnUixeuXziSNHpIbF87SU1dO4LFsgQWrIoC1lej7KKLwLH37wxcAtluqogStCdu8M+eEBNrmdalLYbzw==}
     engines: {node: '>=20'}
     peerDependencies:
       '@kubb/react-fabric': 0.12.11
 
-  '@kubb/plugin-ts@4.26.1':
-    resolution: {integrity: sha512-TyyE1FZZFR6Xhflawk9MaWGB1hae3n0rJ+3UTdqAmik7Co+ptdhsd1QwwD6PLB5ACLjYh5egehEKX4vM+3zWDA==}
+  '@kubb/plugin-ts@4.27.0':
+    resolution: {integrity: sha512-eg4JOOU2tU3QWqEQ8uYyAtcu5ptbFcnVi50D2Q2bMXxtnGEqUB67GKyRi+rqKToXuVeKv4ZUc51QGnxOhtSoig==}
     engines: {node: '>=20'}
     peerDependencies:
       '@kubb/react-fabric': 0.12.11
       typescript: '>=5.9.0'
 
-  '@kubb/plugin-zod@4.26.1':
-    resolution: {integrity: sha512-nx8hfqiGwBZtiEvffU/ZMsKsgdyUEsQHoKvWDB3uy1ipnHhiNDs21HFW6sZULnTuHLcvQRUOZ8Sm3dtePydqAQ==}
+  '@kubb/plugin-zod@4.27.0':
+    resolution: {integrity: sha512-D+BXIUi3rLe3WDaOZg2NR+KTs3GLFDsbDE6HZa94hezY45Nz3kOlKdTcti/y6cBUqEflTvjIReSUs54IXCWFgA==}
     engines: {node: '>=20'}
 
   '@kubb/react-fabric@0.12.11':
@@ -4391,20 +4391,20 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.11)(nanostores@1.1.0)':
+  '@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0)':
     dependencies:
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
       '@standard-schema/spec': 1.1.0
       better-call: 1.1.8(zod@4.3.6)
       jose: 6.1.3
-      kysely: 0.28.11
+      kysely: 0.28.5
       nanostores: 1.1.0
       zod: 4.3.6
 
   '@better-auth/telemetry@1.4.18(@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0))':
     dependencies:
-      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.11)(nanostores@1.1.0)
+      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0)
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
 
@@ -4791,10 +4791,10 @@ snapshots:
     dependencies:
       jsep: 1.4.0
 
-  '@kubb/cli@4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)':
+  '@kubb/cli@4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)':
     dependencies:
       '@clack/prompts': 1.0.1
-      '@kubb/core': 4.26.1(@kubb/react-fabric@0.12.11)
+      '@kubb/core': 4.27.0(@kubb/react-fabric@0.12.11)
       chokidar: 5.0.0
       citty: 0.1.6
       cosmiconfig: 9.0.0(typescript@5.9.3)
@@ -4811,7 +4811,7 @@ snapshots:
       - '@kubb/react-fabric'
       - typescript
 
-  '@kubb/core@4.26.1(@kubb/react-fabric@0.12.11)':
+  '@kubb/core@4.27.0(@kubb/react-fabric@0.12.11)':
     dependencies:
       '@kubb/react-fabric': 0.12.11
       camelcase: 8.0.0
@@ -4841,9 +4841,9 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@kubb/oas@4.26.1(@kubb/react-fabric@0.12.11)':
+  '@kubb/oas@4.27.0(@kubb/react-fabric@0.12.11)':
     dependencies:
-      '@kubb/core': 4.26.1(@kubb/react-fabric@0.12.11)
+      '@kubb/core': 4.27.0(@kubb/react-fabric@0.12.11)
       '@redocly/openapi-core': 2.19.1
       jsonpointer: 5.0.1
       oas: 28.9.0
@@ -4855,13 +4855,13 @@ snapshots:
       - '@kubb/react-fabric'
       - encoding
 
-  '@kubb/plugin-client@4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)':
+  '@kubb/plugin-client@4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)':
     dependencies:
-      '@kubb/core': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/oas': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/plugin-oas': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/plugin-ts': 4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
-      '@kubb/plugin-zod': 4.26.1(typescript@5.9.3)
+      '@kubb/core': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/oas': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/plugin-oas': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/plugin-ts': 4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
+      '@kubb/plugin-zod': 4.27.0(typescript@5.9.3)
       '@kubb/react-fabric': 0.12.11
     transitivePeerDependencies:
       - bufferutil
@@ -4869,22 +4869,22 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@kubb/plugin-oas@4.26.1(@kubb/react-fabric@0.12.11)':
+  '@kubb/plugin-oas@4.27.0(@kubb/react-fabric@0.12.11)':
     dependencies:
-      '@kubb/core': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/oas': 4.26.1(@kubb/react-fabric@0.12.11)
+      '@kubb/core': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/oas': 4.27.0(@kubb/react-fabric@0.12.11)
       '@kubb/react-fabric': 0.12.11
       p-limit: 7.3.0
       remeda: 2.33.6
     transitivePeerDependencies:
       - encoding
 
-  '@kubb/plugin-ts@4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)':
+  '@kubb/plugin-ts@4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)':
     dependencies:
-      '@kubb/core': 4.26.1(@kubb/react-fabric@0.12.11)
+      '@kubb/core': 4.27.0(@kubb/react-fabric@0.12.11)
       '@kubb/fabric-core': 0.12.11
-      '@kubb/oas': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/plugin-oas': 4.26.1(@kubb/react-fabric@0.12.11)
+      '@kubb/oas': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/plugin-oas': 4.27.0(@kubb/react-fabric@0.12.11)
       '@kubb/react-fabric': 0.12.11
       natural-orderby: 5.0.0
       remeda: 2.33.6
@@ -4894,12 +4894,12 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@kubb/plugin-zod@4.26.1(typescript@5.9.3)':
+  '@kubb/plugin-zod@4.27.0(typescript@5.9.3)':
     dependencies:
-      '@kubb/core': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/oas': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/plugin-oas': 4.26.1(@kubb/react-fabric@0.12.11)
-      '@kubb/plugin-ts': 4.26.1(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
+      '@kubb/core': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/oas': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/plugin-oas': 4.27.0(@kubb/react-fabric@0.12.11)
+      '@kubb/plugin-ts': 4.27.0(@kubb/react-fabric@0.12.11)(typescript@5.9.3)
       '@kubb/react-fabric': 0.12.11
     transitivePeerDependencies:
       - bufferutil
@@ -5661,7 +5661,7 @@ snapshots:
 
   better-auth@1.4.18(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.11)(nanostores@1.1.0)
+      '@better-auth/core': 1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0)
       '@better-auth/telemetry': 1.4.18(@better-auth/core@1.4.18(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.6))(jose@6.1.3)(kysely@0.28.5)(nanostores@1.1.0))
       '@better-auth/utils': 0.3.0
       '@better-fetch/fetch': 1.1.21
