@@ -10,8 +10,8 @@ catalog:
   '@kubb/plugin-oas': 4.26.1
   '@kubb/plugin-ts': 4.26.1
   '@kubb/react-fabric': 0.12.11
-  '@stricli/auto-complete': 1.2.5
-  '@stricli/core': 1.2.5
+  '@stricli/auto-complete': 1.2.6
+  '@stricli/core': 1.2.6
   '@tailwindcss/vite': 4.2.0
   '@tmcw/togeojson': 7.1.2
   '@turf/area': 7.3.4

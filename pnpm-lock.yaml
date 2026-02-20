@@ -31,11 +31,11 @@ catalogs:
       specifier: 0.12.11
       version: 0.12.11
     '@stricli/auto-complete':
-      specifier: 1.2.5
-      version: 1.2.5
+      specifier: 1.2.6
+      version: 1.2.6
     '@stricli/core':
-      specifier: 1.2.5
-      version: 1.2.5
+      specifier: 1.2.6
+      version: 1.2.6
     '@tailwindcss/vite':
       specifier: 4.2.0
       version: 4.2.0
@@ -170,10 +170,10 @@ importers:
     dependencies:
       '@stricli/auto-complete':
         specifier: 'catalog:'
-        version: 1.2.5
+        version: 1.2.6
       '@stricli/core':
         specifier: 'catalog:'
-        version: 1.2.5
+        version: 1.2.6
       '@trackfootball/postgres':
         specifier: workspace:*
         version: link:../postgres
@@ -1504,12 +1504,12 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@stricli/auto-complete@1.2.5':
-    resolution: {integrity: sha512-C6G88Hh4lUWBwiqsxbcA4I1ricSQwiLaOziTWW3NmBoX7WGTW7i7RvyooXMpZk1YMLf2olv5Odxmg127ik1DKQ==}
+  '@stricli/auto-complete@1.2.6':
+    resolution: {integrity: sha512-H7dectwnLBoyDrp4Vek1gTNdUWzqkEDt5X6oFoOPxPVbca5FA9ttBZ/OlfNvt14aeiZUsg1rC7GEHjIh3tjn2A==}
     hasBin: true
 
-  '@stricli/core@1.2.5':
-    resolution: {integrity: sha512-+afyztQW7fwWkqmU2WQZbdc3LjnZThWYdtE0l+hykZ1Rvy7YGxZSvsVCS/wZ/2BNv117pQ9TU1GZZRIcPnB4tw==}
+  '@stricli/core@1.2.6':
+    resolution: {integrity: sha512-j5fa1wyOLrP9WJqqLFEJeQviqb3cK46K+FXTuISEkG/H5C820YfKDoVQ3CDVdM5WLhEx1ARdpiW6+hU4tYHjCQ==}
 
   '@tailwindcss/node@4.2.0':
     resolution: {integrity: sha512-Yv+fn/o2OmL5fh/Ir62VXItdShnUxfpkMA4Y7jdeC8O81WPB8Kf6TT6GSHvnqgSwDzlB5iT7kDpeXxLsUS0T6Q==}
@@ -5201,11 +5201,11 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@stricli/auto-complete@1.2.5':
+  '@stricli/auto-complete@1.2.6':
     dependencies:
-      '@stricli/core': 1.2.5
+      '@stricli/core': 1.2.6
 
-  '@stricli/core@1.2.5': {}
+  '@stricli/core@1.2.6': {}
 
   '@tailwindcss/node@4.2.0':
     dependencies:
