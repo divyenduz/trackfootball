@@ -52,10 +52,13 @@ cleanupUnusedCatalogs: true
 
 minimumReleaseAge: 4320
 
+# Only exclude trusted packages from stable, well-known publishers
+# (e.g., Cloudflare, DefinitelyTyped) where fast adoption matters
+# and the risk of a bad release is low.
 minimumReleaseAgeExclude:
-  - '@types/*'
-  - '@cloudflare/*'
-  - wrangler
+  - '@cloudflare/*' # Cloudflare platform packages
+  - wrangler # Cloudflare CLI, tracks platform releases
+  - workerd # Cloudflare runtime, transitive dep of wrangler
 
 onlyBuiltDependencies:
   - esbuild
