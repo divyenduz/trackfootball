@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Update dependencies
-        run: pnpm update --recursive --latest
+        run: pnpm update --recursive --latest || true
 
       - name: Audit fix
         run: pnpm audit --fix || true
