@@ -1,0 +1,64 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-dependencies
+  cancel-in-progress: true
+
+env:
+  NO_COLOR: true
+  CI: 1
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Update dependencies
+        run: pnpm update --recursive --latest
+
+      - name: Audit fix
+        run: pnpm audit --fix || true
+
+      - name: Re-install lockfile
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore(deps): update dependencies'
+          title: 'chore(deps): update dependencies'
+          body: |
+            Automated dependency update:
+            - `pnpm update --recursive --latest`
+            - `pnpm audit --fix`
+          branch: chore/update-dependencies
+          delete-branch: true
+          labels: dependencies

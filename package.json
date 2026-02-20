@@ -18,14 +18,6 @@
     "typescript": "catalog:",
     "wrangler": "catalog:"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lefthook",
-      "sharp",
-      "workerd"
-    ]
-  },
   "dependencies": {
     "kysely": "catalog:",
     "kysely-postgres-js": "catalog:",
