@@ -2,6 +2,7 @@
   "name": "trackfootball",
   "version": "2.0.0",
   "private": true,
+  "packageManager": "pnpm@10.34.5",
   "scripts": {
     "dev": "pnpm --filter @trackfootball/rw-app dev",
     "build": "pnpm --filter @trackfootball/* build",
