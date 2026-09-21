@@ -1,4 +1,5 @@
 *.env
+.dev.vars*
 .env.development
 _.env.development
 *.envrc

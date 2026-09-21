@@ -12,7 +12,6 @@
   },
   "vars": {
     "BACKEND_API": "https://trackfootball.app/api",
-    "COOKIE_DOMAIN": ".trackfootball.app",
     "HOMEPAGE_URL": "https://trackfootball.app",
     "BETTER_AUTH_URL": "https://trackfootball.app",
   },

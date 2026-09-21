@@ -9,7 +9,6 @@ declare namespace Cloudflare {
 		ASSETS: Fetcher;
 		BACKEND_API: string;
 		DATABASE_URL: string;
-		COOKIE_DOMAIN: string;
 		STRAVA_CLIENT_ID: string;
 		STRAVA_CLIENT_SECRET: string;
 		HOMEPAGE_URL: string;
@@ -28,7 +27,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "BACKEND_API" | "DATABASE_URL" | "COOKIE_DOMAIN" | "STRAVA_CLIENT_ID" | "STRAVA_CLIENT_SECRET" | "HOMEPAGE_URL" | "NO_COLOR" | "DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK" | "UNSAFE_AUTH_BYPASS_USER" | "STRAVA_WEBHOOK_VERIFY_TOKEN" | "BETTER_AUTH_URL" | "BETTER_AUTH_SECRET" | "GOOGLE_CLIENT_ID" | "GOOGLE_CLIENT_SECRET">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "BACKEND_API" | "DATABASE_URL" | "STRAVA_CLIENT_ID" | "STRAVA_CLIENT_SECRET" | "HOMEPAGE_URL" | "NO_COLOR" | "DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK" | "UNSAFE_AUTH_BYPASS_USER" | "STRAVA_WEBHOOK_VERIFY_TOKEN" | "BETTER_AUTH_URL" | "BETTER_AUTH_SECRET" | "GOOGLE_CLIENT_ID" | "GOOGLE_CLIENT_SECRET">> {}
 }
 
 // Begin runtime types

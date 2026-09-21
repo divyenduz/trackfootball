@@ -2,11 +2,13 @@
 
 ## Development
 
-The app is running at https://trackfootball.localhost. Do not attempt to run it, I will run it for you. If you find that the app is not running tell me to run it. You should already be logged in on this domain.
+The app may already be running in an Amp orb. From the repository root, run `amp orb services ensure` to reuse the supervised app service or start it when missing, wait for readiness, and obtain its portal URL. Use the exact portal URL returned by Amp; do not launch a second dev server directly or ask the user to start it.
+
+If the service does not become ready, inspect `amp orb service status app` and `amp orb service logs app` before changing anything. If required runtime configuration is missing, use the project's Amp environment variables or secrets; do not invent credential values. The browser may retain an authenticated session, but verify that rather than assuming it is logged in.
 
 ## Commands
 
-- **Dev**: `pnpm run dev` (starts Next.js app)
+- **Dev**: `pnpm run dev` (starts the Vite app outside an Amp orb); use `amp orb services ensure` in an orb
 - **Build**: `pnpm run build` (builds all packages)
 - **Test**: `pnpm run test` (runs all tests), `pnpm --filter @trackfootball/service test` (single package test)
 - **Lint**: `pnpm run lint` (TypeScript check all packages), `pnpm --filter <package> lint` (single package)

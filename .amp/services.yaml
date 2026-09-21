@@ -1,0 +1,11 @@
+services:
+  app:
+    command: ./scripts/dev-orb.sh --host 0.0.0.0 --port "$PORT" --strictPort
+    health: /home
+    env:
+      UNSAFE_AUTH_BYPASS_USER: "true"
+    agent: control
+    portal:
+      url: /dashboard
+      title: TrackFootball
+      description: Development app using the synthetic orb user.
