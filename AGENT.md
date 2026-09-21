@@ -14,6 +14,10 @@ If the service does not become ready, inspect `amp orb service status app` and `
 - **Lint**: `pnpm run lint` (TypeScript check all packages), `pnpm --filter <package> lint` (single package)
 - **Release**: `pnpm run release` (deploys rw-app to Cloudflare Workers)
 
+## Feature Verification
+
+After building a feature, test the rendered home page (`/home`), dashboard feed (`/dashboard`), and at least one concrete activity page (`/activity/:id`) before considering the work complete. Commit the completed feature after these checks pass.
+
 ## Architecture
 
 - **Monorepo** with pnpm workspaces, packages in `packages/`
