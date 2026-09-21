@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+step() {
+  printf '\n==> %s\n' "$1"
+}
+
+step 'Installing mise'
+if [[ ! -x "$HOME/.local/bin/mise" ]]; then
+  curl -fsSL https://mise.run | sh
+fi
+mise="$HOME/.local/bin/mise"
+
+profile_marker='# trackfootball mise activation'
+if ! grep -Fqx "$profile_marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<'EOF'
+
+# trackfootball mise activation
+if [[ -x "$HOME/.local/bin/mise" ]]; then
+  eval "$("$HOME/.local/bin/mise" activate bash)"
+fi
+EOF
+fi
+
+step 'Installing the pinned toolchain'
+"$mise" trust --yes mise.toml
+"$mise" install
+eval "$("$mise" activate bash)"
+
+printf 'Node.js %s, pnpm %s\n' "$(node --version)" "$(pnpm --version)"
+
+step 'Installing workspace dependencies'
+time CI=1 pnpm install --frozen-lockfile

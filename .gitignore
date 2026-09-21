@@ -30,3 +30,5 @@ samples/
 
 secrets.json
 .stub-worker.js
+
+.amp/portals/
