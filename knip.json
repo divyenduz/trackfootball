@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "$schema": "https://unpkg.com/knip@6/schema.json",
   "ignoreBinaries": ["pg_dump"],
   "workspaces": {
     ".": {
@@ -7,29 +7,25 @@
       "ignoreDependencies": ["prettier", "wrangler"]
     },
     "packages/rw-app": {
-      "entry": ["src/worker.tsx", "src/client.tsx", "vite.config.mts"],
+      "entry": ["src/client.tsx", "vite.config.mts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignore": ["**/*.d.ts", "better-auth_migrations/**"],
       "ignoreDependencies": ["cloudflare", "tailwindcss"],
       "vite": false
     },
     "packages/service": {
-      "project": ["**/*.ts"],
-      "ignore": ["**/*.d.ts"]
+      "project": ["**/*.ts"]
     },
     "packages/postgres": {
-      "project": ["**/*.ts"],
-      "ignore": ["**/*.d.ts"]
+      "project": ["**/*.ts"]
     },
     "packages/cli": {
       "project": ["src/**/*.ts"],
-      "ignore": ["**/*.d.ts"],
       "entry": ["src/bin/bash-completions.ts", "src/commands/completions.ts"]
     },
     "packages/open-api": {
       "entry": ["kubb.config.ts"],
       "project": ["**/*.ts"],
-      "ignore": ["**/*.d.ts", "services/**/generated/**"]
+      "ignore": ["services/**/generated/**"]
     }
   }
 }
