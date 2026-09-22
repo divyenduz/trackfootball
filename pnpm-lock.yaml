@@ -79,8 +79,8 @@ catalogs:
       specifier: 1.7.5
       version: 1.7.5
     capnweb:
-      specifier: 0.10.0
-      version: 0.10.0
+      specifier: 0.12.0
+      version: 0.12.0
     cross-env:
       specifier: ^10.1.0
       version: 10.1.0
@@ -280,7 +280,7 @@ importers:
         version: 19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1))
       rwsdk:
         specifier: 'catalog:'
-        version: 1.7.3(@cloudflare/vite-plugin@1.57.3(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13)))(capnweb@0.10.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13))(yauzl@3.4.0)
+        version: 1.7.3(@cloudflare/vite-plugin@1.57.3(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13)))(capnweb@0.12.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13))(yauzl@3.4.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.3
@@ -308,7 +308,7 @@ importers:
         version: 19.3.0(@types/react@19.3.0)
       capnweb:
         specifier: 'catalog:'
-        version: 0.10.0
+        version: 0.12.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2010,8 +2010,8 @@ packages:
   caniuse-lite@1.0.30001769:
     resolution: {integrity: sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==}
 
-  capnweb@0.10.0:
-    resolution: {integrity: sha512-lQ2nlzaifkqBeNfs8RLErn7NZ8FNf3vn1W7J3nSH73edWG+0B5nHZGR51S2S9HMZEuZcEypOO469dZRY/BluFA==}
+  capnweb@0.12.0:
+    resolution: {integrity: sha512-jgZ/LMtMVTi+RVlooIslH78Gg23XbDTdvcLghWx3oz17D6u5GuJARt+uhZk/wcTo+f81eeabfnow4d3zLBj+JQ==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -5315,7 +5315,7 @@ snapshots:
 
   caniuse-lite@1.0.30001769: {}
 
-  capnweb@0.10.0: {}
+  capnweb@0.12.0: {}
 
   ccount@2.0.1: {}
 
@@ -6829,7 +6829,7 @@ snapshots:
 
   rsc-html-stream@0.0.8: {}
 
-  rwsdk@1.7.3(@cloudflare/vite-plugin@1.57.3(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13)))(capnweb@0.10.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13))(yauzl@3.4.0):
+  rwsdk@1.7.3(@cloudflare/vite-plugin@1.57.3(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13)))(capnweb@0.12.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13))(yauzl@3.4.0):
     dependencies:
       '@ast-grep/napi': 0.45.3
       '@cloudflare/vite-plugin': 1.57.3(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13))
@@ -6876,7 +6876,7 @@ snapshots:
       vite-tsconfig-paths: 6.1.1(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))
       wrangler: 4.136.3(@cloudflare/workers-types@5.20260922.1)(@types/node@24.10.13)
     optionalDependencies:
-      capnweb: 0.10.0
+      capnweb: 0.12.0
     transitivePeerDependencies:
       - '@rolldown/plugin-babel'
       - babel-plugin-react-compiler
