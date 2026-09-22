@@ -1,6 +1,6 @@
 'use client'
 
-import type { Post, User } from '@trackfootball/postgres'
+import type { User } from '@trackfootball/postgres'
 import { useState, useRef, useEffect } from 'react'
 import { getFeed } from './feed'
 
@@ -104,10 +104,6 @@ export function FeedContainer({
     return (meters / 1000).toFixed(2)
   }
 
-  const formatSpeed = (mps: number) => {
-    return (mps * 3.6).toFixed(1) + ' km/h'
-  }
-
   const formatDateTime = (date: Date) => {
     const now = new Date()
     const diff = now.getTime() - date.getTime()
@@ -176,62 +172,64 @@ export function FeedContainer({
 
       {posts.map((post) => (
         <article
-          className="relative rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+          className="group relative overflow-visible rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
           key={post.id}
         >
           <a
             href={`/activity/${post.id}`}
-            className="block rounded-xl text-gray-900"
+            className="block rounded-2xl text-gray-900"
           >
-            <div className="border-b border-gray-100 p-4 pb-3 pr-16">
-              <div className="flex items-start gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white">
+            <div className="px-5 pb-4 pt-5 pr-16 sm:px-6 sm:pb-5 sm:pt-6 sm:pr-18">
+              <h2 className="break-words text-xl font-semibold leading-snug tracking-tight text-gray-950 transition-colors group-hover:text-cardinal-900 sm:text-2xl">
+                {post.text || 'Football Activity'}
+              </h2>
+
+              <div className="mt-4 flex min-w-0 items-center gap-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white shadow-sm ring-2 ring-white">
                   {getInitials(post.User.firstName, post.User.lastName)}
                 </div>
 
-                <div className="min-w-0 flex-1">
-                  <p className="break-words font-semibold text-gray-900">
+                <div className="min-w-0 text-sm sm:flex sm:items-baseline sm:gap-2">
+                  <p className="truncate font-semibold text-gray-900">
                     {post.User.firstName} {post.User.lastName}
                   </p>
-                  <p className="mt-0.5 text-sm text-gray-500">
+                  <span
+                    aria-hidden="true"
+                    className="hidden text-gray-300 sm:inline"
+                  >
+                    •
+                  </span>
+                  <p className="mt-0.5 whitespace-nowrap text-gray-500 sm:mt-0">
                     {formatDateTime(new Date(post.createdAt))}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="px-4 pb-2 pt-3">
-              <h2 className="break-words text-lg font-semibold text-gray-900">
-                {post.text || 'Football Activity'}
-              </h2>
-            </div>
-
-            <div className="px-4 pb-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-                    Time
-                  </div>
-                  <div className="text-xl font-semibold tabular-nums text-gray-900">
-                    {post.elapsedTime ? formatTime(post.elapsedTime) : '--'}
-                  </div>
+            <div className="grid grid-cols-2 border-t border-gray-100 bg-gray-50/70">
+              <div className="px-5 py-4 sm:px-6">
+                <div className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">
+                  Time
                 </div>
-                <div>
-                  <div className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-                    Distance
-                  </div>
-                  <div className="text-xl font-semibold tabular-nums text-gray-900">
-                    {post.totalDistance
-                      ? `${formatDistance(post.totalDistance)} km`
-                      : '-- km'}
-                  </div>
+                <div className="mt-1 text-xl font-semibold tabular-nums tracking-tight text-gray-950 sm:text-2xl">
+                  {post.elapsedTime ? formatTime(post.elapsedTime) : '--'}
+                </div>
+              </div>
+              <div className="border-l border-gray-200 px-5 py-4 sm:px-6">
+                <div className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">
+                  Distance
+                </div>
+                <div className="mt-1 text-xl font-semibold tabular-nums tracking-tight text-gray-950 sm:text-2xl">
+                  {post.totalDistance
+                    ? `${formatDistance(post.totalDistance)} km`
+                    : '-- km'}
                 </div>
               </div>
             </div>
           </a>
 
           <div
-            className="absolute right-3 top-3"
+            className="absolute right-3 top-3 sm:right-4 sm:top-4"
             ref={openDropdown === post.id ? dropdownRef : null}
           >
             <button
@@ -256,7 +254,7 @@ export function FeedContainer({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
+                  d="M5 12h.01M12 12h.01M19 12h.01"
                 />
               </svg>
             </button>
