@@ -4,11 +4,20 @@
  */
 
 import fetch from '../../../fetch.ts'
-import type { RequestConfig, ResponseErrorConfig } from '../../../fetch.ts'
 import type {
+  Client,
+  RequestConfig,
+  ResponseErrorConfig,
+} from '../../../fetch.ts'
+import type {
+  CreateActivityMutationResponse,
+  ExploreSegmentsQueryResponse,
+  ExploreSegmentsQueryParams,
+  GetEffortsBySegmentIdQueryResponse,
+  GetEffortsBySegmentIdQueryParams,
+  GetLoggedInAthleteQueryResponse,
   GetStatsQueryResponse,
   GetStatsPathParams,
-  GetLoggedInAthleteQueryResponse,
   UpdateLoggedInAthleteMutationResponse,
   UpdateLoggedInAthletePathParams,
   GetLoggedInAthleteZonesQueryResponse,
@@ -18,13 +27,8 @@ import type {
   GetLoggedInAthleteStarredSegmentsQueryParams,
   StarSegmentMutationResponse,
   StarSegmentPathParams,
-  GetEffortsBySegmentIdQueryResponse,
-  GetEffortsBySegmentIdQueryParams,
-  ExploreSegmentsQueryResponse,
-  ExploreSegmentsQueryParams,
   GetSegmentEffortByIdQueryResponse,
   GetSegmentEffortByIdPathParams,
-  CreateActivityMutationResponse,
   GetActivityByIdQueryResponse,
   GetActivityByIdPathParams,
   GetActivityByIdQueryParams,
@@ -45,15 +49,6 @@ import type {
   GetKudoersByActivityIdQueryParams,
   GetClubByIdQueryResponse,
   GetClubByIdPathParams,
-  GetClubMembersByIdQueryResponse,
-  GetClubMembersByIdPathParams,
-  GetClubMembersByIdQueryParams,
-  GetClubAdminsByIdQueryResponse,
-  GetClubAdminsByIdPathParams,
-  GetClubAdminsByIdQueryParams,
-  GetClubActivitiesByIdQueryResponse,
-  GetClubActivitiesByIdPathParams,
-  GetClubActivitiesByIdQueryParams,
   GetLoggedInAthleteClubsQueryResponse,
   GetLoggedInAthleteClubsQueryParams,
   GetGearByIdQueryResponse,
@@ -97,7 +92,7 @@ function getGetStatsUrl(id: GetStatsPathParams['id']) {
  */
 export async function getStats(
   id: GetStatsPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -123,7 +118,7 @@ function getGetLoggedInAthleteUrl() {
  * {@link /athlete}
  */
 export async function getLoggedInAthlete(
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -156,7 +151,7 @@ function getUpdateLoggedInAthleteUrl(
  */
 export async function updateLoggedInAthlete(
   weight: UpdateLoggedInAthletePathParams['weight'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -186,7 +181,7 @@ function getGetLoggedInAthleteZonesUrl() {
  * {@link /athlete/zones}
  */
 export async function getLoggedInAthleteZones(
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -217,7 +212,7 @@ function getGetSegmentByIdUrl(id: GetSegmentByIdPathParams['id']) {
  */
 export async function getSegmentById(
   id: GetSegmentByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -248,7 +243,7 @@ function getGetLoggedInAthleteStarredSegmentsUrl() {
  */
 export async function getLoggedInAthleteStarredSegments(
   params?: GetLoggedInAthleteStarredSegmentsQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -280,7 +275,7 @@ function getStarSegmentUrl(id: StarSegmentPathParams['id']) {
  */
 export async function starSegment(
   id: StarSegmentPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -315,7 +310,7 @@ function getGetEffortsBySegmentIdUrl() {
  */
 export async function getEffortsBySegmentId(
   params: GetEffortsBySegmentIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -341,13 +336,13 @@ function getExploreSegmentsUrl() {
 }
 
 /**
- * @description Returns the top 10 segments matching a specified query.
+ * @description Returns the top 10 segments matching a specified query. Available only to Extended Access Tier apps with granted permission.
  * @summary Explore segments
  * {@link /segments/explore}
  */
 export async function exploreSegments(
   params: ExploreSegmentsQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -379,7 +374,7 @@ function getGetSegmentEffortByIdUrl(id: GetSegmentEffortByIdPathParams['id']) {
  */
 export async function getSegmentEffortById(
   id: GetSegmentEffortByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -409,7 +404,7 @@ function getCreateActivityUrl() {
  * {@link /activities}
  */
 export async function createActivity(
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -447,7 +442,7 @@ function getGetActivityByIdUrl(id: GetActivityByIdPathParams['id']) {
 export async function getActivityById(
   id: GetActivityByIdPathParams['id'],
   params?: GetActivityByIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -481,7 +476,7 @@ export async function updateActivityById(
   id: UpdateActivityByIdPathParams['id'],
   data?: UpdateActivityByIdMutationRequest,
   config: Partial<RequestConfig<UpdateActivityByIdMutationRequest>> & {
-    client?: typeof fetch
+    client?: Client
   } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -516,7 +511,7 @@ function getGetLoggedInAthleteActivitiesUrl() {
  */
 export async function getLoggedInAthleteActivities(
   params?: GetLoggedInAthleteActivitiesQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -548,7 +543,7 @@ function getGetLapsByActivityIdUrl(id: GetLapsByActivityIdPathParams['id']) {
  */
 export async function getLapsByActivityId(
   id: GetLapsByActivityIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -579,7 +574,7 @@ function getGetZonesByActivityIdUrl(id: GetZonesByActivityIdPathParams['id']) {
  */
 export async function getZonesByActivityId(
   id: GetZonesByActivityIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -613,7 +608,7 @@ function getGetCommentsByActivityIdUrl(
 export async function getCommentsByActivityId(
   id: GetCommentsByActivityIdPathParams['id'],
   params?: GetCommentsByActivityIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -648,7 +643,7 @@ function getGetKudoersByActivityIdUrl(
 export async function getKudoersByActivityId(
   id: GetKudoersByActivityIdPathParams['id'],
   params?: GetKudoersByActivityIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -680,7 +675,7 @@ function getGetClubByIdUrl(id: GetClubByIdPathParams['id']) {
  */
 export async function getClubById(
   id: GetClubByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -691,107 +686,6 @@ export async function getClubById(
   >({
     method: 'GET',
     url: getGetClubByIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetClubMembersByIdUrl(id: GetClubMembersByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/clubs/${id}/members` as const,
-  }
-  return res
-}
-
-/**
- * @description Returns a list of the athletes who are members of a given club.
- * @summary List Club Members
- * {@link /clubs/:id/members}
- */
-export async function getClubMembersById(
-  id: GetClubMembersByIdPathParams['id'],
-  params?: GetClubMembersByIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
-
-  const res = await request<
-    GetClubMembersByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetClubMembersByIdUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetClubAdminsByIdUrl(id: GetClubAdminsByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/clubs/${id}/admins` as const,
-  }
-  return res
-}
-
-/**
- * @description Returns a list of the administrators of a given club.
- * @summary List Club Administrators
- * {@link /clubs/:id/admins}
- */
-export async function getClubAdminsById(
-  id: GetClubAdminsByIdPathParams['id'],
-  params?: GetClubAdminsByIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
-
-  const res = await request<
-    GetClubAdminsByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetClubAdminsByIdUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetClubActivitiesByIdUrl(
-  id: GetClubActivitiesByIdPathParams['id'],
-) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/clubs/${id}/activities` as const,
-  }
-  return res
-}
-
-/**
- * @description Retrieve recent activities from members of a specific club. The authenticated athlete must belong to the requested club in order to hit this endpoint. Pagination is supported. Athlete profile visibility is respected for all activities.
- * @summary List Club Activities
- * {@link /clubs/:id/activities}
- */
-export async function getClubActivitiesById(
-  id: GetClubActivitiesByIdPathParams['id'],
-  params?: GetClubActivitiesByIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
-
-  const res = await request<
-    GetClubActivitiesByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetClubActivitiesByIdUrl(id).url.toString(),
-    params,
     ...requestConfig,
   })
   return res.data
@@ -812,7 +706,7 @@ function getGetLoggedInAthleteClubsUrl() {
  */
 export async function getLoggedInAthleteClubs(
   params?: GetLoggedInAthleteClubsQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -844,7 +738,7 @@ function getGetGearByIdUrl(id: GetGearByIdPathParams['id']) {
  */
 export async function getGearById(
   id: GetGearByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -875,7 +769,7 @@ function getGetRouteByIdUrl(id: GetRouteByIdPathParams['id']) {
  */
 export async function getRouteById(
   id: GetRouteByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -907,7 +801,7 @@ function getGetRoutesByAthleteIdUrl() {
  */
 export async function getRoutesByAthleteId(
   params?: GetRoutesByAthleteIdQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -939,7 +833,7 @@ function getGetRouteAsGPXUrl(id: GetRouteAsGPXPathParams['id']) {
  */
 export async function getRouteAsGPX(
   id: GetRouteAsGPXPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -970,7 +864,7 @@ function getGetRouteAsTCXUrl(id: GetRouteAsTCXPathParams['id']) {
  */
 export async function getRouteAsTCX(
   id: GetRouteAsTCXPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -1000,7 +894,7 @@ function getCreateUploadUrl() {
  * {@link /uploads}
  */
 export async function createUpload(
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -1031,7 +925,7 @@ function getGetUploadByIdUrl(uploadId: GetUploadByIdPathParams['uploadId']) {
  */
 export async function getUploadById(
   uploadId: GetUploadByIdPathParams['uploadId'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -1063,7 +957,7 @@ function getGetActivityStreamsUrl(id: GetActivityStreamsPathParams['id']) {
 export async function getActivityStreams(
   id: GetActivityStreamsPathParams['id'],
   params: GetActivityStreamsQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -1098,7 +992,7 @@ function getGetSegmentEffortStreamsUrl(
 export async function getSegmentEffortStreams(
   id: GetSegmentEffortStreamsPathParams['id'],
   params: GetSegmentEffortStreamsQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -1131,7 +1025,7 @@ function getGetSegmentStreamsUrl(id: GetSegmentStreamsPathParams['id']) {
 export async function getSegmentStreams(
   id: GetSegmentStreamsPathParams['id'],
   params: GetSegmentStreamsQueryParams,
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 
@@ -1163,7 +1057,7 @@ function getGetRouteStreamsUrl(id: GetRouteStreamsPathParams['id']) {
  */
 export async function getRouteStreams(
   id: GetRouteStreamsPathParams['id'],
-  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+  config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
 

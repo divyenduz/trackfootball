@@ -414,8 +414,7 @@ export type DetailedAthlete = SummaryAthlete & {
    * @type string | undefined
    */
   measurement_preference?:
-    | DetailedAthleteMeasurementPreferenceEnumKey
-    | undefined
+    DetailedAthleteMeasurementPreferenceEnumKey | undefined
   /**
    * @description The athlete\'s FTP (Functional Threshold Power).
    * @type integer | undefined
@@ -873,8 +872,11 @@ export const sportTypeEnum = {
   AlpineSki: 'AlpineSki',
   BackcountrySki: 'BackcountrySki',
   Badminton: 'Badminton',
+  Basketball: 'Basketball',
   Canoeing: 'Canoeing',
+  Cricket: 'Cricket',
   Crossfit: 'Crossfit',
+  Dance: 'Dance',
   EBikeRide: 'EBikeRide',
   Elliptical: 'Elliptical',
   EMountainBikeRide: 'EMountainBikeRide',
@@ -889,6 +891,8 @@ export const sportTypeEnum = {
   Kitesurf: 'Kitesurf',
   MountainBikeRide: 'MountainBikeRide',
   NordicSki: 'NordicSki',
+  Padel: 'Padel',
+  PhysicalTherapy: 'PhysicalTherapy',
   Pickleball: 'Pickleball',
   Pilates: 'Pilates',
   Racquetball: 'Racquetball',
@@ -914,6 +918,7 @@ export const sportTypeEnum = {
   VirtualRide: 'VirtualRide',
   VirtualRow: 'VirtualRow',
   VirtualRun: 'VirtualRun',
+  Volleyball: 'Volleyball',
   Walk: 'Walk',
   WeightTraining: 'WeightTraining',
   Wheelchair: 'Wheelchair',
@@ -1512,86 +1517,6 @@ export type DetailedClub = SummaryClub & {
   following_count?: number | undefined
 }
 
-export type ClubAthlete = {
-  /**
-   * @description Resource state, indicates level of detail. Possible values: 1 -> \"meta\", 2 -> \"summary\", 3 -> \"detail\"
-   * @type integer | undefined
-   */
-  resource_state?: number | undefined
-  /**
-   * @description The athlete\'s first name.
-   * @type string | undefined
-   */
-  firstname?: string | undefined
-  /**
-   * @description The athlete\'s last initial.
-   * @type string | undefined
-   */
-  lastname?: string | undefined
-  /**
-   * @description The athlete\'s member status.
-   * @type string | undefined
-   */
-  member?: string | undefined
-  /**
-   * @description Whether the athlete is a club admin.
-   * @type boolean | undefined
-   */
-  admin?: boolean | undefined
-  /**
-   * @description Whether the athlete is club owner.
-   * @type boolean | undefined
-   */
-  owner?: boolean | undefined
-}
-
-export type ClubActivity = {
-  /**
-   * @type object | undefined
-   */
-  athlete?: MetaAthlete | undefined
-  /**
-   * @description The name of the activity
-   * @type string | undefined
-   */
-  name?: string | undefined
-  /**
-   * @description The activity\'s distance, in meters
-   * @type number | undefined, float
-   */
-  distance?: number | undefined
-  /**
-   * @description The activity\'s moving time, in seconds
-   * @type integer | undefined
-   */
-  moving_time?: number | undefined
-  /**
-   * @description The activity\'s elapsed time, in seconds
-   * @type integer | undefined
-   */
-  elapsed_time?: number | undefined
-  /**
-   * @description The activity\'s total elevation gain.
-   * @type number | undefined, float
-   */
-  total_elevation_gain?: number | undefined
-  /**
-   * @description An enumeration of the types an activity may have. Note that this enumeration does not include new sport types (e.g. MountainBikeRide, EMountainBikeRide), activities with these sport types will have the corresponding activity type (e.g. Ride for MountainBikeRide, EBikeRide for EMountainBikeRide)
-   * @type string | undefined
-   */
-  type?: ActivityType | undefined
-  /**
-   * @description An enumeration of the sport types an activity may have. Distinct from ActivityType in that it has new types (e.g. MountainBikeRide)
-   * @type string | undefined
-   */
-  sport_type?: SportType | undefined
-  /**
-   * @description The activity\'s workout type
-   * @type integer | undefined
-   */
-  workout_type?: number | undefined
-}
-
 export type DetailedGear = SummaryGear & {
   /**
    * @description The gear\'s brand name.
@@ -1700,12 +1625,12 @@ export type Route = {
    */
   timestamp?: number | undefined
   /**
-   * @description This route\'s type (1 for ride, 2 for runs)
+   * @description This route\'s type (1 = Ride, 2 = Run, 3 = Walk, 4 = Hike, 5 = Trail Run, 6 = Gravel Ride, 7 = Mountain Bike Ride)
    * @type integer | undefined
    */
   type?: number | undefined
   /**
-   * @description This route\'s sub-type (1 for road, 2 for mountain bike, 3 for cross, 4 for trail, 5 for mixed)
+   * @description This route\'s sub-type (1 = Road, 2 = MTB, 3 = Gravel, 4 = Trail, 5 = Mixed)
    * @type integer | undefined
    */
   sub_type?: number | undefined
@@ -2490,129 +2415,6 @@ export type GetClubByIdQueryResponse = GetClubById200
 export type GetClubByIdQuery = {
   Response: GetClubById200
   PathParams: GetClubByIdPathParams
-  Errors: any
-}
-
-export type GetClubMembersByIdPathParams = {
-  /**
-   * @description The identifier of the club.
-   * @type integer, int64
-   */
-  id: number
-}
-
-export type GetClubMembersByIdQueryParams = {
-  /**
-   * @description Page number. Defaults to 1.
-   * @type integer | undefined
-   */
-  page?: number | undefined
-  /**
-   * @description Number of items per page. Defaults to 30.
-   * @default 30
-   * @type integer | undefined
-   */
-  per_page?: number | undefined
-}
-
-/**
- * @description A list of club athlete representations.
- */
-export type GetClubMembersById200 = ClubAthlete[]
-
-/**
- * @description Unexpected error.
- */
-export type GetClubMembersByIdError = Fault
-
-export type GetClubMembersByIdQueryResponse = GetClubMembersById200
-
-export type GetClubMembersByIdQuery = {
-  Response: GetClubMembersById200
-  PathParams: GetClubMembersByIdPathParams
-  QueryParams: GetClubMembersByIdQueryParams
-  Errors: any
-}
-
-export type GetClubAdminsByIdPathParams = {
-  /**
-   * @description The identifier of the club.
-   * @type integer, int64
-   */
-  id: number
-}
-
-export type GetClubAdminsByIdQueryParams = {
-  /**
-   * @description Page number. Defaults to 1.
-   * @type integer | undefined
-   */
-  page?: number | undefined
-  /**
-   * @description Number of items per page. Defaults to 30.
-   * @default 30
-   * @type integer | undefined
-   */
-  per_page?: number | undefined
-}
-
-/**
- * @description A list of summary athlete representations.
- */
-export type GetClubAdminsById200 = SummaryAthlete[]
-
-/**
- * @description Unexpected error.
- */
-export type GetClubAdminsByIdError = Fault
-
-export type GetClubAdminsByIdQueryResponse = GetClubAdminsById200
-
-export type GetClubAdminsByIdQuery = {
-  Response: GetClubAdminsById200
-  PathParams: GetClubAdminsByIdPathParams
-  QueryParams: GetClubAdminsByIdQueryParams
-  Errors: any
-}
-
-export type GetClubActivitiesByIdPathParams = {
-  /**
-   * @description The identifier of the club.
-   * @type integer, int64
-   */
-  id: number
-}
-
-export type GetClubActivitiesByIdQueryParams = {
-  /**
-   * @description Page number. Defaults to 1.
-   * @type integer | undefined
-   */
-  page?: number | undefined
-  /**
-   * @description Number of items per page. Defaults to 30.
-   * @default 30
-   * @type integer | undefined
-   */
-  per_page?: number | undefined
-}
-
-/**
- * @description A list of activities.
- */
-export type GetClubActivitiesById200 = ClubActivity[]
-
-/**
- * @description Unexpected error.
- */
-export type GetClubActivitiesByIdError = Fault
-
-export type GetClubActivitiesByIdQueryResponse = GetClubActivitiesById200
-
-export type GetClubActivitiesByIdQuery = {
-  Response: GetClubActivitiesById200
-  PathParams: GetClubActivitiesByIdPathParams
-  QueryParams: GetClubActivitiesByIdQueryParams
   Errors: any
 }
 
