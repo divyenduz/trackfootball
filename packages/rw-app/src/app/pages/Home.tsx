@@ -18,9 +18,9 @@ export function Home({ ctx }: RequestInfo) {
           <div className="title-line" />
           <h1 className="title">Improve Your Game</h1>
           <p className="copy">
-            TrackFootball is a social network for casual Football players. Play
-            football and record your game with any GPS watch/phone and upload it
-            to TrackFootball.
+            TrackFootball is a social network for casual football players.
+            Record your game with any GPS watch or phone, then upload it to
+            track, analyse and improve your performance.
           </p>
           <div className="home-cta">
             <LoginButton>Get started now</LoginButton>
@@ -35,7 +35,7 @@ export function Home({ ctx }: RequestInfo) {
               src="/assets/core/landing/images/stat_icons/analyse.svg"
             ></img>
           </div>
-          <span>Track, Analyse and Improve Your Game</span>
+          <span>Track, analyse and improve your game</span>
         </div>
         <div className="stats">
           <div className="stat-icon">
@@ -44,7 +44,7 @@ export function Home({ ctx }: RequestInfo) {
               src="/assets/core/landing/images/stat_icons/compare.svg"
             ></img>
           </div>
-          <span>Compete with Your Friends</span>
+          <span>Compete with your friends</span>
         </div>
         <div className="stats">
           <div className="stat-icon">
@@ -53,7 +53,7 @@ export function Home({ ctx }: RequestInfo) {
               src="/assets/core/landing/images/stat_icons/overview.svg"
             ></img>
           </div>
-          <span>Get Overview of Progress</span>
+          <span>See your progress at a glance</span>
         </div>
         <div className="stats">
           <div className="stat-icon">
@@ -63,7 +63,7 @@ export function Home({ ctx }: RequestInfo) {
               src="/assets/core/landing/images/stat_icons/share.svg"
             ></img>
           </div>
-          <span>Share on Social Media</span>
+          <span>Share on social media</span>
         </div>
       </div>
 
@@ -73,11 +73,11 @@ export function Home({ ctx }: RequestInfo) {
         </div>
         <div className="overlay" />
         <div className="content-wrapper">
-          <h2 className="title">Brought by Football Berlin</h2>
+          <h2 className="title">Brought to you by Football Berlin</h2>
           <p className="copy">
-            Local football comunity with ~100 diverse nationalities dedicated to
-            helping players improve their game. You don&apos;t need to play for
-            a club to get meaningful stats for your game.
+            A local football community with players from nearly 100
+            nationalities, dedicated to helping everyone improve their game. You
+            don&apos;t need to play for a club to get meaningful stats.
           </p>
           <div className="home-cta">
             <LoginButton>Get started now</LoginButton>
