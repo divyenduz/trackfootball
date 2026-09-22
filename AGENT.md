@@ -18,6 +18,8 @@ If the service does not become ready, inspect `amp orb service status app` and `
 
 After building a feature, test the rendered home page (`/home`), dashboard feed (`/dashboard`), and at least one concrete activity page (`/activity/:id`) before considering the work complete. Commit the completed feature after these checks pass.
 
+Always give the user direct proof that the changed behavior works. Report the executed checks and their decisive output; do not treat a successful build or deployment workflow as proof that the application works. After shipping a change, verify the live production application independently and report concrete evidence such as the requested URL, final URL, HTTP status, and relevant rendered content or browser state. If authentication or unavailable data prevents a production check, state exactly what could and could not be verified.
+
 ## Architecture
 
 - **Monorepo** with pnpm workspaces, packages in `packages/`
