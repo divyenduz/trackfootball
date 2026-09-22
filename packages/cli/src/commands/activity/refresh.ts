@@ -6,6 +6,7 @@ import { LocalContext } from 'src/context'
 import invariant from 'tiny-invariant'
 import postgres from 'postgres'
 import { fetchCompletePost, fetchStravaActivity } from '@trackfootball/service'
+import { getStravaOAuthConfig } from 'src/config'
 import * as readline from 'readline/promises'
 
 type Flags = {}
@@ -87,6 +88,7 @@ async function cmd(this: LocalContext, {}: Flags, ...activityIdArgs: string[]) {
         repository,
         parseInt(activity.key),
         user.id,
+        getStravaOAuthConfig(),
       )
       invariant(
         stravaActivity,
@@ -115,6 +117,7 @@ async function cmd(this: LocalContext, {}: Flags, ...activityIdArgs: string[]) {
 
       await fetchCompletePost(repository, {
         postId: activity.id,
+        stravaOAuth: getStravaOAuthConfig(),
       })
       const updatedPost = await repository.getPostWithUserAndFields(activity.id)
       invariant(

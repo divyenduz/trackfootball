@@ -1,12 +1,17 @@
-import { env } from '@trackfootball/rw-app/src/env'
-
-interface CreateDiscordMessageArgs {
+export interface DiscordMessage {
   heading?: string
   name: string
   description: string
 }
 
+export type DiscordMessageSender = (message: DiscordMessage) => Promise<unknown>
+
+interface CreateDiscordMessageArgs extends DiscordMessage {
+  webhookUrl: string
+}
+
 export async function createDiscordMessage({
+  webhookUrl,
   heading,
   name,
   description,
@@ -23,7 +28,7 @@ export async function createDiscordMessage({
   form.append('content', content)
 
   try {
-    await fetch(env.DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK, {
+    await fetch(webhookUrl, {
       method: 'POST',
       body: form,
       signal: AbortSignal.timeout(10_000),

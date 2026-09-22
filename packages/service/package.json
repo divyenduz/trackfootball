@@ -13,7 +13,6 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@trackfootball/rw-app": "workspace:*",
     "@trackfootball/postgres": "workspace:*",
     "@trackfootball/open-api": "workspace:*",
     "@tmcw/togeojson": "catalog:",

@@ -2,6 +2,7 @@
 
 import type { SocialLogin, User } from '@trackfootball/postgres'
 import { checkStravaAccessToken } from '@trackfootball/service'
+import { getStravaOAuthConfig } from '@/services/strava'
 import { requestInfo } from 'rwsdk/worker'
 
 export async function checkStravaToken(
@@ -19,6 +20,7 @@ export async function checkStravaToken(
   const working = await checkStravaAccessToken(
     requestInfo.ctx.repository,
     user.id,
+    getStravaOAuthConfig(),
   )
   return working ? ('WORKING' as const) : ('NOT_WORKING' as const)
 }

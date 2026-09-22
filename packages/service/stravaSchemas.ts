@@ -70,6 +70,7 @@ export const stravaActivitySchema = z
       .optional(),
   })
   .passthrough()
+export type StravaActivity = z.infer<typeof stravaActivitySchema>
 
 const streamMetadataSchema = z.object({
   series_type: z.enum(['distance', 'time']).optional(),

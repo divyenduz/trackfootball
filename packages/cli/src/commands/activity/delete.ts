@@ -5,6 +5,7 @@ import { LocalContext } from 'src/context'
 import invariant from 'tiny-invariant'
 import postgres from 'postgres'
 import { fetchStravaActivity } from '@trackfootball/service'
+import { getStravaOAuthConfig } from 'src/config'
 import * as readline from 'readline/promises'
 
 type Flags = {}
@@ -124,6 +125,7 @@ async function cmd(this: LocalContext, {}: Flags, idArg?: string) {
           repository,
           activityId,
           user.id,
+          getStravaOAuthConfig(),
         )
         const kind = stravaActivity?.type
         if (!kind) {

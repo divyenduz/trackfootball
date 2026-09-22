@@ -1,4 +1,5 @@
 import { tokenExchange } from '@trackfootball/service'
+import { getStravaOAuthConfig } from '@/services/strava'
 import { DefaultAppContext } from 'rwsdk/worker'
 import type { Platform } from '@trackfootball/postgres'
 import { env } from 'cloudflare:workers'
@@ -30,7 +31,7 @@ export async function StravaAuthCallback({
 
   let tokenExchangeResponse
   try {
-    tokenExchangeResponse = await tokenExchange(code)
+    tokenExchangeResponse = await tokenExchange(code, getStravaOAuthConfig())
   } catch (error) {
     console.error('Strava token exchange failed', error)
     return new Response(

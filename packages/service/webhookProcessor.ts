@@ -6,13 +6,15 @@ import type {
 import { match } from 'ts-pattern'
 import { ZodError } from 'zod'
 
-import { createDiscordMessage as defaultCreateDiscordMessage } from './discord'
+import type { DiscordMessageSender } from './discord'
+import type { StravaOAuthConfig } from './strava'
 import {
   fetchStravaActivity as defaultFetchStravaActivity,
   IgnorableActivityError,
   importStravaActivity as defaultImportStravaActivity,
 } from './strava'
 import { stravaEventSchema } from './stravaSchemas'
+import type { StravaActivity } from './stravaSchemas'
 
 const MAX_ATTEMPTS = 5
 
@@ -23,11 +25,25 @@ class TerminalWebhookError extends Error {
   }
 }
 
+export type ImportStravaActivityFn = (
+  repository: ReturnType<typeof createRepository>,
+  ownerId: number,
+  activityId: number,
+  source: 'WEBHOOK' | 'MANUAL',
+) => Promise<void>
+
+export type FetchStravaActivityFn = (
+  repository: ReturnType<typeof createRepository>,
+  activityId: number,
+  userId: number,
+) => Promise<StravaActivity>
+
 export type WebhookProcessorDeps = {
   repository: ReturnType<typeof createRepository>
-  createDiscordMessage?: typeof defaultCreateDiscordMessage
-  fetchStravaActivity?: typeof defaultFetchStravaActivity
-  importStravaActivity?: typeof defaultImportStravaActivity
+  stravaOAuth: StravaOAuthConfig
+  createDiscordMessage?: DiscordMessageSender
+  fetchStravaActivity?: FetchStravaActivityFn
+  importStravaActivity?: ImportStravaActivityFn
   env: {
     HOMEPAGE_URL?: string
     STRAVA_WEBHOOK_SUBSCRIPTION_ID: number
@@ -62,12 +78,30 @@ export async function processStravaWebhookEvent(
   deps: WebhookProcessorDeps,
 ): Promise<WebhookProcessingResult> {
   const { repository, env } = deps
-  const importStravaActivity =
-    deps.importStravaActivity ?? defaultImportStravaActivity
-  const fetchStravaActivity =
-    deps.fetchStravaActivity ?? defaultFetchStravaActivity
-  const createDiscordMessage =
-    deps.createDiscordMessage ?? defaultCreateDiscordMessage
+  const createDiscordMessage = deps.createDiscordMessage
+  const importStravaActivity: ImportStravaActivityFn =
+    deps.importStravaActivity ??
+    ((importRepository, ownerId, activityId, source) =>
+      defaultImportStravaActivity(
+        importRepository,
+        ownerId,
+        activityId,
+        source,
+        {
+          stravaOAuth: deps.stravaOAuth,
+          homepageUrl: env.HOMEPAGE_URL,
+          createDiscordMessage,
+        },
+      ))
+  const fetchStravaActivity: FetchStravaActivityFn =
+    deps.fetchStravaActivity ??
+    ((fetchRepository, activityId, userId) =>
+      defaultFetchStravaActivity(
+        fetchRepository,
+        activityId,
+        userId,
+        deps.stravaOAuth,
+      ))
   const attempt = claimCount(event) + 1
   const claim = `claim:v1:${crypto.randomUUID()}:${attempt}`
   const claimedEvent = await repository.claimStravaWebhookEvent(event.id, claim)
@@ -101,7 +135,7 @@ export async function processStravaWebhookEvent(
             String(activityUpdateEvent.owner_id),
           )
           if (!user) {
-            await createDiscordMessage({
+            await createDiscordMessage?.({
               heading:
                 'Activity Update Failed - No Social Login For User (Webhook)',
               name: `${activityUpdateEvent.owner_id}/${activityUpdateEvent.object_id}`,
@@ -183,7 +217,7 @@ export async function processStravaWebhookEvent(
             return
           }
 
-          await createDiscordMessage({
+          await createDiscordMessage?.({
             heading: 'Activity Deleted (Webhook)',
             name: post.text,
             description: `ID: ${post.id} / Strava ID: ${activityDeleteEvent.object_id}\nLink: ${env.HOMEPAGE_URL}/activity/${post.id}`,
@@ -194,7 +228,7 @@ export async function processStravaWebhookEvent(
         { object_type: 'athlete', aspect_type: 'update' },
         async (athleteUpdateEvent) => {
           await repository.deleteStravaSocialLogin(athleteUpdateEvent.owner_id)
-          await createDiscordMessage({
+          await createDiscordMessage?.({
             heading: 'Athlete Social Login Deleted (Webhook)',
             name: String(athleteUpdateEvent.owner_id),
             description: '',

@@ -324,9 +324,6 @@ importers:
       '@trackfootball/postgres':
         specifier: workspace:*
         version: link:../postgres
-      '@trackfootball/rw-app':
-        specifier: workspace:*
-        version: link:../rw-app
       '@turf/area':
         specifier: 'catalog:'
         version: 7.4.0

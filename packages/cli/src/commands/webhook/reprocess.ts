@@ -4,10 +4,8 @@ import { CLI_NAME } from 'src/constants'
 import { LocalContext } from 'src/context'
 import invariant from 'tiny-invariant'
 import postgres from 'postgres'
-import {
-  createDiscordMessage,
-  reprocessStravaWebhookEvent,
-} from '@trackfootball/service'
+import { reprocessStravaWebhookEvent } from '@trackfootball/service'
+import { createDiscordMessage, getStravaOAuthConfig } from 'src/config'
 import type { StravaWebhookEvent } from '@trackfootball/postgres'
 import * as readline from 'readline/promises'
 
@@ -125,6 +123,7 @@ async function cmd(
       console.log(`  Processing event ${id}...`)
       const result = await reprocessStravaWebhookEvent(event, {
         repository,
+        stravaOAuth: getStravaOAuthConfig(),
         createDiscordMessage,
         env: {
           HOMEPAGE_URL: process.env.HOMEPAGE_URL,

@@ -1,7 +1,6 @@
 import type { PostType } from '@trackfootball/postgres'
 
 import invariant from 'tiny-invariant'
-import { createDiscordMessage } from './discord'
 import {
   getActivityById,
   getActivityStreams,
@@ -12,14 +11,13 @@ import { match } from 'ts-pattern'
 import { GeoData } from './geoData'
 import { postAddField } from './addField'
 import { createRepository } from '@trackfootball/postgres'
+import type { DiscordMessageSender } from './discord'
 import {
   stravaActivitySchema,
   stravaActivityStreamsSchema,
   tokenExchangeResponseSchema,
   tokenRefreshResponseSchema,
 } from './stravaSchemas'
-
-import { env } from '@trackfootball/rw-app/src/env'
 
 export class IgnorableActivityError extends Error {
   constructor(message: string) {
@@ -37,17 +35,9 @@ export const stringify = (value: number | string): string => {
   return value
 }
 
-type StravaOAuthConfig = {
+export type StravaOAuthConfig = {
   clientId: string
   clientSecret: string
-}
-
-function getStravaOAuthConfig(): StravaOAuthConfig {
-  const clientId = env.STRAVA_CLIENT_ID
-  const clientSecret = env.STRAVA_CLIENT_SECRET
-  invariant(clientId, 'STRAVA_CLIENT_ID is required')
-  invariant(clientSecret, 'STRAVA_CLIENT_SECRET is required')
-  return { clientId, clientSecret }
 }
 
 async function readOAuthResponse(response: Response) {
@@ -70,15 +60,23 @@ async function readOAuthResponse(response: Response) {
   return body
 }
 
+export type ImportStravaActivityDeps = {
+  stravaOAuth: StravaOAuthConfig
+  homepageUrl?: string
+  createDiscordMessage?: DiscordMessageSender
+}
+
 export async function importStravaActivity(
   repository: ReturnType<typeof createRepository>,
   ownerId: number,
   activityId: number,
   source: 'WEBHOOK' | 'MANUAL',
+  deps: ImportStravaActivityDeps,
 ) {
+  const { stravaOAuth, homepageUrl, createDiscordMessage } = deps
   const user = await repository.getUserBy(stringify(ownerId))
   if (!user) {
-    await createDiscordMessage({
+    await createDiscordMessage?.({
       heading: `New Activity Creation Failed - No Social Login For User (${source})`,
       name: `${ownerId}/${activityId}`,
       description: `
@@ -101,7 +99,12 @@ export async function importStravaActivity(
     return
   }
 
-  const activity = await fetchStravaActivity(repository, activityId, user.id)
+  const activity = await fetchStravaActivity(
+    repository,
+    activityId,
+    user.id,
+    stravaOAuth,
+  )
 
   if (activity.id !== activityId || activity.athlete.id !== ownerId) {
     throw new Error(`Strava activity ${activityId} ownership mismatch`)
@@ -151,23 +154,24 @@ export async function importStravaActivity(
 
   await fetchCompletePost(repository, {
     postId: post.id,
+    stravaOAuth,
   })
   const updatedPost = await repository.getPostWithUserAndFields(post.id)
 
-  await createDiscordMessage({
+  await createDiscordMessage?.({
     heading: `New Activity Created (${source})`,
     name: `${post.text}`,
     description: `
       ID: ${post.id} / Strava ID: ${activityId}
       Activity Time: ${updatedPost?.startTime}
       User: ${user.firstName} ${user.lastName}
-      Link: ${env.HOMEPAGE_URL}/activity/${post.id}`,
+      Link: ${homepageUrl}/activity/${post.id}`,
   })
 }
 
 export async function tokenExchange(
   code: string,
-  config: StravaOAuthConfig = getStravaOAuthConfig(),
+  config: StravaOAuthConfig,
   fetchFn: typeof fetch = fetch,
 ) {
   const link = 'https://www.strava.com/api/v3/oauth/token'
@@ -188,7 +192,7 @@ export async function tokenExchange(
 
 export async function tokenRefresh(
   refreshToken: string,
-  config: StravaOAuthConfig = getStravaOAuthConfig(),
+  config: StravaOAuthConfig,
   fetchFn: typeof fetch = fetch,
 ) {
   const link = 'https://www.strava.com/api/v3/oauth/token'
@@ -217,6 +221,7 @@ export type Maybe<T = string, E = null> = T | E
 export async function getStravaToken(
   repository: ReturnType<typeof createRepository>,
   userId: number,
+  config: StravaOAuthConfig,
 ): Promise<Maybe> {
   const now = new Date()
 
@@ -245,7 +250,7 @@ export async function getStravaToken(
 
   if (expiresAt.getTime() < now.getTime()) {
     try {
-      const tokenRefreshResponse = await tokenRefresh(refreshToken)
+      const tokenRefreshResponse = await tokenRefresh(refreshToken, config)
 
       const expiresAt = new Date(tokenRefreshResponse.expires_at * 1000)
 
@@ -269,8 +274,9 @@ export async function getStravaToken(
 async function getStravaAccessTokenHeaders(
   repository: ReturnType<typeof createRepository>,
   userId: number,
+  config: StravaOAuthConfig,
 ) {
-  const stravaAccessToken = await getStravaToken(repository, userId)
+  const stravaAccessToken = await getStravaToken(repository, userId, config)
   if (!stravaAccessToken) {
     throw new Error(`No Strava access token for user ${userId}`)
   }
@@ -282,11 +288,13 @@ async function getStravaAccessTokenHeaders(
 export async function checkStravaAccessToken(
   repository: ReturnType<typeof createRepository>,
   userId: number,
+  config: StravaOAuthConfig,
 ) {
   try {
     const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
       repository,
       userId,
+      config,
     )
     await getLoggedInAthleteActivities(
       {
@@ -308,10 +316,12 @@ export async function fetchStravaActivity(
   repository: ReturnType<typeof createRepository>,
   activityId: number,
   userId: number,
+  config: StravaOAuthConfig,
 ) {
   const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
     repository,
     userId,
+    config,
   )
   const activity = await getActivityById(
     activityId,
@@ -329,10 +339,12 @@ export async function fetchStravaActivityGeoJson(
   repository: ReturnType<typeof createRepository>,
   activityId: number,
   userId: number,
+  config: StravaOAuthConfig,
 ) {
   const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
     repository,
     userId,
+    config,
   )
   const activityStreams = stravaActivityStreamsSchema.parse(
     await getActivityStreams(
@@ -347,7 +359,12 @@ export async function fetchStravaActivityGeoJson(
     ),
   )
 
-  const activity = await fetchStravaActivity(repository, activityId, userId)
+  const activity = await fetchStravaActivity(
+    repository,
+    activityId,
+    userId,
+    config,
+  )
   const activityName = activity.name
   invariant(activityName, 'activity must have a name')
   const activityStartDate = activity.start_date
@@ -368,11 +385,12 @@ export async function fetchStravaActivityGeoJson(
 
 interface FetchCompletePostArgs {
   postId: number
+  stravaOAuth: StravaOAuthConfig
 }
 
 export async function fetchCompletePost(
   repository: ReturnType<typeof createRepository>,
-  { postId }: FetchCompletePostArgs,
+  { postId, stravaOAuth }: FetchCompletePostArgs,
 ) {
   {
     const post = await repository.getPostById(postId)
@@ -392,6 +410,7 @@ export async function fetchCompletePost(
       repository,
       parseInt(post.key),
       post.userId,
+      stravaOAuth,
     )
 
     if (geoJson instanceof Error) {
@@ -406,6 +425,7 @@ export async function fetchCompletePost(
       repository,
       parseInt(post.key),
       post.userId,
+      stravaOAuth,
     )
 
     await repository.updatePostComplete({

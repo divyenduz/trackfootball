@@ -1,8 +1,6 @@
-import {
-  createDiscordMessage,
-  processStravaWebhookEvent,
-  stravaEventSchema,
-} from '@trackfootball/service'
+import { processStravaWebhookEvent, stravaEventSchema } from '@trackfootball/service'
+import { createDiscordMessage } from '@/services/discord'
+import { getStravaOAuthConfig } from '@/services/strava'
 import { DefaultAppContext } from 'rwsdk/worker'
 import invariant from 'tiny-invariant'
 import { env } from 'cloudflare:workers'
@@ -112,6 +110,7 @@ export async function StravaWebhookCallback({
     cf.waitUntil(
       processStravaWebhookEvent(stravaWebhookEvent, {
         repository: ctx.repository,
+        stravaOAuth: getStravaOAuthConfig(),
         createDiscordMessage,
         env: {
           HOMEPAGE_URL: env.HOMEPAGE_URL,

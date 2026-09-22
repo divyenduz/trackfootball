@@ -21,10 +21,9 @@ import {
 import { Privacy } from './app/pages/compliance/Privacy'
 import { Terms } from './app/pages/compliance/Terms'
 import type { User } from '@trackfootball/postgres'
-import {
-  createDiscordMessage,
-  processRetryableStravaWebhookEvents,
-} from '@trackfootball/service'
+import { processRetryableStravaWebhookEvents } from '@trackfootball/service'
+import { createDiscordMessage } from '@/services/discord'
+import { getStravaOAuthConfig } from '@/services/strava'
 
 export type AppContext = {
   user: User | null
@@ -168,6 +167,7 @@ async function processWebhookRetries() {
   try {
     await processRetryableStravaWebhookEvents({
       repository: createRepository(sql),
+      stravaOAuth: getStravaOAuthConfig(),
       createDiscordMessage,
       env: {
         HOMEPAGE_URL: env.HOMEPAGE_URL,

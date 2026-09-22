@@ -56,7 +56,9 @@ describe('Strava OAuth', () => {
       getUserStravaSocialLogin: vi.fn().mockResolvedValue(null),
     } as unknown as ReturnType<typeof createRepository>
 
-    await expect(checkStravaAccessToken(repository, 42)).resolves.toBe(false)
+    await expect(
+      checkStravaAccessToken(repository, 42, config),
+    ).resolves.toBe(false)
     expect(repository.getUserStravaSocialLogin).toHaveBeenCalledWith(42)
   })
 })

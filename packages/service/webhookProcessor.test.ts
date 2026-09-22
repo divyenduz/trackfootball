@@ -54,6 +54,8 @@ const env = {
   STRAVA_WEBHOOK_SUBSCRIPTION_ID: 303,
 }
 
+const stravaOAuth = { clientId: 'client', clientSecret: 'secret' }
+
 describe('Strava webhook processing', () => {
   it('keeps transport failures retryable', async () => {
     const sourceEvent = event()
@@ -64,6 +66,7 @@ describe('Strava webhook processing', () => {
 
     const result = await processStravaWebhookEvent(sourceEvent, {
       repository,
+      stravaOAuth,
       env,
       importStravaActivity,
     })
@@ -84,6 +87,7 @@ describe('Strava webhook processing', () => {
 
     const result = await processStravaWebhookEvent(sourceEvent, {
       repository,
+      stravaOAuth,
       env,
       importStravaActivity: vi
         .fn()
@@ -103,6 +107,7 @@ describe('Strava webhook processing', () => {
 
     const result = await processStravaWebhookEvent(sourceEvent, {
       repository,
+      stravaOAuth,
       env,
       importStravaActivity: vi.fn(),
     })
@@ -150,6 +155,7 @@ describe('Strava webhook processing', () => {
 
     const result = await processStravaWebhookEvent(sourceEvent, {
       repository,
+      stravaOAuth,
       env,
       fetchStravaActivity,
       importStravaActivity,
@@ -188,6 +194,7 @@ describe('Strava webhook processing', () => {
 
     const result = await reprocessStravaWebhookEvent(erroredEvent, {
       repository,
+      stravaOAuth,
       env,
       importStravaActivity,
     })
