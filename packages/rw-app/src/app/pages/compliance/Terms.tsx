@@ -8,7 +8,7 @@ export async function Terms({ ctx }: RequestInfo) {
         name="description"
         content="Read TrackFootball.app's terms and conditions of use. Understand the rules and guidelines for using our football tracking platform."
       />
-      <div className="w-full max-w-4xl">
+      <article className="legal-content">
         <h1>Website Terms and Conditions of Use</h1>
 
         <h2>1. Terms</h2>
@@ -125,7 +125,7 @@ export async function Terms({ ctx }: RequestInfo) {
           Any claim related to TrackFootball&apos;s Website shall be governed by
           the laws of de without regards to its conflict of law provisions.
         </p>
-      </div>
+      </article>
     </>
   )
 }

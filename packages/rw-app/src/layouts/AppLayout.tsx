@@ -6,7 +6,7 @@ export function AppLayout({ children, requestInfo }: LayoutProps) {
   const user = requestInfo?.ctx.user || null
 
   return (
-    <div className="app">
+    <div className="app flex min-h-dvh flex-col bg-gray-50 text-gray-900">
       <title>
         TrackFootball.app - Track, Analyse and Improve Your Football Game
       </title>
@@ -14,22 +14,17 @@ export function AppLayout({ children, requestInfo }: LayoutProps) {
         name="description"
         content="TrackFootball is a social network for casual Football players. Record your game with any GPS watch/phone and upload it to TrackFootball to track, analyse and improve your performance."
       />
-      <header>
-        <AppBar pageName={'TrackFootball'} user={user}></AppBar>
-      </header>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      <AppBar pageName="TrackFootball" user={user} />
 
-      <main>
-        <div className="flex items-center justify-center min-h-[600px]">
-          <div
-            className={`flex flex-col items-center justify-center w-full mt-16 sm:mt-24`}
-          >
-            {children}
-          </div>
-        </div>
+      <main id="main-content" tabIndex={-1} className="w-full flex-1">
+        {children}
       </main>
 
       <footer>
-        <Footer></Footer>
+        <Footer />
       </footer>
     </div>
   )

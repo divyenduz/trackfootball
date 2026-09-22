@@ -24,8 +24,10 @@ export function FeedContainer({
   const [posts, setPosts] = useState(initialPosts)
   const [nextCursor, setNextCursor] = useState(initialNextCursor)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [openDropdown, setOpenDropdown] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const actionsButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -36,13 +38,26 @@ export function FeedContainer({
         setOpenDropdown(null)
       }
     }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape' && openDropdown !== null) {
+        setOpenDropdown(null)
+        actionsButtonRef.current?.focus()
+      }
+    }
+
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [openDropdown])
 
   const loadMore = async () => {
     if (!nextCursor || loading) return
 
+    setError(null)
     setLoading(true)
     try {
       const data = await getFeed(nextCursor)
@@ -50,6 +65,7 @@ export function FeedContainer({
       setNextCursor(data.nextCursor)
     } catch (error) {
       console.error('Error loading more posts:', error)
+      setError('We could not load more activities. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -64,9 +80,12 @@ export function FeedContainer({
         if (response.ok) {
           setPosts(posts.filter((p) => p.id !== postId))
           setOpenDropdown(null)
+        } else {
+          setError('We could not delete this activity. Please try again.')
         }
       } catch (error) {
         console.error('Error deleting post:', error)
+        setError('We could not delete this activity. Please try again.')
       }
     }
   }
@@ -125,132 +144,157 @@ export function FeedContainer({
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-4">
-      {posts.map((post) => (
-        <a
-          key={post.id}
-          href={`/activity/${post.id}`}
-          className="block bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-        >
-          {/* Header */}
-          <div className="p-4 pb-3 border-b border-gray-100">
-            <div className="flex items-start gap-3">
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                {getInitials(post.User.firstName, post.User.lastName)}
-              </div>
+    <div className="mx-auto w-full max-w-2xl space-y-4 px-4 py-8 sm:px-6 sm:py-12">
+      <div className="mb-6">
+        <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-cardinal-900">
+          Latest activity
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-gray-950">
+          Dashboard
+        </h1>
+      </div>
 
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-gray-900">
+      {error && (
+        <div
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+        >
+          {error}
+        </div>
+      )}
+
+      {posts.length === 0 && (
+        <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900">
+            No activities yet
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            New football activities will appear here.
+          </p>
+        </div>
+      )}
+
+      {posts.map((post) => (
+        <article
+          className="relative rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+          key={post.id}
+        >
+          <a
+            href={`/activity/${post.id}`}
+            className="block rounded-xl text-gray-900"
+          >
+            <div className="border-b border-gray-100 p-4 pb-3 pr-16">
+              <div className="flex items-start gap-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white">
+                  {getInitials(post.User.firstName, post.User.lastName)}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <p className="break-words font-semibold text-gray-900">
                     {post.User.firstName} {post.User.lastName}
-                  </h3>
-                  <div
-                    className="ml-auto relative"
-                    ref={openDropdown === post.id ? dropdownRef : null}
-                  >
-                    <button
-                      className="p-1 hover:bg-gray-100 rounded transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setOpenDropdown(
-                          openDropdown === post.id ? null : post.id,
-                        )
-                      }}
-                    >
-                      <svg
-                        className="w-5 h-5 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </button>
-                    {openDropdown === post.id && (
-                      <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10 py-1">
-                        <a
-                          href={`https://strava.com/activities/${post.key}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                          View in Strava
-                        </a>
-                        {currentUser?.type === 'ADMIN' && (
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault()
-                              handleDelete(post.id)
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                          >
-                            Delete Activity
-                          </button>
-                        )}
-                      </div>
-                    )}
+                  </p>
+                  <p className="mt-0.5 text-sm text-gray-500">
+                    {formatDateTime(new Date(post.createdAt))}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-4 pb-2 pt-3">
+              <h2 className="break-words text-lg font-semibold text-gray-900">
+                {post.text || 'Football Activity'}
+              </h2>
+            </div>
+
+            <div className="px-4 pb-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Time
+                  </div>
+                  <div className="text-xl font-semibold tabular-nums text-gray-900">
+                    {post.elapsedTime ? formatTime(post.elapsedTime) : '--'}
                   </div>
                 </div>
-                <div className="text-sm text-gray-500 mt-0.5">
-                  <span>{formatDateTime(new Date(post.createdAt))}</span>
+                <div>
+                  <div className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Distance
+                  </div>
+                  <div className="text-xl font-semibold tabular-nums text-gray-900">
+                    {post.totalDistance
+                      ? `${formatDistance(post.totalDistance)} km`
+                      : '-- km'}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </a>
 
-          {/* Activity Title */}
-          <div className="px-4 pt-3 pb-2">
-            <h2 className="text-lg font-semibold text-gray-900">
-              {post.text || 'Football Activity'}
-            </h2>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="px-4 pb-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="text-xs text-gray-500 mb-1">Time</div>
-                <div className="text-xl font-semibold text-gray-900">
-                  {post.elapsedTime ? formatTime(post.elapsedTime) : '--'}
-                </div>
+          <div
+            className="absolute right-3 top-3"
+            ref={openDropdown === post.id ? dropdownRef : null}
+          >
+            <button
+              ref={openDropdown === post.id ? actionsButtonRef : null}
+              type="button"
+              aria-label={`Actions for ${post.text || 'Football Activity'}`}
+              aria-controls={`activity-actions-${post.id}`}
+              aria-expanded={openDropdown === post.id}
+              className="flex size-11 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              onClick={() => {
+                setOpenDropdown(openDropdown === post.id ? null : post.id)
+              }}
+            >
+              <svg
+                aria-hidden="true"
+                className="size-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {openDropdown === post.id && (
+              <div
+                id={`activity-actions-${post.id}`}
+                className="absolute right-0 z-10 mt-1 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+              >
+                <a
+                  href={`https://strava.com/activities/${post.key}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block min-h-11 w-full px-4 py-3 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                >
+                  View in Strava
+                </a>
+                {currentUser?.type === 'ADMIN' && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(post.id)}
+                    className="min-h-11 w-full px-4 py-3 text-left text-sm text-red-700 transition-colors hover:bg-red-50"
+                  >
+                    Delete activity
+                  </button>
+                )}
               </div>
-              <div>
-                <div className="text-xs text-gray-500 mb-1">Distance</div>
-                <div className="text-xl font-semibold text-gray-900">
-                  {post.totalDistance
-                    ? `${formatDistance(post.totalDistance)} km`
-                    : '-- km'}
-                </div>
-              </div>
-            </div>
+            )}
           </div>
-
-          {/* Heatmap Preview - uncomment when heatmapUrl is available */}
-          {/* {post.heatmapUrl && (
-            <div className="px-4 pb-4">
-              <img 
-                src={post.heatmapUrl} 
-                alt="Activity heatmap" 
-                className="w-full h-48 object-cover rounded-lg"
-              />
-            </div>
-          )} */}
-        </a>
+        </article>
       ))}
 
       {nextCursor && (
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center pt-4">
           <button
+            type="button"
             onClick={loadMore}
             disabled={loading}
-            className="px-6 py-2 border border-black text-black hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="min-h-11 rounded-lg border border-gray-900 px-6 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? 'Loading...' : 'Load More'}
           </button>

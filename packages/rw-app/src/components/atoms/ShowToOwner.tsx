@@ -16,9 +16,8 @@ export const ShowToOwner: React.FC<ShowToOwnerProps> = ({
   const isOwner = ownerId === userId
 
   if (isOwner) {
-    return <span className={className}>{children}</span>
+    return <div className={className}>{children}</div>
   } else {
     return <></>
   }
 }
-

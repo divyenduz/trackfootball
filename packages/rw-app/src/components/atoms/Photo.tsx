@@ -9,7 +9,7 @@ const Photo = ({ photo }: Props) => {
     <>
       <ConditionalDisplay visible={Boolean(photo)}>
         {photo ? (
-          <div className="w-15 h-15 overflow-hidden rounded-full border-2 border-white shadow-lg">
+          <div className="size-10 overflow-hidden rounded-full border-2 border-white shadow-sm">
             <img
               alt="User's display picture"
               className="h-full w-full object-cover"

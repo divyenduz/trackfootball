@@ -9,6 +9,100 @@
   --color-oynx: #0e0e2c;
 }
 
+@layer base {
+  a {
+    color: #65308a;
+  }
+
+  :where(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid #bb132f;
+    outline-offset: 3px;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  background: #0e0e2c;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 150ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.app-bar-login > button {
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #fff;
+  background: #ce3241;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.app-bar-login > button:hover {
+  background: #bb132f;
+}
+
+.legal-content {
+  width: 100%;
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: 48px 24px;
+  color: #374151;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.legal-content h1 {
+  margin-bottom: 28px;
+  color: #111827;
+  font-size: clamp(1.75rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.legal-content h2 {
+  margin-top: 36px;
+  margin-bottom: 12px;
+  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.legal-content p {
+  margin-bottom: 18px;
+}
+
+.legal-content ul {
+  margin-bottom: 18px;
+  padding-left: 24px;
+  list-style: disc;
+}
+
+.legal-content li + li {
+  margin-top: 6px;
+}
+
+.legal-content a {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* @import '@fontsource/roboto/300.css';
 @import '@fontsource/roboto/400.css';
 @import '@fontsource/roboto/500.css';
@@ -306,9 +400,6 @@
   font-size: 15px;
   font-weight: 400;
 }
-a {
-  color: #65308a;
-}
 .MuiButton-containedSecondary {
   background-color: #ce3241 !important;
   border: 1px solid #bd2332 !important;
@@ -466,6 +557,10 @@ a {
     width: 76px;
     height: 76px;
     border-width: 2px;
+  }
+
+  .legal-content {
+    padding: 32px 20px;
   }
 }
 @media (max-width: 375px) {

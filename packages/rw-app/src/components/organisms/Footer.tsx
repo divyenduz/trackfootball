@@ -2,37 +2,40 @@ import Logo from '@/components/atoms/brand/core/Logo'
 
 export function Footer() {
   return (
-    <div className="p-5 bg-oynx">
-      <div className="flex flex-col items-center justify-center">
-        <div className="mb-8 cursor-pointer ">
+    <div className="bg-oynx py-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-4 sm:px-6">
+        <div className="mb-6">
           <div className="flex items-center justify-center">
             <Logo size={'xs'} />
-            {/* <Typography
-              variant="h6"
-              component={'h5'}
-              className="hidden md:block"
-              style={{
-                color: '#fff',
-                fontWeight: 300,
-                position: 'relative',
-              }}
-            >
-              TrackFootball
-            </Typography> */}
           </div>
-          <span className="flex items-center justify-center text-sm font-light text-center text-gray-300">
+          <span className="flex items-center justify-center text-center text-sm font-light text-gray-300">
             Made for players looking to improve their games
           </span>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-white underline dec">
-          <a href="/privacy" target="_blank">
-            <span className="text-gray-500">Privacy Policy</span>
+        <nav
+          aria-label="Footer navigation"
+          className="flex flex-wrap items-center justify-center gap-1 text-sm"
+        >
+          <a
+            className="rounded px-3 py-2 text-gray-300 underline decoration-gray-600 underline-offset-4 hover:text-white"
+            href="/privacy"
+          >
+            Privacy Policy
           </a>
-          <a href="mailto:hello@trackfootball.app" target="_blank">
-            <span className="text-gray-500">Contact Us</span>
+          <a
+            className="rounded px-3 py-2 text-gray-300 underline decoration-gray-600 underline-offset-4 hover:text-white"
+            href="/terms"
+          >
+            Terms
           </a>
-        </div>
-        <div className="flex flex-wrap items-center justify-center m-4">
+          <a
+            className="rounded px-3 py-2 text-gray-300 underline decoration-gray-600 underline-offset-4 hover:text-white"
+            href="mailto:hello@trackfootball.app"
+          >
+            Contact Us
+          </a>
+        </nav>
+        <div className="mt-4 flex flex-wrap items-center justify-center">
           <img
             width={100}
             height={50}

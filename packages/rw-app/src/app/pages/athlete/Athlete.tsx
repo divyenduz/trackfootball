@@ -11,7 +11,22 @@ export async function Athlete({ ctx, params }: RequestInfo) {
   const athlete = await ctx.repository.getUser(parseInt(params.id, 10))
 
   if (!athlete) {
-    return <div className="p-4">Athlete not found</div>
+    return (
+      <div className="mx-auto w-full max-w-2xl px-4 py-12 sm:px-6">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-950">
+          Athlete not found
+        </h1>
+        <p className="mt-2 text-gray-600">
+          This athlete profile is no longer available.
+        </p>
+        <a
+          className="mt-6 inline-flex min-h-11 items-center rounded-lg font-semibold text-cardinal-900 underline underline-offset-4"
+          href="/dashboard"
+        >
+          Return to dashboard
+        </a>
+      </div>
+    )
   }
 
   const athleteSocialLogin = await ctx.repository.getUserStravaSocialLogin(
@@ -23,29 +38,42 @@ export async function Athlete({ ctx, params }: RequestInfo) {
     socialLogin: athleteSocialLogin ? [athleteSocialLogin] : [],
   })) as CheckStravaState
 
+  const athleteName =
+    [athlete.firstName, athlete.lastName].filter(Boolean).join(' ') || 'Athlete'
+
   return (
-    <>
-      <title>
-        {athlete.firstName} {athlete.lastName} - Athlete Profile |
-        TrackFootball.app
-      </title>
+    <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
+      <title>{`${athleteName} - Athlete Profile | TrackFootball.app`}</title>
       <meta
         name="description"
-        content={`View ${athlete.firstName} ${athlete.lastName}'s football profile and activities. Track performance, analyze game data and connect on TrackFootball.`}
+        content={`View ${athleteName}'s football profile and activities. Track performance, analyze game data and connect on TrackFootball.`}
       />
-      <h1 className="text-2xl font-bold">
-        {athlete.firstName} {athlete.lastName}
-      </h1>
+      <div className="mb-8">
+        <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-cardinal-900">
+          Athlete profile
+        </p>
+        <h1 className="break-words text-3xl font-semibold tracking-tight text-gray-950">
+          {athleteName}
+        </h1>
+      </div>
 
       <ShowToOwner ownerId={athlete.id} userId={ctx.user?.id}>
-        <div className="bg-gray-50 border-b border-gray-200 px-6 py-3 flex justify-end">
+        <section className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Strava connection
+            </h2>
+            <p className="mt-1 max-w-sm text-sm leading-6 text-gray-600">
+              Keep your football activities in sync with your athlete profile.
+            </p>
+          </div>
           <ConnectWithStravaWidget
             redirectTo="athlete"
             backendApiUrl={env.BACKEND_API}
             checkStravaState={stravaState}
           />
-        </div>
+        </section>
       </ShowToOwner>
-    </>
+    </div>
   )
 }

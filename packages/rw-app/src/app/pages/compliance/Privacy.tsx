@@ -8,7 +8,7 @@ export async function Privacy({ ctx }: RequestInfo) {
         name="description"
         content="Read TrackFootball.app's privacy policy. Learn how we collect, use, and protect your personal information and data."
       />
-      <div className="w-full max-w-4xl">
+      <article className="legal-content">
         <h1>Privacy Policy for TrackFootball.app</h1>
         <p>
           At https://trackfootball.app, accessible from
@@ -233,7 +233,7 @@ export async function Privacy({ ctx }: RequestInfo) {
           will do our best efforts to promptly remove such information from our
           records.
         </p>
-      </div>
+      </article>
     </>
   )
 }

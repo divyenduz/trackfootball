@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { match } from 'ts-pattern'
 
 import Logo from '@/components/atoms/brand/core/Logo'
@@ -21,39 +21,65 @@ export const AppBar: React.FC<Props> = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const open = Boolean(anchorEl)
 
+  const accountRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setAnchorEl(null)
+        accountRef.current?.focus()
+      }
+    }
+
+    document.addEventListener('keydown', closeOnEscape)
+    return () => document.removeEventListener('keydown', closeOnEscape)
+  }, [open])
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="px-3 py-3">
+    <header className="sticky top-0 z-50 shrink-0 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
+      <div className="mx-auto w-full max-w-6xl px-4 py-2 sm:px-6">
         <div className="flex items-center justify-between">
-          <a href="/home" className="flex items-center gap-2 cursor-pointer">
+          <a
+            href="/home"
+            className="flex min-h-11 items-center gap-2 rounded-lg text-gray-900"
+          >
             <Logo size={'xs'} />
-            <h5 className="text-gray-900 hidden md:block text-xl font-medium">
+            <span className="hidden text-xl font-semibold tracking-tight md:block">
               {pageName}
-            </h5>
+            </span>
           </a>
 
           <div className="flex items-center gap-2">
             {match(user)
               .with(null, () => {
                 return (
-                <LoginButton />
+                  <div className="app-bar-login">
+                    <LoginButton />
+                  </div>
                 )
               })
               .otherwise((user) => {
                 return (
                   <>
-                    <a href={`/dashboard`}>
-                      <button>Dashboard</button>
+                    <a
+                      href="/dashboard"
+                      className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-950"
+                    >
+                      Dashboard
                     </a>
                     <div className="relative">
                       <button
-                        aria-label="account of current user"
+                        ref={accountRef}
+                        type="button"
+                        aria-label="Account"
                         aria-controls="menu-appbar"
-                        aria-haspopup="true"
+                        aria-expanded={open}
                         onClick={(event) => {
-                          setAnchorEl(event.currentTarget)
+                          setAnchorEl(open ? null : event.currentTarget)
                         }}
-                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                        className="flex min-h-11 min-w-11 items-center justify-center rounded-full p-0.5 transition-colors hover:bg-gray-100"
                       >
                         <Photo photo={user?.picture}></Photo>
                       </button>
@@ -70,7 +96,7 @@ export const AppBar: React.FC<Props> = ({
                             <div className="py-1">
                               <a
                                 href={`/athlete/${user?.id}`}
-                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                className="flex min-h-11 items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100"
                                 onClick={() => setAnchorEl(null)}
                               >
                                 <span className="mr-3">👤</span>
@@ -81,7 +107,7 @@ export const AppBar: React.FC<Props> = ({
 
                               <button
                                 type="button"
-                                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                className="flex min-h-11 w-full items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100"
                                 onClick={async () => {
                                   setAnchorEl(null)
                                   await signOut({

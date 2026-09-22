@@ -42,10 +42,10 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
         <div>
-          <div className="text-sm text-gray-500">Start Time</div>
-          <div className="text-lg font-semibold text-gray-900">
+          <div className="text-sm font-medium text-gray-600">Start time</div>
+          <div className="mt-1 text-lg font-semibold tabular-nums text-gray-900">
             {post.startTime
               ? new Date(post.startTime).toLocaleString('en-US', {
                   dateStyle: 'medium',
@@ -56,7 +56,7 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
         </div>
 
         {post.Field && (
-          <div className="mt-4 rounded-md bg-gray-50 p-3 text-sm text-gray-600">
+          <div className="mt-4 rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
             <div className="font-medium text-gray-900">Field</div>
             <div>
               {post.Field.name} · {post.Field.usage}
@@ -66,27 +66,29 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <div className="text-sm text-gray-500">Total Distance</div>
-          <div className="text-2xl font-semibold text-gray-900">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="text-sm font-medium text-gray-600">
+            Total distance
+          </div>
+          <div className="mt-1 text-2xl font-semibold tabular-nums text-gray-900">
             {post.totalDistance ? formatDistance(post.totalDistance) : '--'}
           </div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <div className="text-sm text-gray-500">Elapsed Time</div>
-          <div className="text-2xl font-semibold text-gray-900">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="text-sm font-medium text-gray-600">Elapsed time</div>
+          <div className="mt-1 text-2xl font-semibold tabular-nums text-gray-900">
             {post.elapsedTime ? formatDuration(post.elapsedTime) : '--'}
           </div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <div className="text-sm text-gray-500">Average Speed</div>
-          <div className="text-2xl font-semibold text-gray-900">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="text-sm font-medium text-gray-600">Average speed</div>
+          <div className="mt-1 text-2xl font-semibold tabular-nums text-gray-900">
             {formatSpeed(post.averageSpeed)}
           </div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <div className="text-sm text-gray-500">Max Speed</div>
-          <div className="text-2xl font-semibold text-gray-900">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="text-sm font-medium text-gray-600">Max speed</div>
+          <div className="mt-1 text-2xl font-semibold tabular-nums text-gray-900">
             {formatSpeed(post.maxSpeed)}
           </div>
         </div>
