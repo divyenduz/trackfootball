@@ -6,6 +6,9 @@ export async function Activity({ ctx, params }: RequestInfo) {
     parseInt(params.id, 10),
   )
 
+  const backHref = ctx.user ? '/dashboard' : '/home'
+  const backLabel = ctx.user ? 'Back to dashboard' : 'TrackFootball home'
+
   if (!post) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-12 sm:px-6">
@@ -17,34 +20,50 @@ export async function Activity({ ctx, params }: RequestInfo) {
         </p>
         <a
           className="mt-6 inline-flex min-h-11 items-center rounded-lg font-semibold text-cardinal-900 underline underline-offset-4"
-          href="/dashboard"
+          href={backHref}
         >
-          Return to dashboard
+          {backLabel}
         </a>
       </div>
     )
   }
 
-  const activityTitle = post.text || 'Football Activity'
+  const activityTitle = post.text.trim() || 'Football Activity'
+  const athleteName =
+    [post.User.firstName, post.User.lastName]
+      .map((name) => name?.trim())
+      .filter(Boolean)
+      .join(' ') || 'an athlete'
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
+    <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
       <title>{`${activityTitle} - Activity | TrackFootball.app`}</title>
       <meta
         name="description"
-        content={`View ${post.User.firstName} ${post.User.lastName}'s football activity: ${activityTitle}. Analyze performance metrics and training data on TrackFootball.`}
+        content={`View ${athleteName}'s football activity: ${activityTitle}. Analyze performance metrics and training data on TrackFootball.`}
       />
-      <div className="mb-6 sm:mb-8">
-        <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-cardinal-900">
-          Activity
-        </p>
-        <h1 className="break-words text-2xl font-semibold leading-tight tracking-tight text-gray-950 sm:text-3xl">
-          {activityTitle}
-        </h1>
-        <p className="mt-2 text-base text-gray-600">
-          {post.User.firstName} {post.User.lastName}
-        </p>
-      </div>
+      <nav
+        aria-label="Activity navigation"
+        className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 sm:mb-5"
+      >
+        <a
+          href={backHref}
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg font-semibold text-gray-700 underline decoration-gray-300 underline-offset-4 transition-colors hover:text-gray-950"
+        >
+          <span aria-hidden="true">←</span>
+          {backLabel}
+        </a>
+        <a
+          href={`https://strava.com/activities/${post.key}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg font-semibold text-cardinal-900 underline decoration-cardinal-900/30 underline-offset-4"
+        >
+          View in Strava
+          <span aria-hidden="true">↗</span>
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </nav>
       <ActivityClient post={post} />
     </div>
   )
