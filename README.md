@@ -38,6 +38,22 @@ pnpm install
 pnpm run dev
 ```
 
+### Strava webhook setup
+
+Webhook delivery uses a secret URL path because Strava does not sign delivery
+requests. Configure `STRAVA_WEBHOOK_CALLBACK_SECRET` with a URL-safe,
+high-entropy secret, then register this callback URL with Strava:
+
+```text
+https://trackfootball.app/api/social/strava/webhook/callback/<secret>
+```
+
+Keep `STRAVA_WEBHOOK_VERIFY_TOKEN` for Strava's GET subscription handshake.
+After Strava creates the subscription, configure the returned positive integer
+as `STRAVA_WEBHOOK_SUBSCRIPTION_ID`. The Worker cron retries authenticated,
+unfinished events every five minutes; events received by the old unauthenticated
+endpoint are deliberately excluded from automatic replay.
+
 ### Commands
 
 | Command            | Description                  |

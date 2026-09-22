@@ -9,7 +9,7 @@
     "packages/rw-app": {
       "entry": ["src/worker.tsx", "src/client.tsx", "vite.config.mts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignore": ["**/*.d.ts", "better-auth_migrations/**", "src/app/pages/strava/StravaEventProcessorWorkflow.ts"],
+      "ignore": ["**/*.d.ts", "better-auth_migrations/**"],
       "ignoreDependencies": ["cloudflare", "tailwindcss"],
       "vite": false
     },

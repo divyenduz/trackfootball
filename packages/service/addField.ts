@@ -3,7 +3,6 @@ import area from '@turf/area'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import center from '@turf/center'
 import envelope from '@turf/envelope'
-import type { FeatureCollection, LineString } from 'geojson'
 import { featureCollection, point } from '@turf/helpers'
 import intersect from '@turf/intersect'
 import invariant from 'tiny-invariant'
@@ -26,7 +25,8 @@ export async function postAddField(
       return
     }
 
-    const geoJson = post.geoJson as unknown as FeatureCollection<LineString>
+    const geoJson = post.geoJson
+    invariant(geoJson, `expected post ${postId} to have geo data`)
     const centerValue = center(geoJson)
     const geoJsonCover = envelope(geoJson)
 

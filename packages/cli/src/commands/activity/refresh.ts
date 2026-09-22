@@ -12,11 +12,7 @@ type Flags = {}
 
 const help = `${CLI_NAME} activity refresh [ids...] | refresh one or more activities, or all uncompleted posts if no ids provided`
 
-async function cmd(
-  this: LocalContext,
-  {}: Flags,
-  ...activityIdArgs: string[]
-) {
+async function cmd(this: LocalContext, {}: Flags, ...activityIdArgs: string[]) {
   invariant(process.env.DATABASE_URL, 'DATABASE_URL must be set')
   const sql = postgres(process.env.DATABASE_URL)
   const repository = await createRepository(sql)
@@ -126,40 +122,11 @@ async function cmd(
         `Updated post not found for activity with id ${activityId}`,
       )
 
-      const existingWebhookEvent =
-        await repository.findStravaWebhookEventByActivityId(
-          parseInt(activity.key),
-        )
-      if (existingWebhookEvent) {
-        await repository.updateStravaWebhookEventStatus(
-          existingWebhookEvent.id,
-          'COMPLETED',
-        )
-      }
-
       console.log(
         `Activity with id ${updatedPost.id} has been refreshed successfully`,
       )
     } catch (e) {
       console.error(`Error refreshing activity ${activityId}:`, e)
-      try {
-        const activity = await repository.getPostById(activityId)
-        if (activity) {
-          const existingWebhookEvent =
-            await repository.findStravaWebhookEventByActivityId(
-              parseInt(activity.key),
-            )
-          console.log(existingWebhookEvent)
-          if (existingWebhookEvent) {
-            await repository.deleteStravaWebhookEvent(existingWebhookEvent.id)
-          }
-        }
-      } catch (cleanupError) {
-        console.error(
-          `Error during cleanup for activity ${activityId}:`,
-          cleanupError,
-        )
-      }
     }
   }
 

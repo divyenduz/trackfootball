@@ -96,6 +96,14 @@ export const userSchema = z.object({
 })
 export type User = z.infer<typeof userSchema>
 
+export const publicUserSchema = userSchema.pick({
+  id: true,
+  firstName: true,
+  lastName: true,
+  picture: true,
+})
+export type PublicUser = z.infer<typeof publicUserSchema>
+
 export const fieldSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -140,7 +148,7 @@ export const stravaWebhookEventSchema = z.object({
   updatedAt: z.coerce.date(),
   status: stravaWebhookEventStatusSchema,
   body: z.string(),
-  errors: z.array(z.unknown()).nullable(),
+  errors: z.array(z.string()).nullable(),
 })
 export type StravaWebhookEvent = z.infer<typeof stravaWebhookEventSchema>
 

@@ -18,6 +18,9 @@
   "limits": {
     "cpu_ms": 30000,
   },
+  "triggers": {
+    "crons": ["*/5 * * * *"],
+  },
   "routes": [
     {
       "pattern": "trackfootball.app",

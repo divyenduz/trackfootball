@@ -1,130 +1,132 @@
-import type { StravaWebhookEvent } from '@trackfootball/postgres'
+import { HttpError } from '@trackfootball/open-api'
+import type {
+  StravaWebhookEvent,
+  createRepository,
+} from '@trackfootball/postgres'
+import { match } from 'ts-pattern'
+import { ZodError } from 'zod'
+
 import { createDiscordMessage as defaultCreateDiscordMessage } from './discord'
 import {
   IgnorableActivityError,
-  importStravaActivity,
+  importStravaActivity as defaultImportStravaActivity,
 } from './strava'
-import { match } from 'ts-pattern'
-import type { createRepository } from '@trackfootball/postgres'
+import { stravaEventSchema } from './stravaSchemas'
 
-const stringify = (value: number | string): string => {
-  if (typeof value === 'number') {
-    return value.toString()
-  }
-  return value
-}
+const MAX_ATTEMPTS = 5
 
-type StravaEventBase = {
-  object_id: number
-  owner_id: number
-  subscription_id: number
-  event_time: number
-}
-
-type StravaEventActivity = StravaEventBase & {
-  object_type: 'activity'
-  aspect_type: 'create' | 'update' | 'delete'
-  updates: {
-    title: string
-    type: string
-    private: boolean
+class TerminalWebhookError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'TerminalWebhookError'
   }
 }
-
-type StravaEventAthlete = StravaEventBase & {
-  object_type: 'athlete'
-  aspect_type: 'update'
-  updates: {
-    authorized: 'false'
-  }
-}
-
-export type StravaEvent = StravaEventActivity | StravaEventAthlete
 
 export type WebhookProcessorDeps = {
   repository: ReturnType<typeof createRepository>
   createDiscordMessage?: typeof defaultCreateDiscordMessage
+  importStravaActivity?: typeof defaultImportStravaActivity
   env: {
     HOMEPAGE_URL?: string
+    STRAVA_WEBHOOK_SUBSCRIPTION_ID: number
   }
+}
+
+export type WebhookProcessingResult =
+  | { status: 'COMPLETED' | 'IGNORED'; eventId: number }
+  | { status: 'RETRYING' | 'ERRORED'; eventId: number; error: string }
+  | { status: 'SKIPPED'; eventId: number }
+
+function errorDescription(error: unknown) {
+  if (error instanceof HttpError) {
+    return `http-${error.status}`
+  }
+  if (error instanceof ZodError) {
+    return 'invalid-payload'
+  }
+  if (error instanceof Error) {
+    return `${error.name}:${error.message}`.slice(0, 240)
+  }
+  return 'unknown-error'
+}
+
+function claimCount(event: StravaWebhookEvent) {
+  return (event.errors ?? []).filter((entry) => entry.startsWith('claim:v1:'))
+    .length
 }
 
 export async function processStravaWebhookEvent(
   event: StravaWebhookEvent,
   deps: WebhookProcessorDeps,
-) {
+): Promise<WebhookProcessingResult> {
   const { repository, env } = deps
-  const createDiscordMessageFn =
-    deps.createDiscordMessage || defaultCreateDiscordMessage
-  const body: StravaEvent = JSON.parse(event.body)
+  const importStravaActivity =
+    deps.importStravaActivity ?? defaultImportStravaActivity
+  const createDiscordMessage =
+    deps.createDiscordMessage ?? defaultCreateDiscordMessage
+  const attempt = claimCount(event) + 1
+  const claim = `claim:v1:${crypto.randomUUID()}:${attempt}`
+  const claimedEvent = await repository.claimStravaWebhookEvent(event.id, claim)
+
+  if (!claimedEvent) {
+    return { status: 'SKIPPED', eventId: event.id }
+  }
 
   try {
+    let body
+    try {
+      body = stravaEventSchema.parse(JSON.parse(claimedEvent.body))
+    } catch {
+      throw new TerminalWebhookError('Invalid webhook payload')
+    }
+    if (body.subscription_id !== env.STRAVA_WEBHOOK_SUBSCRIPTION_ID) {
+      throw new TerminalWebhookError('Unexpected Strava subscription')
+    }
+
     await match(body)
       .with(
-      { object_type: 'activity', aspect_type: 'create' },
-      async (activityCreateEvent) => {
-        const ownerId = activityCreateEvent.owner_id
-        const activityId = activityCreateEvent.object_id
-
-        try {
+        { object_type: 'activity', aspect_type: 'create' },
+        async ({ owner_id: ownerId, object_id: activityId }) => {
           await importStravaActivity(repository, ownerId, activityId, 'WEBHOOK')
-          await repository.updateStravaWebhookEventStatus(
-            event.id,
-            'COMPLETED',
-          )
-        } catch (e) {
-          if (e instanceof IgnorableActivityError) {
-            await repository.deleteStravaWebhookEvent(event.id)
-          } else {
-            console.error(`Webhook activity create failed:`, e)
-            await repository.updateStravaWebhookEventStatus(
-              event.id,
-              'ERRORED',
-            )
-          }
-        }
-      },
-    )
-    .with(
-      { object_type: 'activity', aspect_type: 'update' },
-      async (activityUpdateEvent) => {
-        try {
+        },
+      )
+      .with(
+        { object_type: 'activity', aspect_type: 'update' },
+        async (activityUpdateEvent) => {
           const user = await repository.getUserBy(
-            stringify(activityUpdateEvent.owner_id),
+            String(activityUpdateEvent.owner_id),
           )
-
           if (!user) {
-            await createDiscordMessageFn({
+            await createDiscordMessage({
               heading:
-                'New Activity Update Failed - No Social Login For User (Update Webhook)',
+                'Activity Update Failed - No Social Login For User (Webhook)',
               name: `${activityUpdateEvent.owner_id}/${activityUpdateEvent.object_id}`,
-              description: `
-          User has no Strava social login configured
-          Strava Owner: ${activityUpdateEvent.owner_id}
-          Activity ID: ${activityUpdateEvent.object_id}
-          Athlete Link: https://strava.com/athletes/${activityUpdateEvent.owner_id}
-          Activity Link: https://strava.com/activities/${activityUpdateEvent.object_id}`,
+              description: `Strava owner ${activityUpdateEvent.owner_id} is not connected`,
             })
-            throw new Error(
-              `Failed to find user with Strava ID: ${activityUpdateEvent.owner_id}`,
-            )
+            throw new Error('Strava owner is not connected')
           }
 
-          const post = await repository.getPostByStravaId(
+          const ownedPost = await repository.getPostByStravaIdForUser(
             activityUpdateEvent.object_id,
+            user.id,
           )
-          if (post?.id) {
-            if (activityUpdateEvent.updates.title) {
-              try {
-                await repository.updatePostTitle(
-                  activityUpdateEvent.object_id,
-                  activityUpdateEvent.updates.title,
-                )
-              } catch (e) {
-                console.error(`activityUpdateEvent: `, e)
-              }
+          if (!ownedPost) {
+            const postForAnotherUser = await repository.getPostByStravaId(
+              activityUpdateEvent.object_id,
+            )
+            if (postForAnotherUser) {
+              throw new TerminalWebhookError('Activity ownership mismatch')
             }
-          } else {
+            await importStravaActivity(
+              repository,
+              activityUpdateEvent.owner_id,
+              activityUpdateEvent.object_id,
+              'WEBHOOK',
+            )
+            return
+          }
+
+          if (ownedPost.status !== 'COMPLETED' || !ownedPost.geoJson) {
             await importStravaActivity(
               repository,
               activityUpdateEvent.owner_id,
@@ -133,92 +135,99 @@ export async function processStravaWebhookEvent(
             )
           }
 
-          await repository.updateStravaWebhookEventStatus(
-            event.id,
-            'COMPLETED',
-          )
-        } catch (e) {
-          if (e instanceof IgnorableActivityError) {
-            await repository.deleteStravaWebhookEvent(event.id)
-          } else {
-            console.error(`Webhook activity update failed:`, e)
-            await repository.updateStravaWebhookEventStatus(event.id, 'ERRORED')
+          if (activityUpdateEvent.updates.title) {
+            const updated = await repository.updatePostTitleForUser(
+              activityUpdateEvent.object_id,
+              user.id,
+              activityUpdateEvent.updates.title,
+            )
+            if (!updated) {
+              throw new Error('Owned activity title update failed')
+            }
           }
-        }
-      },
-    )
-    .with(
-      { object_type: 'activity', aspect_type: 'delete' },
-      async (activityDeleteEvent) => {
-        try {
+        },
+      )
+      .with(
+        { object_type: 'activity', aspect_type: 'delete' },
+        async (activityDeleteEvent) => {
           const user = await repository.getUserBy(
-            stringify(activityDeleteEvent.owner_id),
+            String(activityDeleteEvent.owner_id),
           )
-
           if (!user) {
-            await createDiscordMessageFn({
-              heading:
-                'Activity Deletion Failed - No Social Login For User (Webhook)',
-              name: `${activityDeleteEvent.owner_id}/${activityDeleteEvent.object_id}`,
-              description: `
-          User has no Strava social login configured
-          Strava Owner: ${activityDeleteEvent.owner_id}
-          Activity ID: ${activityDeleteEvent.object_id}
-          Athlete Link: https://strava.com/athletes/${activityDeleteEvent.owner_id}
-          Activity Link: https://strava.com/activities/${activityDeleteEvent.object_id}`,
-            })
-            throw new Error(
-              `Failed to find user with Strava ID: ${activityDeleteEvent.owner_id}`,
-            )
+            throw new Error('Strava owner is not connected')
           }
 
-          const post = await repository.deletePostBy(
+          const post = await repository.deletePostByStravaIdForUser(
             activityDeleteEvent.object_id,
+            user.id,
           )
-
           if (!post) {
-            console.error(
-              `Post to be deleted not found, Strava key: ${activityDeleteEvent.object_id}`,
+            const postForAnotherUser = await repository.getPostByStravaId(
+              activityDeleteEvent.object_id,
             )
-          } else {
-            await createDiscordMessageFn({
-              heading: 'Activity Deleted (Webhook)',
-              name: `${post.text}`,
-              description: `
-        ID: ${post.id} / Strava ID: ${activityDeleteEvent.object_id}
-        Activity Time: ${post?.startTime}
-        User: ${user.firstName} ${user.lastName}
-        Link: ${env.HOMEPAGE_URL}/activity/${post.id}`,
-            })
+            if (postForAnotherUser) {
+              throw new TerminalWebhookError('Activity ownership mismatch')
+            }
+            return
           }
 
-          await repository.updateStravaWebhookEventStatus(
-            event.id,
-            'COMPLETED',
-          )
-        } catch (e) {
-          console.error(`Webhook activity delete failed:`, e)
-          await repository.updateStravaWebhookEventStatus(event.id, 'ERRORED')
-        }
-      },
-    )
-    .with(
-      { object_type: 'athlete', aspect_type: 'update' },
-      async (athleteUpdateEvent) => {
-        if (athleteUpdateEvent.updates.authorized === 'false') {
-          await repository.deleteStravaSocialLogin(athleteUpdateEvent.owner_id)
-          await createDiscordMessageFn({
-            heading: 'Athlete Social Login Deleted (Webhook)',
-            name: `${athleteUpdateEvent.owner_id}`,
-            description: ``,
+          await createDiscordMessage({
+            heading: 'Activity Deleted (Webhook)',
+            name: post.text,
+            description: `ID: ${post.id} / Strava ID: ${activityDeleteEvent.object_id}\nLink: ${env.HOMEPAGE_URL}/activity/${post.id}`,
           })
-        }
-        await repository.updateStravaWebhookEventStatus(event.id, 'COMPLETED')
-      },
+        },
+      )
+      .with(
+        { object_type: 'athlete', aspect_type: 'update' },
+        async (athleteUpdateEvent) => {
+          await repository.deleteStravaSocialLogin(athleteUpdateEvent.owner_id)
+          await createDiscordMessage({
+            heading: 'Athlete Social Login Deleted (Webhook)',
+            name: String(athleteUpdateEvent.owner_id),
+            description: '',
+          })
+        },
+      )
+      .exhaustive()
+
+    const completed = await repository.completeClaimedStravaWebhookEvent(
+      event.id,
+      claim,
     )
-    .exhaustive()
-  } catch (e) {
-    console.error(`Webhook processing failed for event ${event.id}:`, e)
-    await repository.updateStravaWebhookEventStatus(event.id, 'ERRORED')
+    return { status: completed ? 'COMPLETED' : 'SKIPPED', eventId: event.id }
+  } catch (error) {
+    if (error instanceof IgnorableActivityError) {
+      await repository.completeClaimedStravaWebhookEvent(event.id, claim)
+      return { status: 'IGNORED', eventId: event.id }
+    }
+
+    const description = errorDescription(error)
+    const terminal =
+      error instanceof TerminalWebhookError || attempt >= MAX_ATTEMPTS
+    await repository.failClaimedStravaWebhookEvent(
+      event.id,
+      claim,
+      `failure:v1:${description}`,
+      terminal,
+    )
+    console.error(
+      `Webhook processing failed for event ${event.id}: ${description}`,
+    )
+    return {
+      status: terminal ? 'ERRORED' : 'RETRYING',
+      eventId: event.id,
+      error: description,
+    }
   }
+}
+
+export async function processRetryableStravaWebhookEvents(
+  deps: WebhookProcessorDeps,
+  limit = 10,
+) {
+  const events = await deps.repository.getRetryableStravaWebhookEvents(limit)
+  return Promise.all(
+    events.map((event) => processStravaWebhookEvent(event, deps)),
+  )
 }

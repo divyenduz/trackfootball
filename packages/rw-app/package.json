@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "catalog:",
-    "@trackfootball/open-api": "workspace:*",
     "@trackfootball/postgres": "workspace:*",
     "@trackfootball/service": "workspace:*",
     "better-auth": "catalog:",

@@ -4,12 +4,13 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "test": "echo 'No tests defined' && exit 0",
+    "test": "vitest run",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/geojson": "catalog:",
-    "@types/node": "catalog:"
+    "@types/node": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@trackfootball/rw-app": "workspace:*",
@@ -25,6 +26,7 @@
     "@xmldom/xmldom": "catalog:",
     "geojson": "catalog:",
     "tiny-invariant": "catalog:",
-    "ts-pattern": "catalog:"
+    "ts-pattern": "catalog:",
+    "zod": "catalog:"
   }
 }

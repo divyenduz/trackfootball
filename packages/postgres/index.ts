@@ -28,12 +28,25 @@ export function createRepository(sql: ReturnType<typeof postgres>) {
     getPostByStravaId: (
       stravaId: Parameters<typeof postRepo.getPostByStravaId>[1],
     ) => postRepo.getPostByStravaId(sql, stravaId),
+    getPostByStravaIdForUser: (
+      stravaId: Parameters<typeof postRepo.getPostByStravaIdForUser>[1],
+      userId: Parameters<typeof postRepo.getPostByStravaIdForUser>[2],
+    ) => postRepo.getPostByStravaIdForUser(sql, stravaId, userId),
     updatePostTitle: (
       stravaId: Parameters<typeof postRepo.updatePostTitle>[1],
       title: Parameters<typeof postRepo.updatePostTitle>[2],
     ) => postRepo.updatePostTitle(sql, stravaId, title),
+    updatePostTitleForUser: (
+      stravaId: Parameters<typeof postRepo.updatePostTitleForUser>[1],
+      userId: Parameters<typeof postRepo.updatePostTitleForUser>[2],
+      title: Parameters<typeof postRepo.updatePostTitleForUser>[3],
+    ) => postRepo.updatePostTitleForUser(sql, stravaId, userId, title),
     deletePostBy: (stravaId: Parameters<typeof postRepo.deletePostBy>[1]) =>
       postRepo.deletePostBy(sql, stravaId),
+    deletePostByStravaIdForUser: (
+      stravaId: Parameters<typeof postRepo.deletePostByStravaIdForUser>[1],
+      userId: Parameters<typeof postRepo.deletePostByStravaIdForUser>[2],
+    ) => postRepo.deletePostByStravaIdForUser(sql, stravaId, userId),
     getFeed: (
       cursor?: Parameters<typeof postRepo.getFeed>[1],
       limit?: Parameters<typeof postRepo.getFeed>[2],
@@ -95,6 +108,47 @@ export function createRepository(sql: ReturnType<typeof postgres>) {
     deleteStravaWebhookEvent: (
       id: Parameters<typeof stravaWebhookEventRepo.deleteStravaWebhookEvent>[1],
     ) => stravaWebhookEventRepo.deleteStravaWebhookEvent(sql, id),
+    getRetryableStravaWebhookEvents: (
+      limit: Parameters<
+        typeof stravaWebhookEventRepo.getRetryableStravaWebhookEvents
+      >[1],
+    ) => stravaWebhookEventRepo.getRetryableStravaWebhookEvents(sql, limit),
+    claimStravaWebhookEvent: (
+      id: Parameters<typeof stravaWebhookEventRepo.claimStravaWebhookEvent>[1],
+      claim: Parameters<
+        typeof stravaWebhookEventRepo.claimStravaWebhookEvent
+      >[2],
+    ) => stravaWebhookEventRepo.claimStravaWebhookEvent(sql, id, claim),
+    completeClaimedStravaWebhookEvent: (
+      id: Parameters<
+        typeof stravaWebhookEventRepo.completeClaimedStravaWebhookEvent
+      >[1],
+      claim: Parameters<
+        typeof stravaWebhookEventRepo.completeClaimedStravaWebhookEvent
+      >[2],
+    ) =>
+      stravaWebhookEventRepo.completeClaimedStravaWebhookEvent(sql, id, claim),
+    failClaimedStravaWebhookEvent: (
+      id: Parameters<
+        typeof stravaWebhookEventRepo.failClaimedStravaWebhookEvent
+      >[1],
+      claim: Parameters<
+        typeof stravaWebhookEventRepo.failClaimedStravaWebhookEvent
+      >[2],
+      failure: Parameters<
+        typeof stravaWebhookEventRepo.failClaimedStravaWebhookEvent
+      >[3],
+      terminal: Parameters<
+        typeof stravaWebhookEventRepo.failClaimedStravaWebhookEvent
+      >[4],
+    ) =>
+      stravaWebhookEventRepo.failClaimedStravaWebhookEvent(
+        sql,
+        id,
+        claim,
+        failure,
+        terminal,
+      ),
     findStravaWebhookEventByActivityId: (
       activityId: Parameters<
         typeof stravaWebhookEventRepo.findStravaWebhookEventByActivityId

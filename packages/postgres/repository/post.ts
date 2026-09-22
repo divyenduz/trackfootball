@@ -1,4 +1,11 @@
-import { type Field, type Post, type PostType, type User } from '../types'
+import {
+  type Field,
+  type Post,
+  type PostStatus,
+  type PostType,
+  type PublicUser,
+  type User,
+} from '../types'
 import type { FeatureCollection, LineString } from 'geojson'
 import invariant from 'tiny-invariant'
 import { Sql } from 'postgres'
@@ -28,13 +35,19 @@ export async function createPost(sql: Sql, input: CreatePostInput) {
         //@ts-expect-error
         sql(data)
       }
-      ON CONFLICT ("key", "type") DO UPDATE SET
-        "geoJson" = EXCLUDED."geoJson"
+      ON CONFLICT ("key", "type") DO NOTHING
       RETURNING *
       `
 
-  const post = posts[0]
-  return post
+  if (posts[0]) {
+    return posts[0]
+  }
+
+  const existingPosts = await sql<Post[]>`
+    SELECT * FROM "Post"
+    WHERE "key" = ${input.key} AND "type" = ${input.type}
+  `
+  return existingPosts[0]
 }
 
 async function getPostMeta(sql: Sql, id: number) {
@@ -141,6 +154,20 @@ export async function getPostByStravaId(sql: Sql, stravaId: number) {
   return post
 }
 
+export async function getPostByStravaIdForUser(
+  sql: Sql,
+  stravaId: number,
+  userId: number,
+) {
+  const posts = await sql<Post[]>`
+    SELECT * FROM "Post"
+    WHERE "key" = ${stringify(stravaId)}
+      AND "type" = 'STRAVA_ACTIVITY'
+      AND "userId" = ${userId}
+  `
+  return posts[0] ?? null
+}
+
 export async function updatePostTitle(
   sql: Sql,
   stravaId: number,
@@ -155,6 +182,23 @@ export async function updatePostTitle(
   const post = posts[0]
 
   return post
+}
+
+export async function updatePostTitleForUser(
+  sql: Sql,
+  stravaId: number,
+  userId: number,
+  title: string,
+) {
+  const posts = await sql<Post[]>`
+    UPDATE "Post"
+    SET "text" = ${title}
+    WHERE "key" = ${stringify(stravaId)}
+      AND "type" = 'STRAVA_ACTIVITY'
+      AND "userId" = ${userId}
+    RETURNING *
+  `
+  return posts[0] ?? null
 }
 
 export async function deletePostBy(
@@ -176,9 +220,24 @@ export async function deletePostBy(
   }
 }
 
+export async function deletePostByStravaIdForUser(
+  sql: Sql,
+  stravaId: number,
+  userId: number,
+): Promise<Post | null> {
+  const posts = await sql<Post[]>`
+    DELETE FROM "Post"
+    WHERE "key" = ${stringify(stravaId)}
+      AND "type" = 'STRAVA_ACTIVITY'
+      AND "userId" = ${userId}
+    RETURNING *
+  `
+  return posts[0] ?? null
+}
+
 type FeedItemType = Omit<Post, 'geoJson' | 'sprints' | 'runs'> & {
-  Field: Field
-  User: User
+  Field: Field | null
+  User: PublicUser
 }
 
 export async function getFeed(
@@ -192,7 +251,13 @@ export async function getFeed(
   const maxPostIdValue = maxPostId.max
 
   const posts: FeedItemType[] = await sql`
-    SELECT row_to_json("Field".*::"Field") as "Field", row_to_json("User".*::"User") as "User", 
+    SELECT row_to_json("Field".*::"Field") as "Field",
+    json_build_object(
+      'id', "User"."id",
+      'firstName', "User"."firstName",
+      'lastName', "User"."lastName",
+      'picture', "User"."picture"
+    ) as "User",
     "Post"."id", "Post"."createdAt", "Post"."updatedAt", "Post"."type", "Post"."text", "Post"."key", "Post"."totalDistance", "Post"."elapsedTime", "Post"."totalSprintTime", "Post"."maxSpeed", "Post"."averageSpeed", "Post"."userId", "Post"."startTime", "Post"."fieldId", "Post"."image", "Post"."halfTime", "Post"."status", "Post"."statusInfo" FROM "Post"
     LEFT JOIN "Field" ON "Post"."fieldId" = "Field"."id"
     INNER JOIN "User" ON "Post"."userId" = "User"."id"
@@ -244,7 +309,7 @@ export async function getPostByIdWithoutField(
 export async function updatePostStatus(
   sql: Sql,
   postId: number,
-  status: string,
+  status: PostStatus,
 ): Promise<void> {
   await sql`
     UPDATE "Post"
@@ -255,13 +320,13 @@ export async function updatePostStatus(
 
 interface UpdatePostCompleteInput {
   id: number
-  geoJson: any
+  geoJson: FeatureCollection<LineString>
   totalDistance: number
   startTime: Date
   elapsedTime: number
   totalSprintTime: number
-  sprints: any
-  runs: any
+  sprints: Array<FeatureCollection<LineString>>
+  runs: Array<FeatureCollection<LineString>>
   maxSpeed: number
   averageSpeed: number
 }
@@ -270,17 +335,23 @@ export async function updatePostComplete(
   sql: Sql,
   input: UpdatePostCompleteInput,
 ): Promise<Post | null> {
+  const geoJson = sql.json(
+    input.geoJson as unknown as Parameters<Sql['json']>[0],
+  )
+  const sprints = sql.json(
+    input.sprints as unknown as Parameters<Sql['json']>[0],
+  )
+  const runs = sql.json(input.runs as unknown as Parameters<Sql['json']>[0])
   const posts: Post[] = await sql`
     WITH PostModified AS (
       UPDATE "Post"
-      SET "status" = 'COMPLETED',
-      "geoJson" = ${input.geoJson},
+      SET "geoJson" = ${geoJson},
       "totalDistance" = ${input.totalDistance},
       "startTime" = ${input.startTime},
       "elapsedTime" = ${input.elapsedTime},
       "totalSprintTime" = ${input.totalSprintTime},
-      "sprints" = ${input.sprints},
-      "runs" = ${input.runs},
+      "sprints" = ${sprints},
+      "runs" = ${runs},
       "maxSpeed" = ${input.maxSpeed},
       "averageSpeed" = ${input.averageSpeed}
       WHERE "id" = ${input.id}

@@ -8,6 +8,7 @@ import {
   createDiscordMessage,
   processStravaWebhookEvent,
 } from '@trackfootball/service'
+import type { StravaWebhookEvent } from '@trackfootball/postgres'
 import * as readline from 'readline/promises'
 
 type Flags = {
@@ -22,6 +23,11 @@ async function cmd(
   ...eventIdArgs: string[]
 ) {
   invariant(process.env.DATABASE_URL, 'DATABASE_URL must be set')
+  const subscriptionId = Number(process.env.STRAVA_WEBHOOK_SUBSCRIPTION_ID)
+  invariant(
+    Number.isSafeInteger(subscriptionId) && subscriptionId > 0,
+    'STRAVA_WEBHOOK_SUBSCRIPTION_ID must be a positive integer',
+  )
   console.log('Connecting to database...')
   const sql = postgres(process.env.DATABASE_URL, {
     connect_timeout: 10,
@@ -39,6 +45,7 @@ async function cmd(
       SELECT id, body, status 
       FROM "StravaWebhookEvent" 
       WHERE status = 'PENDING'
+      AND "errors"[1] LIKE 'accepted:v1:%'
       ORDER BY id ASC
     `
 
@@ -95,14 +102,9 @@ async function cmd(
 
     try {
       console.log(`  Fetching event ${id} from database...`)
-      const rows = await sql<
-        Array<{
-          id: number
-          body: string
-          status: string
-          errors: unknown[]
-        }>
-      >`SELECT id, body, status, errors FROM "StravaWebhookEvent" WHERE id = ${id}`
+      const rows = await sql<StravaWebhookEvent[]>`
+        SELECT * FROM "StravaWebhookEvent" WHERE id = ${id}
+      `
 
       if (!rows.length) {
         console.warn(`Event ${id} not found, skipping.`)
@@ -112,19 +114,31 @@ async function cmd(
 
       const event = rows[0]
       invariant(event, 'Event should be defined')
+      if (!event.errors?.[0]?.startsWith('accepted:v1:')) {
+        console.warn(
+          `Event ${id} predates authenticated webhook ingress and was not reprocessed.`,
+        )
+        errorCount++
+        continue
+      }
 
       console.log(`  Processing event ${id}...`)
-      //@ts-ignore FIXME
-      await processStravaWebhookEvent(event, {
+      const result = await processStravaWebhookEvent(event, {
         repository,
         createDiscordMessage,
         env: {
           HOMEPAGE_URL: process.env.HOMEPAGE_URL,
+          STRAVA_WEBHOOK_SUBSCRIPTION_ID: subscriptionId,
         },
       })
 
-      console.log(`✓ Event ${id} processed successfully`)
-      successCount++
+      if (result.status === 'COMPLETED' || result.status === 'IGNORED') {
+        console.log(`✓ Event ${id} processed successfully (${result.status})`)
+        successCount++
+      } else {
+        console.error(`✗ Event ${id} was not completed (${result.status})`)
+        errorCount++
+      }
     } catch (e) {
       console.error(`✗ Error processing event ${id}:`, e)
       errorCount++

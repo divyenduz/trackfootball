@@ -4,12 +4,7 @@ export type RequestConfig<TData = unknown> = {
   params?: object
   data?: TData | FormData
   responseType?:
-    | 'arraybuffer'
-    | 'blob'
-    | 'document'
-    | 'json'
-    | 'text'
-    | 'stream'
+    'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
   signal?: AbortSignal
   headers?: HeadersInit
 }
@@ -24,6 +19,54 @@ export type ResponseErrorConfig<TError = unknown> = {
   error: TError
   status: number
   statusText: string
+}
+
+export class HttpError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly statusText: string,
+    public readonly body: unknown,
+    public readonly retryAfter: string | null,
+  ) {
+    super(`HTTP ${status}${statusText ? ` ${statusText}` : ''}`)
+    this.name = 'HttpError'
+  }
+}
+
+async function parseResponse<TData>(
+  response: Response,
+  responseType: RequestConfig['responseType'],
+): Promise<TData | undefined> {
+  if (
+    response.status === 204 ||
+    response.headers.get('content-length') === '0'
+  ) {
+    return undefined
+  }
+
+  if (responseType === 'blob') {
+    return (await response.blob()) as unknown as TData
+  }
+  if (responseType === 'text') {
+    return (await response.text()) as unknown as TData
+  }
+  if (responseType === 'arraybuffer') {
+    return (await response.arrayBuffer()) as unknown as TData
+  }
+
+  const text = await response.text()
+  if (!text) {
+    return undefined
+  }
+
+  try {
+    return JSON.parse(text) as TData
+  } catch (error) {
+    if (!response.ok) {
+      return text as TData
+    }
+    throw error
+  }
 }
 
 const client = async <TData, TError = unknown, TVariables = unknown>(
@@ -64,21 +107,18 @@ const client = async <TData, TError = unknown, TVariables = unknown>(
 
   const response = await fetch(url.toString(), options)
 
-  // Parse response based on responseType
-  let data: TData
-  if (config.responseType === 'blob') {
-    data = (await response.blob()) as unknown as TData
-  } else if (config.responseType === 'text') {
-    data = (await response.text()) as unknown as TData
-  } else if (config.responseType === 'arraybuffer') {
-    data = (await response.arrayBuffer()) as unknown as TData
-  } else {
-    // Default to JSON
-    data = (await response.json()) as TData
+  const data = await parseResponse<TData>(response, config.responseType)
+  if (!response.ok) {
+    throw new HttpError(
+      response.status,
+      response.statusText,
+      data,
+      response.headers.get('retry-after'),
+    )
   }
 
   return {
-    data,
+    data: data as TData,
     status: response.status,
     statusText: response.statusText,
   }

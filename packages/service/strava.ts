@@ -6,11 +6,18 @@ import {
   getActivityById,
   getActivityStreams,
   getLoggedInAthleteActivities,
+  HttpError,
 } from '@trackfootball/open-api'
 import { match } from 'ts-pattern'
 import { GeoData } from './geoData'
 import { postAddField } from './addField'
 import { createRepository } from '@trackfootball/postgres'
+import {
+  stravaActivitySchema,
+  stravaActivityStreamsSchema,
+  tokenExchangeResponseSchema,
+  tokenRefreshResponseSchema,
+} from './stravaSchemas'
 
 import { env } from '@trackfootball/rw-app/src/env'
 
@@ -28,6 +35,39 @@ export const stringify = (value: number | string): string => {
     return value.toString()
   }
   return value
+}
+
+type StravaOAuthConfig = {
+  clientId: string
+  clientSecret: string
+}
+
+function getStravaOAuthConfig(): StravaOAuthConfig {
+  const clientId = env.STRAVA_CLIENT_ID
+  const clientSecret = env.STRAVA_CLIENT_SECRET
+  invariant(clientId, 'STRAVA_CLIENT_ID is required')
+  invariant(clientSecret, 'STRAVA_CLIENT_SECRET is required')
+  return { clientId, clientSecret }
+}
+
+async function readOAuthResponse(response: Response) {
+  const text = await response.text()
+  let body: unknown
+  try {
+    body = text ? JSON.parse(text) : undefined
+  } catch {
+    body = text
+  }
+
+  if (!response.ok) {
+    throw new HttpError(
+      response.status,
+      response.statusText,
+      body,
+      response.headers.get('retry-after'),
+    )
+  }
+  return body
 }
 
 export async function importStravaActivity(
@@ -54,11 +94,18 @@ export async function importStravaActivity(
   }
 
   const existingPost = await repository.getPostByStravaId(activityId)
-  if (existingPost?.geoJson) {
+  if (existingPost && existingPost.userId !== user.id) {
+    throw new Error(`Activity ${activityId} belongs to another user`)
+  }
+  if (existingPost?.status === 'COMPLETED' && existingPost.geoJson) {
     return
   }
 
   const activity = await fetchStravaActivity(repository, activityId, user.id)
+
+  if (activity.id !== activityId || activity.athlete.id !== ownerId) {
+    throw new Error(`Strava activity ${activityId} ownership mismatch`)
+  }
 
   const activityType = activity.type
   if (!activityType) {
@@ -79,22 +126,28 @@ export async function importStravaActivity(
   const activityName = activity.name
   invariant(activityName, 'activity must have a name')
 
-  const post = existingPost ?? await (async () => {
-    const data = {
-      type: 'STRAVA_ACTIVITY' as PostType,
-      key: stringify(activityId),
-      text: activityName,
-      userId: user.id,
-    }
+  const post =
+    existingPost ??
+    (await (async () => {
+      const data = {
+        type: 'STRAVA_ACTIVITY' as PostType,
+        key: stringify(activityId),
+        text: activityName,
+        userId: user.id,
+      }
 
-    const created = await repository.createPost(data)
+      const created = await repository.createPost(data)
 
-    if (!created) {
-      throw new Error(`Failed to create post for activity ${activityId}`)
-    }
+      if (!created) {
+        throw new Error(`Failed to create post for activity ${activityId}`)
+      }
 
-    return created
-  })()
+      return created
+    })())
+
+  if (post.userId !== user.id) {
+    throw new Error(`Activity ${activityId} belongs to another user`)
+  }
 
   await fetchCompletePost(repository, {
     postId: post.id,
@@ -112,83 +165,46 @@ export async function importStravaActivity(
   })
 }
 
-type Athlete = {
-  id: number
-  username: string
-  resource_state: number
-  firstname: string
-  lastname: string
-  city: string
-  state: string
-  country: string
-  sex: string
-  premium: boolean
-  summit: boolean
-  created_at: string
-  updated_at: string
-  badge_type_id: number
-  profile_medium: string
-  profile: string
-  friend: any
-  follower: any
-}
-
-type TokenExchangeResponse = {
-  token_type: string
-  expires_at: number
-  expires_in: number
-  refresh_token: string
-  access_token: string
-  athlete: Athlete
-}
-
 export async function tokenExchange(
   code: string,
-): Promise<TokenExchangeResponse> {
-  const stravaClientId = env.STRAVA_CLIENT_ID
-  const stravaClientSecret = env.STRAVA_CLIENT_SECRET
+  config: StravaOAuthConfig = getStravaOAuthConfig(),
+  fetchFn: typeof fetch = fetch,
+) {
   const link = 'https://www.strava.com/api/v3/oauth/token'
 
   const form = new FormData()
-  invariant(stravaClientId, `stravaClientId not set`)
-  invariant(stravaClientSecret, `stravaClientSecret not set`)
-  form.append('client_id', stravaClientId)
-  form.append('client_secret', stravaClientSecret)
+  form.append('client_id', config.clientId)
+  form.append('client_secret', config.clientSecret)
   form.append('code', code)
   form.append('grant_type', 'authorization_code')
 
-  const r = await fetch(link, {
+  const response = await fetchFn(link, {
     method: 'POST',
     body: form,
     signal: AbortSignal.timeout(30_000),
   })
-  const tokenExchangeResponse = await r.json()
-  return tokenExchangeResponse as TokenExchangeResponse
+  return tokenExchangeResponseSchema.parse(await readOAuthResponse(response))
 }
 
 export async function tokenRefresh(
   refreshToken: string,
-): Promise<Omit<TokenExchangeResponse, 'athlete'>> {
-  const stravaClientId = env.STRAVA_CLIENT_ID
-  const stravaClientSecret = env.STRAVA_CLIENT_SECRET
+  config: StravaOAuthConfig = getStravaOAuthConfig(),
+  fetchFn: typeof fetch = fetch,
+) {
   const link = 'https://www.strava.com/api/v3/oauth/token'
 
-  invariant(stravaClientId, `stravaClientId not set`)
-  invariant(stravaClientSecret, `stravaClientSecret not set`)
-
   const form = new FormData()
-  form.append('client_id', stravaClientId)
-  form.append('client_secret', stravaClientSecret)
+  form.append('client_id', config.clientId)
+  form.append('client_secret', config.clientSecret)
   form.append('refresh_token', refreshToken)
   form.append('grant_type', 'refresh_token')
 
-  const r = await fetch(link, {
+  const response = await fetchFn(link, {
     method: 'POST',
     body: form,
     signal: AbortSignal.timeout(30_000),
   })
-  const tokenRefreshResponse = await r.json()
-  return tokenRefreshResponse as TokenExchangeResponse
+  return tokenRefreshResponseSchema.parse(await readOAuthResponse(response))
 }
 
 export type Maybe<T = string, E = null> = T | E
@@ -223,27 +239,18 @@ export async function getStravaToken(
   const refreshToken = stravaSocialLogin.refreshToken
   const accessToken = stravaSocialLogin.accessToken
 
-  if (new Date(expiresAt!).getTime() < now.getTime()) {
-    try {
-      const tokenRefreshResponse = await tokenRefresh(refreshToken!)
+  if (!expiresAt || !refreshToken || !accessToken) {
+    return null
+  }
 
-      //@ts-expect-error
-      if (tokenRefreshResponse.errors?.length > 0) {
-        console.error(
-          `Failed to refresh Strava token: `,
-          //@ts-expect-error
-          tokenRefreshResponse.message,
-          ` Errors: `,
-          //@ts-expect-error
-          tokenRefreshResponse.errors,
-        )
-        return null
-      }
+  if (expiresAt.getTime() < now.getTime()) {
+    try {
+      const tokenRefreshResponse = await tokenRefresh(refreshToken)
 
       const expiresAt = new Date(tokenRefreshResponse.expires_at * 1000)
 
       await repository.updateSocialLoginTokens(
-        userStravaId!.toString(),
+        userStravaId,
         tokenRefreshResponse.access_token,
         tokenRefreshResponse.refresh_token,
         expiresAt,
@@ -264,6 +271,9 @@ async function getStravaAccessTokenHeaders(
   userId: number,
 ) {
   const stravaAccessToken = await getStravaToken(repository, userId)
+  if (!stravaAccessToken) {
+    throw new Error(`No Strava access token for user ${userId}`)
+  }
   return {
     Authorization: `Bearer ${stravaAccessToken}`,
   }
@@ -273,11 +283,11 @@ export async function checkStravaAccessToken(
   repository: ReturnType<typeof createRepository>,
   userId: number,
 ) {
-  const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
-    repository,
-    userId,
-  )
   try {
+    const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
+      repository,
+      userId,
+    )
     await getLoggedInAthleteActivities(
       {
         per_page: 1,
@@ -312,7 +322,7 @@ export async function fetchStravaActivity(
       headers: stravaAccessTokenHeaders,
     },
   )
-  return activity
+  return stravaActivitySchema.parse(activity)
 }
 
 export async function fetchStravaActivityGeoJson(
@@ -324,15 +334,17 @@ export async function fetchStravaActivityGeoJson(
     repository,
     userId,
   )
-  const activityStreams = await getActivityStreams(
-    activityId,
-    {
-      keys: ['latlng', 'time', 'heartrate'],
-      key_by_type: true,
-    },
-    {
-      headers: stravaAccessTokenHeaders,
-    },
+  const activityStreams = stravaActivityStreamsSchema.parse(
+    await getActivityStreams(
+      activityId,
+      {
+        keys: ['latlng', 'time', 'heartrate'],
+        key_by_type: true,
+      },
+      {
+        headers: stravaAccessTokenHeaders,
+      },
+    ),
   )
 
   const activity = await fetchStravaActivity(repository, activityId, userId)
@@ -363,11 +375,15 @@ export async function fetchCompletePost(
   { postId }: FetchCompletePostArgs,
 ) {
   {
-    const post = await repository.getPostByIdWithoutField(postId)
+    const post = await repository.getPostById(postId)
 
     if (!post) {
       console.error(`post.fetchComplete: post ${postId} not found`)
       return
+    }
+
+    if (post.status === 'COMPLETED' && post.geoJson) {
+      return { post }
     }
 
     await repository.updatePostStatus(post.id, 'PROCESSING')
@@ -392,9 +408,9 @@ export async function fetchCompletePost(
       post.userId,
     )
 
-    const updatedPost = await repository.updatePostComplete({
+    await repository.updatePostComplete({
       id: post.id,
-      geoJson: geoJson as any,
+      geoJson,
       totalDistance: activity.distance ?? 0,
       startTime: activity.start_date
         ? new Date(activity.start_date)
@@ -412,6 +428,9 @@ export async function fetchCompletePost(
     await postAddField(repository, {
       postId: post.id,
     })
+
+    await repository.updatePostStatus(post.id, 'COMPLETED')
+    const updatedPost = await repository.getPostById(post.id)
 
     return { post: updatedPost }
   }

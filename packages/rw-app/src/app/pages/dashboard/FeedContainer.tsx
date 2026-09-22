@@ -6,12 +6,8 @@ import { getFeed } from './feed'
 
 type FeedPost = Awaited<ReturnType<typeof getFeed>>['posts'][number]
 
-interface FeedWithUser extends FeedPost {
-  User: User
-}
-
 interface FeedContainerProps {
-  initialPosts: FeedWithUser[]
+  initialPosts: FeedPost[]
   initialNextCursor: number | null
   currentUser: User | null
 }

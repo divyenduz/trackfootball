@@ -14,11 +14,25 @@ export async function StravaAuthCallback({
   ctx: DefaultAppContext
 }) {
   const { searchParams } = new URL(request.url)
-  const code = searchParams.get('code') as string
-  const scope = searchParams.get('scope') as string
+  const code = searchParams.get('code')
+  const scope = searchParams.get('scope')
 
-  const tokenExchangeResponse = await tokenExchange(code)
-  if (!tokenExchangeResponse) {
+  if (!ctx.user) {
+    return new Response(MESSAGE_UNAUTHORIZED, {
+      status: 403,
+    })
+  }
+  if (!code || !scope) {
+    return new Response('Missing Strava authorization response.', {
+      status: 400,
+    })
+  }
+
+  let tokenExchangeResponse
+  try {
+    tokenExchangeResponse = await tokenExchange(code)
+  } catch (error) {
+    console.error('Strava token exchange failed', error)
     return new Response(
       'Invalid code, maybe the Strava code expired. Please try again.',
       {
@@ -31,25 +45,19 @@ export async function StravaAuthCallback({
   const user = ctx.user
   const expiresAt = new Date(tokenExchangeResponse.expires_at * 1000)
 
-  if (!user) {
-    return new Response(MESSAGE_UNAUTHORIZED, {
-      status: 403,
-    })
-  } else {
-    const data = {
-      userId: user.id,
-      platform: 'STRAVA' as Platform,
-      platformId: userStravaId,
-      platformScope: scope,
-      platformMeta: '',
-      accessToken: tokenExchangeResponse.access_token,
-      refreshToken: tokenExchangeResponse.refresh_token,
-      expiresAt,
-      updatedAt: new Date(),
-    }
-
-    await ctx.repository.upsertSocialLogin(data)
+  const data = {
+    userId: user.id,
+    platform: 'STRAVA' as Platform,
+    platformId: userStravaId,
+    platformScope: scope,
+    platformMeta: '',
+    accessToken: tokenExchangeResponse.access_token,
+    refreshToken: tokenExchangeResponse.refresh_token,
+    expiresAt,
+    updatedAt: new Date(),
   }
+
+  await ctx.repository.upsertSocialLogin(data)
 
   return new Response(null, {
     status: 302,
