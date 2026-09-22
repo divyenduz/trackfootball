@@ -79,8 +79,8 @@ catalogs:
       specifier: 1.4.18
       version: 1.4.18
     capnweb:
-      specifier: 0.5.0
-      version: 0.5.0
+      specifier: 0.10.0
+      version: 0.10.0
     geojson:
       specifier: 0.5.0
       version: 0.5.0
@@ -274,7 +274,7 @@ importers:
         version: 19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1))
       rwsdk:
         specifier: 'catalog:'
-        version: 1.7.3(@cloudflare/vite-plugin@1.57.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13)))(capnweb@0.5.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13))(yauzl@3.4.0)
+        version: 1.7.3(@cloudflare/vite-plugin@1.57.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13)))(capnweb@0.10.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13))(yauzl@3.4.0)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.3
@@ -302,7 +302,7 @@ importers:
         version: 19.3.0(@types/react@19.3.0)
       capnweb:
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.10.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2251,8 +2251,8 @@ packages:
   caniuse-lite@1.0.30001769:
     resolution: {integrity: sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==}
 
-  capnweb@0.5.0:
-    resolution: {integrity: sha512-fujruGZ4jw3u7mzjqgU+Iad9ms2pS7jwEaAR42bbQe9Eax8Rq+MAOCLT1zmmL5AB/wuKf+0YoCYxfcnSfk2/1Q==}
+  capnweb@0.10.0:
+    resolution: {integrity: sha512-lQ2nlzaifkqBeNfs8RLErn7NZ8FNf3vn1W7J3nSH73edWG+0B5nHZGR51S2S9HMZEuZcEypOO469dZRY/BluFA==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -3245,11 +3245,6 @@ packages:
     resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
     hasBin: true
 
-  nanoid@3.3.11:
-    resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-
   nanoid@3.3.19:
     resolution: {integrity: sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -3408,10 +3403,6 @@ packages:
 
   postcss@8.5.28:
     resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.5.6:
-    resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgres@3.4.9:
@@ -5827,7 +5818,7 @@ snapshots:
 
   caniuse-lite@1.0.30001769: {}
 
-  capnweb@0.5.0: {}
+  capnweb@0.10.0: {}
 
   ccount@2.0.1: {}
 
@@ -7003,9 +6994,6 @@ snapshots:
 
   mustache@4.2.0: {}
 
-  nanoid@3.3.11:
-    optional: true
-
   nanoid@3.3.19: {}
 
   nanostores@1.1.0: {}
@@ -7217,13 +7205,6 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.6:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-    optional: true
-
   postgres@3.4.9: {}
 
   prettier@3.9.8: {}
@@ -7419,7 +7400,7 @@ snapshots:
 
   rsc-html-stream@0.0.8: {}
 
-  rwsdk@1.7.3(@cloudflare/vite-plugin@1.57.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13)))(capnweb@0.5.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13))(yauzl@3.4.0):
+  rwsdk@1.7.3(@cloudflare/vite-plugin@1.57.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13)))(capnweb@0.10.0)(react-dom@19.3.0(react@19.3.0))(react-server-dom-webpack@19.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(webpack@5.99.9(esbuild@0.28.1)))(react@19.3.0)(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13))(yauzl@3.4.0):
     dependencies:
       '@ast-grep/napi': 0.45.3
       '@cloudflare/vite-plugin': 1.57.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))(wrangler@4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13))
@@ -7466,7 +7447,7 @@ snapshots:
       vite-tsconfig-paths: 6.1.1(typescript@5.9.3)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))
       wrangler: 4.136.1(@cloudflare/workers-types@5.20260921.1)(@types/node@24.10.13)
     optionalDependencies:
-      capnweb: 0.5.0
+      capnweb: 0.10.0
     transitivePeerDependencies:
       - '@rolldown/plugin-babel'
       - babel-plugin-react-compiler
@@ -7934,7 +7915,7 @@ snapshots:
       esbuild: 0.27.0
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
-      postcss: 8.5.6
+      postcss: 8.5.28
       rollup: 4.43.0
       tinyglobby: 0.2.17
     optionalDependencies:
