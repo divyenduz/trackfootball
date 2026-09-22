@@ -30,7 +30,7 @@ catalog:
   geojson: 0.5.0
   knip: ^5.83.1
   kysely: ^0.29.6
-  kysely-postgres-js: ^3.0.0
+  kysely-postgres-js: ^5.0.0
   lefthook: 2.1.14
   postgres: 3.4.9
   prettier: 3.9.8

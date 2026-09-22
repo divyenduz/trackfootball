@@ -91,8 +91,8 @@ catalogs:
       specifier: ^0.29.6
       version: 0.29.6
     kysely-postgres-js:
-      specifier: ^3.0.0
-      version: 3.0.0
+      specifier: ^5.0.0
+      version: 5.0.0
     lefthook:
       specifier: 2.1.14
       version: 2.1.14
@@ -148,7 +148,7 @@ importers:
         version: 0.29.6
       kysely-postgres-js:
         specifier: 'catalog:'
-        version: 3.0.0(kysely@0.29.6)(postgres@3.4.9)
+        version: 5.0.0(kysely@0.29.6)(postgres@3.4.9)
       postgres:
         specifier: 'catalog:'
         version: 3.4.9
@@ -2923,11 +2923,11 @@ packages:
     peerDependencies:
       kysely: '*'
 
-  kysely-postgres-js@3.0.0:
-    resolution: {integrity: sha512-o2t/xNSYJQDW6rVGGFPXKmZ0BEz2dGn66c2B+cO/k9ZNcU2qPWPycQPQ+B+P2MBXbKYq0xV9BZmFIvkUrmFWAQ==}
-    engines: {bun: '>=1.2', node: '>=20'}
+  kysely-postgres-js@5.0.0:
+    resolution: {integrity: sha512-KD3Lzhzua5KlHFrtQdkxYH5tOpiJTz0e1OhJjEcJAmce7lfpXzZA07ZJYj1QQV1gKBoYnBBqM/621St6/X0YUA==}
+    engines: {bun: '>=1.2', node: '>=22'}
     peerDependencies:
-      kysely: '>= 0.24.0 < 1'
+      kysely: '>= 0.29.0 < 1'
       postgres: ^3.4.0
     peerDependenciesMeta:
       postgres:
@@ -6788,7 +6788,7 @@ snapshots:
     dependencies:
       kysely: 0.28.11
 
-  kysely-postgres-js@3.0.0(kysely@0.29.6)(postgres@3.4.9):
+  kysely-postgres-js@5.0.0(kysely@0.29.6)(postgres@3.4.9):
     dependencies:
       kysely: 0.29.6
     optionalDependencies:
