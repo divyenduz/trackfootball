@@ -10,9 +10,10 @@
     "test": "pnpm --filter @trackfootball/* test",
     "lint": "pnpm --filter @trackfootball/* lint",
     "release": "pnpm --filter @trackfootball/rw-app release",
-    "knip": "knip"
+    "knip": "cross-env KNIP_DISABLE_RAW_TRANSFER=1 knip"
   },
   "devDependencies": {
+    "cross-env": "catalog:",
     "knip": "catalog:",
     "lefthook": "catalog:",
     "prettier": "catalog:",
