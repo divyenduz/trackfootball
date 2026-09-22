@@ -63,6 +63,59 @@ const formatStartTime = (startTime: Date | null) => {
   }).format(startTime)
 }
 
+const getRoutePoints = (geoJson: Post['geoJson']) => {
+  const allCoordinates =
+    geoJson?.features
+      .flatMap((feature) => feature.geometry.coordinates)
+      .map(([longitude, latitude]) => ({ longitude, latitude }))
+      .filter(
+        ({ longitude, latitude }) =>
+          Number.isFinite(longitude) && Number.isFinite(latitude),
+      ) ?? []
+
+  if (allCoordinates.length < 2) return null
+
+  const sampleEvery = Math.max(1, Math.ceil(allCoordinates.length / 1_000))
+  const coordinates = allCoordinates.filter(
+    (_, index) =>
+      index % sampleEvery === 0 || index === allCoordinates.length - 1,
+  )
+
+  const width = 640
+  const height = 320
+  const padding = 28
+  const meanLatitude =
+    coordinates.reduce((sum, coordinate) => sum + coordinate.latitude, 0) /
+    coordinates.length
+  const longitudeScale = Math.cos((meanLatitude * Math.PI) / 180)
+  const projected = coordinates.map(({ longitude, latitude }) => ({
+    x: longitude * longitudeScale,
+    y: latitude,
+  }))
+  const xs = projected.map(({ x }) => x)
+  const ys = projected.map(({ y }) => y)
+  const minX = Math.min(...xs)
+  const maxX = Math.max(...xs)
+  const minY = Math.min(...ys)
+  const maxY = Math.max(...ys)
+  const routeWidth = maxX - minX
+  const routeHeight = maxY - minY
+
+  if (routeWidth === 0 && routeHeight === 0) return null
+
+  const scale = Math.min(
+    (width - padding * 2) / (routeWidth || 1),
+    (height - padding * 2) / (routeHeight || 1),
+  )
+  const offsetX = (width - routeWidth * scale) / 2
+  const offsetY = (height - routeHeight * scale) / 2
+
+  return projected.map(({ x, y }) => ({
+    x: offsetX + (x - minX) * scale,
+    y: height - (offsetY + (y - minY) * scale),
+  }))
+}
+
 export function ActivityClient({ post }: { post: ActivityPost }) {
   invariant(post, `Post with id ${post.id} not found`)
 
@@ -100,6 +153,7 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
   const primaryMetrics = metrics.filter((metric) => metric.primary)
   const supportingMetrics = metrics.filter((metric) => !metric.primary)
   const hasMetrics = metrics.some((metric) => metric.value)
+  const routePoints = getRoutePoints(post.geoJson)
 
   return (
     <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -199,6 +253,73 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
           </p>
         )}
       </section>
+
+      {routePoints && (
+        <section
+          aria-labelledby="activity-route-heading"
+          className="border-t border-gray-200 p-5 sm:p-8"
+        >
+          <h2
+            id="activity-route-heading"
+            className="text-sm font-semibold text-gray-950"
+          >
+            Route trace
+          </h2>
+          <p className="mt-1 text-sm text-gray-600">
+            GPS path recorded during this activity.
+          </p>
+          <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-slate-50">
+            <svg
+              viewBox="0 0 640 320"
+              className="block aspect-[2/1] w-full"
+              role="img"
+              aria-labelledby="activity-route-title activity-route-description"
+            >
+              <title id="activity-route-title">Activity route trace</title>
+              <desc id="activity-route-description">
+                The GPS path from the start to the end of this activity.
+              </desc>
+              <polyline
+                points={routePoints
+                  .map(({ x, y }) => `${x.toFixed(2)},${y.toFixed(2)}`)
+                  .join(' ')}
+                fill="none"
+                stroke="#9f1239"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              <circle
+                cx={routePoints[0]?.x}
+                cy={routePoints[0]?.y}
+                r="7"
+                fill="#15803d"
+                stroke="white"
+                strokeWidth="3"
+                vectorEffect="non-scaling-stroke"
+              />
+              <circle
+                cx={routePoints.at(-1)?.x}
+                cy={routePoints.at(-1)?.y}
+                r="7"
+                fill="#9f1239"
+                stroke="white"
+                strokeWidth="3"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+          </div>
+          <div className="mt-3 flex gap-5 text-xs font-medium text-gray-600">
+            <span className="inline-flex items-center gap-2">
+              <span className="size-2.5 rounded-full bg-green-700" /> Start
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <span className="size-2.5 rounded-full bg-cardinal-800" /> Finish
+            </span>
+          </div>
+        </section>
+      )}
     </article>
   )
 }

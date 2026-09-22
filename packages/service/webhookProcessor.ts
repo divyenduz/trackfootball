@@ -8,6 +8,7 @@ import { ZodError } from 'zod'
 
 import { createDiscordMessage as defaultCreateDiscordMessage } from './discord'
 import {
+  fetchStravaActivity as defaultFetchStravaActivity,
   IgnorableActivityError,
   importStravaActivity as defaultImportStravaActivity,
 } from './strava'
@@ -25,6 +26,7 @@ class TerminalWebhookError extends Error {
 export type WebhookProcessorDeps = {
   repository: ReturnType<typeof createRepository>
   createDiscordMessage?: typeof defaultCreateDiscordMessage
+  fetchStravaActivity?: typeof defaultFetchStravaActivity
   importStravaActivity?: typeof defaultImportStravaActivity
   env: {
     HOMEPAGE_URL?: string
@@ -62,6 +64,8 @@ export async function processStravaWebhookEvent(
   const { repository, env } = deps
   const importStravaActivity =
     deps.importStravaActivity ?? defaultImportStravaActivity
+  const fetchStravaActivity =
+    deps.fetchStravaActivity ?? defaultFetchStravaActivity
   const createDiscordMessage =
     deps.createDiscordMessage ?? defaultCreateDiscordMessage
   const attempt = claimCount(event) + 1
@@ -136,10 +140,18 @@ export async function processStravaWebhookEvent(
           }
 
           if (activityUpdateEvent.updates.title) {
+            const currentActivity = await fetchStravaActivity(
+              repository,
+              activityUpdateEvent.object_id,
+              user.id,
+            )
+            if (!currentActivity.name) {
+              throw new Error('Strava activity has no title')
+            }
             const updated = await repository.updatePostTitleForUser(
               activityUpdateEvent.object_id,
               user.id,
-              activityUpdateEvent.updates.title,
+              currentActivity.name,
             )
             if (!updated) {
               throw new Error('Owned activity title update failed')
@@ -220,6 +232,24 @@ export async function processStravaWebhookEvent(
       error: description,
     }
   }
+}
+
+export async function reprocessStravaWebhookEvent(
+  event: StravaWebhookEvent,
+  deps: WebhookProcessorDeps,
+): Promise<WebhookProcessingResult> {
+  if (event.status === 'PENDING') {
+    return processStravaWebhookEvent(event, deps)
+  }
+  if (event.status !== 'ERRORED') {
+    return { status: 'SKIPPED', eventId: event.id }
+  }
+
+  const requeued = await deps.repository.requeueStravaWebhookEvent(event.id)
+  if (!requeued) {
+    return { status: 'SKIPPED', eventId: event.id }
+  }
+  return processStravaWebhookEvent(requeued, deps)
 }
 
 export async function processRetryableStravaWebhookEvents(

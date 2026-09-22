@@ -6,7 +6,10 @@ import type {
 import { describe, expect, it, vi } from 'vitest'
 
 import { IgnorableActivityError } from './strava'
-import { processStravaWebhookEvent } from './webhookProcessor'
+import {
+  processStravaWebhookEvent,
+  reprocessStravaWebhookEvent,
+} from './webhookProcessor'
 
 const body = {
   object_id: 101,
@@ -116,12 +119,12 @@ describe('Strava webhook processing', () => {
     )
   })
 
-  it('resumes an incomplete post before completing an update event', async () => {
+  it('resumes an incomplete post and uses the current Strava title', async () => {
     const sourceEvent = event({
       body: JSON.stringify({
         ...body,
         aspect_type: 'update',
-        updates: { title: 'Latest title' },
+        updates: { title: 'Stale webhook title' },
       }),
     })
     const repository = repositoryFor(sourceEvent)
@@ -141,10 +144,14 @@ describe('Strava webhook processing', () => {
       }),
     })
     const importStravaActivity = vi.fn().mockResolvedValue(undefined)
+    const fetchStravaActivity = vi.fn().mockResolvedValue({
+      name: 'Current Strava title',
+    })
 
     const result = await processStravaWebhookEvent(sourceEvent, {
       repository,
       env,
+      fetchStravaActivity,
       importStravaActivity,
     })
 
@@ -154,11 +161,41 @@ describe('Strava webhook processing', () => {
       body.object_id,
       'WEBHOOK',
     )
+    expect(fetchStravaActivity).toHaveBeenCalledWith(
+      repository,
+      body.object_id,
+      user.id,
+    )
     expect(repository.updatePostTitleForUser).toHaveBeenCalledWith(
       body.object_id,
       user.id,
-      'Latest title',
+      'Current Strava title',
     )
+    expect(result.status).toBe('COMPLETED')
+  })
+
+  it('requeues an authenticated errored event for an operator retry', async () => {
+    const erroredEvent = event({ status: 'ERRORED' })
+    const requeuedEvent = event({
+      status: 'PENDING',
+      errors: [...(erroredEvent.errors ?? []), 'requeue:v1:operator'],
+    })
+    const repository = repositoryFor(requeuedEvent)
+    Object.assign(repository, {
+      requeueStravaWebhookEvent: vi.fn().mockResolvedValue(requeuedEvent),
+    })
+    const importStravaActivity = vi.fn().mockResolvedValue(undefined)
+
+    const result = await reprocessStravaWebhookEvent(erroredEvent, {
+      repository,
+      env,
+      importStravaActivity,
+    })
+
+    expect(repository.requeueStravaWebhookEvent).toHaveBeenCalledWith(
+      erroredEvent.id,
+    )
+    expect(importStravaActivity).toHaveBeenCalledOnce()
     expect(result.status).toBe('COMPLETED')
   })
 })

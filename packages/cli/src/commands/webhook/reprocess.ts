@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant'
 import postgres from 'postgres'
 import {
   createDiscordMessage,
-  processStravaWebhookEvent,
+  reprocessStravaWebhookEvent,
 } from '@trackfootball/service'
 import type { StravaWebhookEvent } from '@trackfootball/postgres'
 import * as readline from 'readline/promises'
@@ -15,7 +15,7 @@ type Flags = {
   yes?: boolean
 }
 
-const help = `${CLI_NAME} webhook reprocess [ids...] | reprocess PENDING Strava webhook events`
+const help = `${CLI_NAME} webhook reprocess [ids...] | reprocess PENDING events or explicit ERRORED event IDs`
 
 async function cmd(
   this: LocalContext,
@@ -123,7 +123,7 @@ async function cmd(
       }
 
       console.log(`  Processing event ${id}...`)
-      const result = await processStravaWebhookEvent(event, {
+      const result = await reprocessStravaWebhookEvent(event, {
         repository,
         createDiscordMessage,
         env: {
@@ -167,7 +167,7 @@ export const WebhookReprocessCommand = buildCommand({
     positional: {
       kind: 'array',
       parameter: {
-        brief: 'webhook event id(s) to reprocess',
+        brief: 'PENDING or ERRORED webhook event id(s) to reprocess',
         parse: String,
       },
     },

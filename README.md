@@ -54,6 +54,10 @@ as `STRAVA_WEBHOOK_SUBSCRIPTION_ID`. The Worker cron retries authenticated,
 unfinished events every five minutes; events received by the old unauthenticated
 endpoint are deliberately excluded from automatic replay.
 
+To retry an authenticated event after automatic retries are exhausted, run
+`trackfootball webhook reprocess <event-id>`. Explicit `ERRORED` events are
+atomically returned to the retry queue before processing.
+
 ### Commands
 
 | Command            | Description                  |

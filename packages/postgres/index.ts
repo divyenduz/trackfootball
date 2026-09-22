@@ -113,6 +113,11 @@ export function createRepository(sql: ReturnType<typeof postgres>) {
         typeof stravaWebhookEventRepo.getRetryableStravaWebhookEvents
       >[1],
     ) => stravaWebhookEventRepo.getRetryableStravaWebhookEvents(sql, limit),
+    requeueStravaWebhookEvent: (
+      id: Parameters<
+        typeof stravaWebhookEventRepo.requeueStravaWebhookEvent
+      >[1],
+    ) => stravaWebhookEventRepo.requeueStravaWebhookEvent(sql, id),
     claimStravaWebhookEvent: (
       id: Parameters<typeof stravaWebhookEventRepo.claimStravaWebhookEvent>[1],
       claim: Parameters<

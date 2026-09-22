@@ -29,17 +29,26 @@ export async function Athlete({ ctx, params }: RequestInfo) {
     )
   }
 
-  const athleteSocialLogin = await ctx.repository.getUserStravaSocialLogin(
-    athlete.id,
-  )
-
-  const stravaState = (await checkStravaToken({
-    ...athlete,
-    socialLogin: athleteSocialLogin ? [athleteSocialLogin] : [],
-  })) as CheckStravaState
+  const isOwner = ctx.user?.id === athlete.id
+  let stravaState: CheckStravaState = 'NOT_CONNECTED'
+  if (isOwner) {
+    const athleteSocialLogin = await ctx.repository.getUserStravaSocialLogin(
+      athlete.id,
+    )
+    stravaState = (await checkStravaToken({
+      ...athlete,
+      socialLogin: athleteSocialLogin ? [athleteSocialLogin] : [],
+    })) as CheckStravaState
+  }
 
   const athleteName =
     [athlete.firstName, athlete.lastName].filter(Boolean).join(' ') || 'Athlete'
+  const initials =
+    [athlete.firstName, athlete.lastName]
+      .map((name) => name?.trim().charAt(0))
+      .filter(Boolean)
+      .join('')
+      .toUpperCase() || 'A'
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
@@ -57,8 +66,24 @@ export async function Athlete({ ctx, params }: RequestInfo) {
         </h1>
       </div>
 
+      <section className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div
+          aria-hidden="true"
+          className="flex size-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-lg font-semibold text-white shadow-sm ring-2 ring-white"
+        >
+          {initials}
+        </div>
+        <div className="min-w-0">
+          <h2 className="font-semibold text-gray-950">TrackFootball athlete</h2>
+          <p className="mt-1 text-sm leading-6 text-gray-600">
+            Activity details and performance metrics are shared through this
+            athlete&apos;s recorded football sessions.
+          </p>
+        </div>
+      </section>
+
       <ShowToOwner ownerId={athlete.id} userId={ctx.user?.id}>
-        <section className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <section className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
               Strava connection

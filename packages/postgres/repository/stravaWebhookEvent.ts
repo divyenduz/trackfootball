@@ -13,6 +13,7 @@ const retryableWhere = (sql: Sql) => sql`
   AND "errors"[1] LIKE 'accepted:v1:%'
   AND (
     "errors"[cardinality("errors")] LIKE 'accepted:v1:%'
+    OR "errors"[cardinality("errors")] LIKE 'requeue:v1:%'
     OR (
       "errors"[cardinality("errors")] LIKE 'failure:v1:%'
       AND "updatedAt" < NOW() - INTERVAL '5 minutes'
@@ -67,6 +68,26 @@ export async function getRetryableStravaWebhookEvents(
     ORDER BY "createdAt" ASC
     LIMIT ${limit}
   `
+}
+
+export async function requeueStravaWebhookEvent(
+  sql: Sql,
+  id: number,
+): Promise<StravaWebhookEvent | null> {
+  const events = await sql<StravaWebhookEvent[]>`
+    UPDATE "StravaWebhookEvent"
+    SET "status" = 'PENDING',
+        "errors" = array_append(
+          COALESCE("errors", ARRAY[]::text[]),
+          'requeue:v1:operator'
+        ),
+        "updatedAt" = NOW()
+    WHERE "id" = ${id}
+      AND "status" = 'ERRORED'
+      AND "errors"[1] LIKE 'accepted:v1:%'
+    RETURNING *
+  `
+  return events[0] ?? null
 }
 
 export async function claimStravaWebhookEvent(
