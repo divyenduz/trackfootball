@@ -6,15 +6,14 @@
   "scripts": {
     "test": "vitest run",
     "lint": "tsc --noEmit",
-    "generate:strava": "kubb --config kubb.config.ts"
+    "generate:strava": "kubb generate --config kubb.config.ts"
   },
   "devDependencies": {
-    "@kubb/core": "catalog:",
-    "@kubb/plugin-client": "catalog:",
-    "@kubb/plugin-oas": "catalog:",
+    "@kubb/adapter-oas": "catalog:",
+    "@kubb/plugin-fetch": "catalog:",
     "@kubb/plugin-ts": "catalog:",
-    "@kubb/react-fabric": "catalog:",
-    "@kubb/cli": "catalog:",
+    "@redocly/openapi-core": "catalog:",
+    "kubb": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

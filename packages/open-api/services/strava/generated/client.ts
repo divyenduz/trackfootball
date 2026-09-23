@@ -3,113 +3,92 @@
  * Do not edit manually.
  */
 
-import fetch from '../../../fetch.ts'
+import type { Options, UnwrappedResult } from '../.kubb/client'
 import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from '../../../fetch.ts'
-import type {
-  CreateActivityMutationResponse,
-  ExploreSegmentsQueryResponse,
-  ExploreSegmentsQueryParams,
-  GetEffortsBySegmentIdQueryResponse,
-  GetEffortsBySegmentIdQueryParams,
-  GetLoggedInAthleteQueryResponse,
-  GetStatsQueryResponse,
-  GetStatsPathParams,
-  UpdateLoggedInAthleteMutationResponse,
-  UpdateLoggedInAthletePathParams,
-  GetLoggedInAthleteZonesQueryResponse,
-  GetSegmentByIdQueryResponse,
-  GetSegmentByIdPathParams,
-  GetLoggedInAthleteStarredSegmentsQueryResponse,
-  GetLoggedInAthleteStarredSegmentsQueryParams,
-  StarSegmentMutationResponse,
-  StarSegmentPathParams,
-  GetSegmentEffortByIdQueryResponse,
-  GetSegmentEffortByIdPathParams,
-  GetActivityByIdQueryResponse,
-  GetActivityByIdPathParams,
-  GetActivityByIdQueryParams,
-  UpdateActivityByIdMutationRequest,
-  UpdateActivityByIdMutationResponse,
-  UpdateActivityByIdPathParams,
-  GetLoggedInAthleteActivitiesQueryResponse,
-  GetLoggedInAthleteActivitiesQueryParams,
-  GetLapsByActivityIdQueryResponse,
-  GetLapsByActivityIdPathParams,
-  GetZonesByActivityIdQueryResponse,
-  GetZonesByActivityIdPathParams,
-  GetCommentsByActivityIdQueryResponse,
-  GetCommentsByActivityIdPathParams,
-  GetCommentsByActivityIdQueryParams,
-  GetKudoersByActivityIdQueryResponse,
-  GetKudoersByActivityIdPathParams,
-  GetKudoersByActivityIdQueryParams,
-  GetClubByIdQueryResponse,
-  GetClubByIdPathParams,
-  GetLoggedInAthleteClubsQueryResponse,
-  GetLoggedInAthleteClubsQueryParams,
-  GetGearByIdQueryResponse,
-  GetGearByIdPathParams,
-  GetRouteByIdQueryResponse,
-  GetRouteByIdPathParams,
-  GetRoutesByAthleteIdQueryResponse,
-  GetRoutesByAthleteIdQueryParams,
-  GetRouteAsGPXQueryResponse,
-  GetRouteAsGPXPathParams,
-  GetRouteAsTCXQueryResponse,
-  GetRouteAsTCXPathParams,
-  CreateUploadMutationResponse,
-  GetUploadByIdQueryResponse,
-  GetUploadByIdPathParams,
-  GetActivityStreamsQueryResponse,
-  GetActivityStreamsPathParams,
-  GetActivityStreamsQueryParams,
-  GetSegmentEffortStreamsQueryResponse,
-  GetSegmentEffortStreamsPathParams,
-  GetSegmentEffortStreamsQueryParams,
-  GetSegmentStreamsQueryResponse,
-  GetSegmentStreamsPathParams,
-  GetSegmentStreamsQueryParams,
-  GetRouteStreamsQueryResponse,
-  GetRouteStreamsPathParams,
-} from './types.ts'
-
-function getGetStatsUrl(id: GetStatsPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/athletes/${id}/stats` as const,
-  }
-  return res
-}
+  CreateActivityOptions,
+  CreateActivityResponses,
+  ExploreSegmentsOptions,
+  ExploreSegmentsResponses,
+  GetEffortsBySegmentIdOptions,
+  GetEffortsBySegmentIdResponses,
+  GetLoggedInAthleteOptions,
+  GetLoggedInAthleteResponses,
+  GetStatsOptions,
+  GetStatsResponses,
+  UpdateLoggedInAthleteOptions,
+  UpdateLoggedInAthleteResponses,
+  GetLoggedInAthleteZonesOptions,
+  GetLoggedInAthleteZonesResponses,
+  GetSegmentByIdOptions,
+  GetSegmentByIdResponses,
+  GetLoggedInAthleteStarredSegmentsOptions,
+  GetLoggedInAthleteStarredSegmentsResponses,
+  StarSegmentOptions,
+  StarSegmentResponses,
+  GetSegmentEffortByIdOptions,
+  GetSegmentEffortByIdResponses,
+  GetActivityByIdOptions,
+  GetActivityByIdResponses,
+  UpdateActivityByIdOptions,
+  UpdateActivityByIdResponses,
+  GetLoggedInAthleteActivitiesOptions,
+  GetLoggedInAthleteActivitiesResponses,
+  GetLapsByActivityIdOptions,
+  GetLapsByActivityIdResponses,
+  GetZonesByActivityIdOptions,
+  GetZonesByActivityIdResponses,
+  GetCommentsByActivityIdOptions,
+  GetCommentsByActivityIdResponses,
+  GetKudoersByActivityIdOptions,
+  GetKudoersByActivityIdResponses,
+  GetClubByIdOptions,
+  GetClubByIdResponses,
+  GetLoggedInAthleteClubsOptions,
+  GetLoggedInAthleteClubsResponses,
+  GetGearByIdOptions,
+  GetGearByIdResponses,
+  GetRouteByIdOptions,
+  GetRouteByIdResponses,
+  GetRoutesByAthleteIdOptions,
+  GetRoutesByAthleteIdResponses,
+  GetRouteAsGPXOptions,
+  GetRouteAsGPXResponses,
+  GetRouteAsTCXOptions,
+  GetRouteAsTCXResponses,
+  CreateUploadOptions,
+  CreateUploadResponses,
+  GetUploadByIdOptions,
+  GetUploadByIdResponses,
+  GetActivityStreamsOptions,
+  GetActivityStreamsResponses,
+  GetSegmentEffortStreamsOptions,
+  GetSegmentEffortStreamsResponses,
+  GetSegmentStreamsOptions,
+  GetSegmentStreamsResponses,
+  GetRouteStreamsOptions,
+  GetRouteStreamsResponses,
+} from './types'
+import { client, unwrapResult } from '../.kubb/client'
 
 /**
  * @description Returns the activity stats of an athlete. Only includes data from activities set to Everyone visibilty.
  * @summary Get Athlete Stats
  * {@link /athletes/:id/stats}
  */
-export async function getStats(
-  id: GetStatsPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getStats<ThrowOnError extends boolean = true>(
+  options: Options<GetStatsOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetStatsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetStatsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: 'GET', url: getGetStatsUrl(id).url.toString(), ...requestConfig })
-  return res.data
-}
-
-function getGetLoggedInAthleteUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/athlete` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/athletes/{id}/stats',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetStatsResponses, ThrowOnError>>
 }
 
 /**
@@ -117,31 +96,20 @@ function getGetLoggedInAthleteUrl() {
  * @summary Get Authenticated Athlete
  * {@link /athlete}
  */
-export async function getLoggedInAthlete(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getLoggedInAthlete<ThrowOnError extends boolean = true>(
+  options: Options<GetLoggedInAthleteOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<GetLoggedInAthleteResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetLoggedInAthleteQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetLoggedInAthleteUrl().url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getUpdateLoggedInAthleteUrl(
-  weight: UpdateLoggedInAthletePathParams['weight'],
-) {
-  const res = {
-    method: 'PUT',
-    url: `https://www.strava.com/api/v3/athlete` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/athlete',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetLoggedInAthleteResponses, ThrowOnError>>
 }
 
 /**
@@ -149,30 +117,20 @@ function getUpdateLoggedInAthleteUrl(
  * @summary Update Athlete
  * {@link /athlete}
  */
-export async function updateLoggedInAthlete(
-  weight: UpdateLoggedInAthletePathParams['weight'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function updateLoggedInAthlete<ThrowOnError extends boolean = true>(
+  options: Options<UpdateLoggedInAthleteOptions, ThrowOnError>,
+): Promise<UnwrappedResult<UpdateLoggedInAthleteResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    UpdateLoggedInAthleteMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'PUT',
-    url: getUpdateLoggedInAthleteUrl(weight).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetLoggedInAthleteZonesUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/athlete/zones` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'PUT',
+      url: '/athlete',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<UpdateLoggedInAthleteResponses, ThrowOnError>>
 }
 
 /**
@@ -180,29 +138,20 @@ function getGetLoggedInAthleteZonesUrl() {
  * @summary Get Zones
  * {@link /athlete/zones}
  */
-export async function getLoggedInAthleteZones(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getLoggedInAthleteZones<ThrowOnError extends boolean = true>(
+  options: Options<GetLoggedInAthleteZonesOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<GetLoggedInAthleteZonesResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetLoggedInAthleteZonesQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetLoggedInAthleteZonesUrl().url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetSegmentByIdUrl(id: GetSegmentByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segments/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/athlete/zones',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetLoggedInAthleteZonesResponses, ThrowOnError>>
 }
 
 /**
@@ -210,30 +159,20 @@ function getGetSegmentByIdUrl(id: GetSegmentByIdPathParams['id']) {
  * @summary Get Segment
  * {@link /segments/:id}
  */
-export async function getSegmentById(
-  id: GetSegmentByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getSegmentById<ThrowOnError extends boolean = true>(
+  options: Options<GetSegmentByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetSegmentByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetSegmentByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetSegmentByIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetLoggedInAthleteStarredSegmentsUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segments/starred` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segments/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetSegmentByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -241,31 +180,26 @@ function getGetLoggedInAthleteStarredSegmentsUrl() {
  * @summary List Starred Segments
  * {@link /segments/starred}
  */
-export async function getLoggedInAthleteStarredSegments(
-  params?: GetLoggedInAthleteStarredSegmentsQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getLoggedInAthleteStarredSegments<
+  ThrowOnError extends boolean = true,
+>(
+  options: Options<GetLoggedInAthleteStarredSegmentsOptions, ThrowOnError> = {},
+): Promise<
+  UnwrappedResult<GetLoggedInAthleteStarredSegmentsResponses, ThrowOnError>
+> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetLoggedInAthleteStarredSegmentsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetLoggedInAthleteStarredSegmentsUrl().url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getStarSegmentUrl(id: StarSegmentPathParams['id']) {
-  const res = {
-    method: 'PUT',
-    url: `https://www.strava.com/api/v3/segments/${id}/starred` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segments/starred',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<
+    UnwrappedResult<GetLoggedInAthleteStarredSegmentsResponses, ThrowOnError>
+  >
 }
 
 /**
@@ -273,34 +207,20 @@ function getStarSegmentUrl(id: StarSegmentPathParams['id']) {
  * @summary Star Segment
  * {@link /segments/:id/starred}
  */
-export async function starSegment(
-  id: StarSegmentPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function starSegment<ThrowOnError extends boolean = true>(
+  options: Options<StarSegmentOptions, ThrowOnError>,
+): Promise<UnwrappedResult<StarSegmentResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    StarSegmentMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'PUT',
-    url: getStarSegmentUrl(id).url.toString(),
-    ...requestConfig,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      ...requestConfig.headers,
-    },
-  })
-  return res.data
-}
-
-function getGetEffortsBySegmentIdUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segment_efforts` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'PUT',
+      url: '/segments/{id}/starred',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<StarSegmentResponses, ThrowOnError>>
 }
 
 /**
@@ -308,31 +228,20 @@ function getGetEffortsBySegmentIdUrl() {
  * @summary List Segment Efforts
  * {@link /segment_efforts}
  */
-export async function getEffortsBySegmentId(
-  params: GetEffortsBySegmentIdQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getEffortsBySegmentId<ThrowOnError extends boolean = true>(
+  options: Options<GetEffortsBySegmentIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetEffortsBySegmentIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetEffortsBySegmentIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetEffortsBySegmentIdUrl().url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getExploreSegmentsUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segments/explore` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segment_efforts',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetEffortsBySegmentIdResponses, ThrowOnError>>
 }
 
 /**
@@ -340,31 +249,21 @@ function getExploreSegmentsUrl() {
  * @summary Explore segments
  * {@link /segments/explore}
  */
-export async function exploreSegments(
-  params: ExploreSegmentsQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function exploreSegments<ThrowOnError extends boolean = true>(
+  options: Options<ExploreSegmentsOptions, ThrowOnError>,
+): Promise<UnwrappedResult<ExploreSegmentsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    ExploreSegmentsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getExploreSegmentsUrl().url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetSegmentEffortByIdUrl(id: GetSegmentEffortByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segment_efforts/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segments/explore',
+      security: [{ type: 'oauth2' }],
+      styles: { query: { bounds: { style: 'form', explode: false } } },
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<ExploreSegmentsResponses, ThrowOnError>>
 }
 
 /**
@@ -372,30 +271,20 @@ function getGetSegmentEffortByIdUrl(id: GetSegmentEffortByIdPathParams['id']) {
  * @summary Get Segment Effort
  * {@link /segment_efforts/:id}
  */
-export async function getSegmentEffortById(
-  id: GetSegmentEffortByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getSegmentEffortById<ThrowOnError extends boolean = true>(
+  options: Options<GetSegmentEffortByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetSegmentEffortByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetSegmentEffortByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetSegmentEffortByIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getCreateActivityUrl() {
-  const res = {
-    method: 'POST',
-    url: `https://www.strava.com/api/v3/activities` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segment_efforts/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetSegmentEffortByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -403,33 +292,20 @@ function getCreateActivityUrl() {
  * @summary Create an Activity
  * {@link /activities}
  */
-export async function createActivity(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function createActivity<ThrowOnError extends boolean = true>(
+  options: Options<CreateActivityOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<CreateActivityResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    CreateActivityMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'POST',
-    url: getCreateActivityUrl().url.toString(),
-    ...requestConfig,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      ...requestConfig.headers,
-    },
-  })
-  return res.data
-}
-
-function getGetActivityByIdUrl(id: GetActivityByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/activities/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'POST',
+      url: '/activities',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<CreateActivityResponses, ThrowOnError>>
 }
 
 /**
@@ -439,32 +315,20 @@ function getGetActivityByIdUrl(id: GetActivityByIdPathParams['id']) {
  * @summary Get Activity
  * {@link /activities/:id}
  */
-export async function getActivityById(
-  id: GetActivityByIdPathParams['id'],
-  params?: GetActivityByIdQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getActivityById<ThrowOnError extends boolean = true>(
+  options: Options<GetActivityByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetActivityByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetActivityByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetActivityByIdUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getUpdateActivityByIdUrl(id: UpdateActivityByIdPathParams['id']) {
-  const res = {
-    method: 'PUT',
-    url: `https://www.strava.com/api/v3/activities/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/activities/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetActivityByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -472,36 +336,20 @@ function getUpdateActivityByIdUrl(id: UpdateActivityByIdPathParams['id']) {
  * @summary Update Activity
  * {@link /activities/:id}
  */
-export async function updateActivityById(
-  id: UpdateActivityByIdPathParams['id'],
-  data?: UpdateActivityByIdMutationRequest,
-  config: Partial<RequestConfig<UpdateActivityByIdMutationRequest>> & {
-    client?: Client
-  } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function updateActivityById<ThrowOnError extends boolean = true>(
+  options: Options<UpdateActivityByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<UpdateActivityByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const requestData = data
-
-  const res = await request<
-    UpdateActivityByIdMutationResponse,
-    ResponseErrorConfig<Error>,
-    UpdateActivityByIdMutationRequest
-  >({
-    method: 'PUT',
-    url: getUpdateActivityByIdUrl(id).url.toString(),
-    data: requestData,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetLoggedInAthleteActivitiesUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/athlete/activities` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'PUT',
+      url: '/activities/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<UpdateActivityByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -509,31 +357,26 @@ function getGetLoggedInAthleteActivitiesUrl() {
  * @summary List Athlete Activities
  * {@link /athlete/activities}
  */
-export async function getLoggedInAthleteActivities(
-  params?: GetLoggedInAthleteActivitiesQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getLoggedInAthleteActivities<
+  ThrowOnError extends boolean = true,
+>(
+  options: Options<GetLoggedInAthleteActivitiesOptions, ThrowOnError> = {},
+): Promise<
+  UnwrappedResult<GetLoggedInAthleteActivitiesResponses, ThrowOnError>
+> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetLoggedInAthleteActivitiesQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetLoggedInAthleteActivitiesUrl().url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetLapsByActivityIdUrl(id: GetLapsByActivityIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/activities/${id}/laps` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/athlete/activities',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<
+    UnwrappedResult<GetLoggedInAthleteActivitiesResponses, ThrowOnError>
+  >
 }
 
 /**
@@ -541,30 +384,20 @@ function getGetLapsByActivityIdUrl(id: GetLapsByActivityIdPathParams['id']) {
  * @summary List Activity Laps
  * {@link /activities/:id/laps}
  */
-export async function getLapsByActivityId(
-  id: GetLapsByActivityIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getLapsByActivityId<ThrowOnError extends boolean = true>(
+  options: Options<GetLapsByActivityIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetLapsByActivityIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetLapsByActivityIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetLapsByActivityIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetZonesByActivityIdUrl(id: GetZonesByActivityIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/activities/${id}/zones` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/activities/{id}/laps',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetLapsByActivityIdResponses, ThrowOnError>>
 }
 
 /**
@@ -572,32 +405,20 @@ function getGetZonesByActivityIdUrl(id: GetZonesByActivityIdPathParams['id']) {
  * @summary Get Activity Zones
  * {@link /activities/:id/zones}
  */
-export async function getZonesByActivityId(
-  id: GetZonesByActivityIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getZonesByActivityId<ThrowOnError extends boolean = true>(
+  options: Options<GetZonesByActivityIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetZonesByActivityIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetZonesByActivityIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetZonesByActivityIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetCommentsByActivityIdUrl(
-  id: GetCommentsByActivityIdPathParams['id'],
-) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/activities/${id}/comments` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/activities/{id}/zones',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetZonesByActivityIdResponses, ThrowOnError>>
 }
 
 /**
@@ -605,34 +426,20 @@ function getGetCommentsByActivityIdUrl(
  * @summary List Activity Comments
  * {@link /activities/:id/comments}
  */
-export async function getCommentsByActivityId(
-  id: GetCommentsByActivityIdPathParams['id'],
-  params?: GetCommentsByActivityIdQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getCommentsByActivityId<ThrowOnError extends boolean = true>(
+  options: Options<GetCommentsByActivityIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetCommentsByActivityIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetCommentsByActivityIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetCommentsByActivityIdUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetKudoersByActivityIdUrl(
-  id: GetKudoersByActivityIdPathParams['id'],
-) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/activities/${id}/kudos` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/activities/{id}/comments',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetCommentsByActivityIdResponses, ThrowOnError>>
 }
 
 /**
@@ -640,32 +447,20 @@ function getGetKudoersByActivityIdUrl(
  * @summary List Activity Kudoers
  * {@link /activities/:id/kudos}
  */
-export async function getKudoersByActivityId(
-  id: GetKudoersByActivityIdPathParams['id'],
-  params?: GetKudoersByActivityIdQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getKudoersByActivityId<ThrowOnError extends boolean = true>(
+  options: Options<GetKudoersByActivityIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetKudoersByActivityIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetKudoersByActivityIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetKudoersByActivityIdUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetClubByIdUrl(id: GetClubByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/clubs/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/activities/{id}/kudos',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetKudoersByActivityIdResponses, ThrowOnError>>
 }
 
 /**
@@ -673,30 +468,20 @@ function getGetClubByIdUrl(id: GetClubByIdPathParams['id']) {
  * @summary Get Club
  * {@link /clubs/:id}
  */
-export async function getClubById(
-  id: GetClubByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getClubById<ThrowOnError extends boolean = true>(
+  options: Options<GetClubByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetClubByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetClubByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetClubByIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetLoggedInAthleteClubsUrl() {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/athlete/clubs` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/clubs/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetClubByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -704,31 +489,20 @@ function getGetLoggedInAthleteClubsUrl() {
  * @summary List Athlete Clubs
  * {@link /athlete/clubs}
  */
-export async function getLoggedInAthleteClubs(
-  params?: GetLoggedInAthleteClubsQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getLoggedInAthleteClubs<ThrowOnError extends boolean = true>(
+  options: Options<GetLoggedInAthleteClubsOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<GetLoggedInAthleteClubsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetLoggedInAthleteClubsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetLoggedInAthleteClubsUrl().url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetGearByIdUrl(id: GetGearByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/gear/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/athlete/clubs',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetLoggedInAthleteClubsResponses, ThrowOnError>>
 }
 
 /**
@@ -736,30 +510,20 @@ function getGetGearByIdUrl(id: GetGearByIdPathParams['id']) {
  * @summary Get Equipment
  * {@link /gear/:id}
  */
-export async function getGearById(
-  id: GetGearByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getGearById<ThrowOnError extends boolean = true>(
+  options: Options<GetGearByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetGearByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetGearByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetGearByIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetRouteByIdUrl(id: GetRouteByIdPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/routes/${id}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/gear/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetGearByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -767,31 +531,20 @@ function getGetRouteByIdUrl(id: GetRouteByIdPathParams['id']) {
  * @summary Get Route
  * {@link /routes/:id}
  */
-export async function getRouteById(
-  id: GetRouteByIdPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getRouteById<ThrowOnError extends boolean = true>(
+  options: Options<GetRouteByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetRouteByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetRouteByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetRouteByIdUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetRoutesByAthleteIdUrl() {
-  const res = {
-    method: 'GET',
-    // @ts-expect-error invalid swagger definition
-    url: `https://www.strava.com/api/v3/athletes/${id}/routes` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/routes/{id}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetRouteByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -799,31 +552,20 @@ function getGetRoutesByAthleteIdUrl() {
  * @summary List Athlete Routes
  * {@link /athletes/:id/routes}
  */
-export async function getRoutesByAthleteId(
-  params?: GetRoutesByAthleteIdQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getRoutesByAthleteId<ThrowOnError extends boolean = true>(
+  options: Options<GetRoutesByAthleteIdOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<GetRoutesByAthleteIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetRoutesByAthleteIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetRoutesByAthleteIdUrl().url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetRouteAsGPXUrl(id: GetRouteAsGPXPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/routes/${id}/export_gpx` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/athletes/{id}/routes',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetRoutesByAthleteIdResponses, ThrowOnError>>
 }
 
 /**
@@ -831,30 +573,20 @@ function getGetRouteAsGPXUrl(id: GetRouteAsGPXPathParams['id']) {
  * @summary Export Route GPX
  * {@link /routes/:id/export_gpx}
  */
-export async function getRouteAsGPX(
-  id: GetRouteAsGPXPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getRouteAsGPX<ThrowOnError extends boolean = true>(
+  options: Options<GetRouteAsGPXOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetRouteAsGPXResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetRouteAsGPXQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetRouteAsGPXUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetRouteAsTCXUrl(id: GetRouteAsTCXPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/routes/${id}/export_tcx` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/routes/{id}/export_gpx',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetRouteAsGPXResponses, ThrowOnError>>
 }
 
 /**
@@ -862,30 +594,20 @@ function getGetRouteAsTCXUrl(id: GetRouteAsTCXPathParams['id']) {
  * @summary Export Route TCX
  * {@link /routes/:id/export_tcx}
  */
-export async function getRouteAsTCX(
-  id: GetRouteAsTCXPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getRouteAsTCX<ThrowOnError extends boolean = true>(
+  options: Options<GetRouteAsTCXOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetRouteAsTCXResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetRouteAsTCXQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetRouteAsTCXUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getCreateUploadUrl() {
-  const res = {
-    method: 'POST',
-    url: `https://www.strava.com/api/v3/uploads` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/routes/{id}/export_tcx',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetRouteAsTCXResponses, ThrowOnError>>
 }
 
 /**
@@ -893,29 +615,20 @@ function getCreateUploadUrl() {
  * @summary Upload Activity
  * {@link /uploads}
  */
-export async function createUpload(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function createUpload<ThrowOnError extends boolean = true>(
+  options: Options<CreateUploadOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<CreateUploadResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    CreateUploadMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'POST',
-    url: getCreateUploadUrl().url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetUploadByIdUrl(uploadId: GetUploadByIdPathParams['uploadId']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/uploads/${uploadId}` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'POST',
+      url: '/uploads',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<CreateUploadResponses, ThrowOnError>>
 }
 
 /**
@@ -923,30 +636,20 @@ function getGetUploadByIdUrl(uploadId: GetUploadByIdPathParams['uploadId']) {
  * @summary Get Upload
  * {@link /uploads/:uploadId}
  */
-export async function getUploadById(
-  uploadId: GetUploadByIdPathParams['uploadId'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getUploadById<ThrowOnError extends boolean = true>(
+  options: Options<GetUploadByIdOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetUploadByIdResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetUploadByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetUploadByIdUrl(uploadId).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetActivityStreamsUrl(id: GetActivityStreamsPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/activities/${id}/streams` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/uploads/{uploadId}',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetUploadByIdResponses, ThrowOnError>>
 }
 
 /**
@@ -954,34 +657,21 @@ function getGetActivityStreamsUrl(id: GetActivityStreamsPathParams['id']) {
  * @summary Get Activity Streams
  * {@link /activities/:id/streams}
  */
-export async function getActivityStreams(
-  id: GetActivityStreamsPathParams['id'],
-  params: GetActivityStreamsQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getActivityStreams<ThrowOnError extends boolean = true>(
+  options: Options<GetActivityStreamsOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetActivityStreamsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetActivityStreamsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetActivityStreamsUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetSegmentEffortStreamsUrl(
-  id: GetSegmentEffortStreamsPathParams['id'],
-) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segment_efforts/${id}/streams` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/activities/{id}/streams',
+      security: [{ type: 'oauth2' }],
+      styles: { query: { keys: { style: 'form', explode: false } } },
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetActivityStreamsResponses, ThrowOnError>>
 }
 
 /**
@@ -989,32 +679,21 @@ function getGetSegmentEffortStreamsUrl(
  * @summary Get Segment Effort Streams
  * {@link /segment_efforts/:id/streams}
  */
-export async function getSegmentEffortStreams(
-  id: GetSegmentEffortStreamsPathParams['id'],
-  params: GetSegmentEffortStreamsQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getSegmentEffortStreams<ThrowOnError extends boolean = true>(
+  options: Options<GetSegmentEffortStreamsOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetSegmentEffortStreamsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetSegmentEffortStreamsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetSegmentEffortStreamsUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetSegmentStreamsUrl(id: GetSegmentStreamsPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/segments/${id}/streams` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segment_efforts/{id}/streams',
+      security: [{ type: 'oauth2' }],
+      styles: { query: { keys: { style: 'form', explode: false } } },
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetSegmentEffortStreamsResponses, ThrowOnError>>
 }
 
 /**
@@ -1022,32 +701,21 @@ function getGetSegmentStreamsUrl(id: GetSegmentStreamsPathParams['id']) {
  * @summary Get Segment Streams
  * {@link /segments/:id/streams}
  */
-export async function getSegmentStreams(
-  id: GetSegmentStreamsPathParams['id'],
-  params: GetSegmentStreamsQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getSegmentStreams<ThrowOnError extends boolean = true>(
+  options: Options<GetSegmentStreamsOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetSegmentStreamsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetSegmentStreamsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetSegmentStreamsUrl(id).url.toString(),
-    params,
-    ...requestConfig,
-  })
-  return res.data
-}
-
-function getGetRouteStreamsUrl(id: GetRouteStreamsPathParams['id']) {
-  const res = {
-    method: 'GET',
-    url: `https://www.strava.com/api/v3/routes/${id}/streams` as const,
-  }
-  return res
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/segments/{id}/streams',
+      security: [{ type: 'oauth2' }],
+      styles: { query: { keys: { style: 'form', explode: false } } },
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetSegmentStreamsResponses, ThrowOnError>>
 }
 
 /**
@@ -1055,20 +723,18 @@ function getGetRouteStreamsUrl(id: GetRouteStreamsPathParams['id']) {
  * @summary Get Route Streams
  * {@link /routes/:id/streams}
  */
-export async function getRouteStreams(
-  id: GetRouteStreamsPathParams['id'],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config
+export function getRouteStreams<ThrowOnError extends boolean = true>(
+  options: Options<GetRouteStreamsOptions, ThrowOnError>,
+): Promise<UnwrappedResult<GetRouteStreamsResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options
 
-  const res = await request<
-    GetRouteStreamsQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetRouteStreamsUrl(id).url.toString(),
-    ...requestConfig,
-  })
-  return res.data
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/routes/{id}/streams',
+      security: [{ type: 'oauth2' }],
+      ...config,
+    }),
+    config.throwOnError,
+  ) as Promise<UnwrappedResult<GetRouteStreamsResponses, ThrowOnError>>
 }

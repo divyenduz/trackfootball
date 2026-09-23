@@ -23,6 +23,7 @@ export type Error = {
 
 /**
  * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
 export type Fault = {
   /**
@@ -39,6 +40,7 @@ export type Fault = {
 
 /**
  * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+ * @type object
  */
 export type ActivityTotal = {
   /**
@@ -48,7 +50,9 @@ export type ActivityTotal = {
   count?: number | undefined
   /**
    * @description The total distance covered by the considered activities.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
@@ -63,7 +67,9 @@ export type ActivityTotal = {
   elapsed_time?: number | undefined
   /**
    * @description The total elevation gain of the considered activities.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elevation_gain?: number | undefined
   /**
@@ -75,60 +81,65 @@ export type ActivityTotal = {
 
 /**
  * @description A set of rolled-up statistics and totals for an athlete
+ * @type object
  */
 export type ActivityStats = {
   /**
    * @description The longest distance ridden by the athlete.
-   * @type number | undefined, double
+   *
+   * Format: `double`
+   * @type number | undefined
    */
   biggest_ride_distance?: number | undefined
   /**
    * @description The highest climb ridden by the athlete.
-   * @type number | undefined, double
+   *
+   * Format: `double`
+   * @type number | undefined
    */
   biggest_climb_elevation_gain?: number | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The recent (last 4 weeks) ride stats for the athlete.
    * @type object | undefined
    */
   recent_ride_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The recent (last 4 weeks) run stats for the athlete.
    * @type object | undefined
    */
   recent_run_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The recent (last 4 weeks) swim stats for the athlete.
    * @type object | undefined
    */
   recent_swim_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The year to date ride stats for the athlete.
    * @type object | undefined
    */
   ytd_ride_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The year to date run stats for the athlete.
    * @type object | undefined
    */
   ytd_run_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The year to date swim stats for the athlete.
    * @type object | undefined
    */
   ytd_swim_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The all time ride stats for the athlete.
    * @type object | undefined
    */
   all_ride_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The all time run stats for the athlete.
    * @type object | undefined
    */
   all_run_totals?: ActivityTotal | undefined
   /**
-   * @description A roll-up of metrics pertaining to a set of activities. Values are in seconds and meters.
+   * @description The all time swim stats for the athlete.
    * @type object | undefined
    */
   all_swim_totals?: ActivityTotal | undefined
@@ -137,7 +148,9 @@ export type ActivityStats = {
 export type MetaAthlete = {
   /**
    * @description The unique identifier of the athlete
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
 }
@@ -208,12 +221,16 @@ export type SummaryAthlete = MetaAthlete & {
   summit?: boolean | undefined
   /**
    * @description The time at which the athlete was created.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   created_at?: string | undefined
   /**
    * @description The time at which the athlete was last updated.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   updated_at?: string | undefined
 }
@@ -221,7 +238,9 @@ export type SummaryAthlete = MetaAthlete & {
 export type MetaClub = {
   /**
    * @description The club\'s unique identifier.
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
@@ -236,7 +255,7 @@ export type MetaClub = {
   name?: string | undefined
 }
 
-export const activityTypeEnum = {
+export const activityType = {
   AlpineSki: 'AlpineSki',
   BackcountrySki: 'BackcountrySki',
   Canoeing: 'Canoeing',
@@ -276,13 +295,7 @@ export const activityTypeEnum = {
   Yoga: 'Yoga',
 } as const
 
-export type ActivityTypeEnumKey =
-  (typeof activityTypeEnum)[keyof typeof activityTypeEnum]
-
-/**
- * @description An enumeration of the types an activity may have. Note that this enumeration does not include new sport types (e.g. MountainBikeRide, EMountainBikeRide), activities with these sport types will have the corresponding activity type (e.g. Ride for MountainBikeRide, EBikeRide for EMountainBikeRide)
- */
-export type ActivityType = ActivityTypeEnumKey
+export type ActivityTypeKey = (typeof activityType)[keyof typeof activityType]
 
 export const summaryClubSportTypeEnum = {
   cycling: 'cycling',
@@ -319,7 +332,7 @@ export type SummaryClub = MetaClub & {
    * @description The activity types that count for a club. This takes precedence over sport_type.
    * @type array | undefined
    */
-  activity_types?: ActivityType[] | undefined
+  activity_types?: ActivityTypeKey[] | undefined
   /**
    * @description The club\'s city.
    * @type string | undefined
@@ -385,7 +398,9 @@ export type SummaryGear = {
   name?: string | undefined
   /**
    * @description The distance logged with this gear.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
 }
@@ -422,7 +437,9 @@ export type DetailedAthlete = SummaryAthlete & {
   ftp?: number | undefined
   /**
    * @description The athlete\'s weight.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   weight?: number | undefined
   /**
@@ -463,39 +480,30 @@ export type HeartRateZoneRanges = {
    * @type boolean | undefined
    */
   custom_zones?: boolean | undefined
-  /**
-   * @type array | undefined
-   */
   zones?: ZoneRanges | undefined
 }
 
 export type PowerZoneRanges = {
-  /**
-   * @type array | undefined
-   */
   zones?: ZoneRanges | undefined
 }
 
 export type Zones = {
-  /**
-   * @type object | undefined
-   */
   heart_rate?: HeartRateZoneRanges | undefined
-  /**
-   * @type object | undefined
-   */
   power?: PowerZoneRanges | undefined
 }
 
 /**
  * @description A pair of latitude/longitude coordinates, represented as an array of 2 floating point numbers.
+ * @type array
  */
 export type LatLng = number[]
 
 export type SummaryPRSegmentEffort = {
   /**
    * @description The unique identifier of the activity related to the PR effort.
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   pr_activity_id?: number | undefined
   /**
@@ -505,7 +513,9 @@ export type SummaryPRSegmentEffort = {
   pr_elapsed_time?: number | undefined
   /**
    * @description The time at which the PR effort was started.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   pr_date?: string | undefined
   /**
@@ -518,12 +528,16 @@ export type SummaryPRSegmentEffort = {
 export type SummarySegmentEffort = {
   /**
    * @description The unique identifier of this effort
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
    * @description The unique identifier of the activity related to this effort
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   activity_id?: number | undefined
   /**
@@ -533,17 +547,23 @@ export type SummarySegmentEffort = {
   elapsed_time?: number | undefined
   /**
    * @description The time at which the effort was started.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date?: string | undefined
   /**
    * @description The time at which the effort was started in the local timezone.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date_local?: string | undefined
   /**
    * @description The effort\'s distance in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
@@ -564,7 +584,9 @@ export type SummarySegmentActivityTypeEnumKey =
 export type SummarySegment = {
   /**
    * @description The unique identifier of this segment
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
@@ -572,33 +594,40 @@ export type SummarySegment = {
    * @type string | undefined
    */
   name?: string | undefined
-  /**
-   * @type string | undefined
-   */
   activity_type?: SummarySegmentActivityTypeEnumKey | undefined
   /**
    * @description The segment\'s distance, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
    * @description The segment\'s average grade, in percents
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_grade?: number | undefined
   /**
    * @description The segments\'s maximum grade, in percents
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   maximum_grade?: number | undefined
   /**
    * @description The segments\'s highest elevation, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elevation_high?: number | undefined
   /**
    * @description The segments\'s lowest elevation, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elevation_low?: number | undefined
   /**
@@ -636,13 +665,7 @@ export type SummarySegment = {
    * @type boolean | undefined
    */
   private?: boolean | undefined
-  /**
-   * @type object | undefined
-   */
   athlete_pr_effort?: SummaryPRSegmentEffort | undefined
-  /**
-   * @type object | undefined
-   */
   athlete_segment_stats?: SummarySegmentEffort | undefined
 }
 
@@ -667,22 +690,25 @@ export type PolylineMap = {
 export type DetailedSegment = SummarySegment & {
   /**
    * @description The time at which the segment was created.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   created_at?: string | undefined
   /**
    * @description The time at which the segment was last updated.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   updated_at?: string | undefined
   /**
    * @description The segment\'s total elevation gain.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   total_elevation_gain?: number | undefined
-  /**
-   * @type object | undefined
-   */
   map?: PolylineMap | undefined
   /**
    * @description The total number of efforts for this segment
@@ -709,7 +735,9 @@ export type DetailedSegment = SummarySegment & {
 export type MetaActivity = {
   /**
    * @description The unique identifier of the activity
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
 }
@@ -720,13 +748,7 @@ export type DetailedSegmentEffort = SummarySegmentEffort & {
    * @type string | undefined
    */
   name?: string | undefined
-  /**
-   * @type object | undefined
-   */
   activity?: MetaActivity | undefined
-  /**
-   * @type object | undefined
-   */
   athlete?: MetaAthlete | undefined
   /**
    * @description The effort\'s moving time
@@ -745,12 +767,16 @@ export type DetailedSegmentEffort = SummarySegmentEffort & {
   end_index?: number | undefined
   /**
    * @description The effort\'s average cadence
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_cadence?: number | undefined
   /**
    * @description The average wattage of this effort
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_watts?: number | undefined
   /**
@@ -760,17 +786,18 @@ export type DetailedSegmentEffort = SummarySegmentEffort & {
   device_watts?: boolean | undefined
   /**
    * @description The heart heart rate of the athlete during this effort
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_heartrate?: number | undefined
   /**
    * @description The maximum heart rate of the athlete during this effort
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   max_heartrate?: number | undefined
-  /**
-   * @type object | undefined
-   */
   segment?: SummarySegment | undefined
   /**
    * @description The rank of the effort on the global leaderboard if it belongs in the top 10 at the time of upload
@@ -808,7 +835,9 @@ export type ExplorerSegmentClimbCategoryDescEnumKey =
 export type ExplorerSegment = {
   /**
    * @description The unique identifier of this segment
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
@@ -830,7 +859,9 @@ export type ExplorerSegment = {
   climb_category_desc?: ExplorerSegmentClimbCategoryDescEnumKey | undefined
   /**
    * @description The segment\'s average grade, in percents
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   avg_grade?: number | undefined
   /**
@@ -845,12 +876,16 @@ export type ExplorerSegment = {
   end_latlng?: LatLng | undefined
   /**
    * @description The segments\'s evelation difference, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elev_difference?: number | undefined
   /**
    * @description The segment\'s distance, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
@@ -868,7 +903,7 @@ export type ExplorerResponse = {
   segments?: ExplorerSegment[] | undefined
 }
 
-export const sportTypeEnum = {
+export const sportType = {
   AlpineSki: 'AlpineSki',
   BackcountrySki: 'BackcountrySki',
   Badminton: 'Badminton',
@@ -927,13 +962,7 @@ export const sportTypeEnum = {
   Yoga: 'Yoga',
 } as const
 
-export type SportTypeEnumKey =
-  (typeof sportTypeEnum)[keyof typeof sportTypeEnum]
-
-/**
- * @description An enumeration of the sport types an activity may have. Distinct from ActivityType in that it has new types (e.g. MountainBikeRide)
- */
-export type SportType = SportTypeEnumKey
+export type SportTypeKey = (typeof sportType)[keyof typeof sportType]
 
 export type SummaryActivity = MetaActivity & {
   /**
@@ -943,12 +972,11 @@ export type SummaryActivity = MetaActivity & {
   external_id?: string | undefined
   /**
    * @description The identifier of the upload that resulted in this activity
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   upload_id?: number | undefined
-  /**
-   * @type object | undefined
-   */
   athlete?: MetaAthlete | undefined
   /**
    * @description The name of the activity
@@ -957,7 +985,9 @@ export type SummaryActivity = MetaActivity & {
   name?: string | undefined
   /**
    * @description The activity\'s distance, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
@@ -972,37 +1002,47 @@ export type SummaryActivity = MetaActivity & {
   elapsed_time?: number | undefined
   /**
    * @description The activity\'s total elevation gain.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   total_elevation_gain?: number | undefined
   /**
    * @description The activity\'s highest elevation, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elev_high?: number | undefined
   /**
    * @description The activity\'s lowest elevation, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elev_low?: number | undefined
   /**
-   * @description An enumeration of the types an activity may have. Note that this enumeration does not include new sport types (e.g. MountainBikeRide, EMountainBikeRide), activities with these sport types will have the corresponding activity type (e.g. Ride for MountainBikeRide, EBikeRide for EMountainBikeRide)
+   * @description Deprecated. Prefer to use sport_type
    * @type string | undefined
    */
-  type?: ActivityType | undefined
+  type?: ActivityTypeKey | undefined
   /**
    * @description An enumeration of the sport types an activity may have. Distinct from ActivityType in that it has new types (e.g. MountainBikeRide)
    * @type string | undefined
    */
-  sport_type?: SportType | undefined
+  sport_type?: SportTypeKey | undefined
   /**
    * @description The time at which the activity was started.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date?: string | undefined
   /**
    * @description The time at which the activity was started in the local timezone.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date_local?: string | undefined
   /**
@@ -1051,9 +1091,6 @@ export type SummaryActivity = MetaActivity & {
    * @type integer | undefined
    */
   total_photo_count?: number | undefined
-  /**
-   * @type object | undefined
-   */
   map?: PolylineMap | undefined
   /**
    * @description The name of the device used to record the activity
@@ -1097,12 +1134,16 @@ export type SummaryActivity = MetaActivity & {
   upload_id_str?: string | undefined
   /**
    * @description The activity\'s average speed, in meters per second
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_speed?: number | undefined
   /**
    * @description The activity\'s max speed, in meters per second
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   max_speed?: number | undefined
   /**
@@ -1122,12 +1163,16 @@ export type SummaryActivity = MetaActivity & {
   gear_id?: string | undefined
   /**
    * @description The total work done in kilojoules during this activity. Rides only
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   kilojoules?: number | undefined
   /**
    * @description Average power output in watts during this activity. Rides only
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_watts?: number | undefined
   /**
@@ -1153,26 +1198,16 @@ export type PhotosSummary = {
    * @type integer | undefined
    */
   count?: number | undefined
-  /**
-   * @type object | undefined
-   */
   primary?:
     | {
         /**
-         * @type integer | undefined, int64
-         */
-        id?: number | undefined
-        /**
+         * @description
+         * Format: `int64`
          * @type integer | undefined
          */
+        id?: number | undefined
         source?: number | undefined
-        /**
-         * @type string | undefined
-         */
         unique_id?: string | undefined
-        /**
-         * @type object | undefined
-         */
         urls?:
           | {
               [key: string]: string
@@ -1185,12 +1220,16 @@ export type PhotosSummary = {
 export type Split = {
   /**
    * @description The average speed of this split, in meters per second
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_speed?: number | undefined
   /**
    * @description The distance of this split, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
@@ -1200,7 +1239,9 @@ export type Split = {
   elapsed_time?: number | undefined
   /**
    * @description The elevation difference of this split, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elevation_difference?: number | undefined
   /**
@@ -1223,30 +1264,32 @@ export type Split = {
 export type Lap = {
   /**
    * @description The unique identifier of this lap
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
-  /**
-   * @type object | undefined
-   */
   activity?: MetaActivity | undefined
-  /**
-   * @type object | undefined
-   */
   athlete?: MetaAthlete | undefined
   /**
    * @description The lap\'s average cadence
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_cadence?: number | undefined
   /**
    * @description The lap\'s average speed
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   average_speed?: number | undefined
   /**
    * @description The lap\'s distance, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
@@ -1271,7 +1314,9 @@ export type Lap = {
   lap_index?: number | undefined
   /**
    * @description The maximum speed of this lat, in meters per second
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   max_speed?: number | undefined
   /**
@@ -1289,23 +1334,26 @@ export type Lap = {
    * @type integer | undefined
    */
   pace_zone?: number | undefined
-  /**
-   * @type integer | undefined
-   */
   split?: number | undefined
   /**
    * @description The time at which the lap was started.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date?: string | undefined
   /**
    * @description The time at which the lap was started in the local timezone.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date_local?: string | undefined
   /**
    * @description The elevation gain of this lap, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   total_elevation_gain?: number | undefined
 }
@@ -1316,22 +1364,15 @@ export type DetailedActivity = SummaryActivity & {
    * @type string | undefined
    */
   description?: string | undefined
-  /**
-   * @type object | undefined
-   */
   photos?: PhotosSummary | undefined
-  /**
-   * @type object | undefined
-   */
   gear?: SummaryGear | undefined
   /**
    * @description The number of kilocalories consumed during this activity
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   calories?: number | undefined
-  /**
-   * @type array | undefined
-   */
   segment_efforts?: DetailedSegmentEffort[] | undefined
   /**
    * @description The name of the device used to record the activity
@@ -1353,13 +1394,7 @@ export type DetailedActivity = SummaryActivity & {
    * @type array | undefined
    */
   splits_standard?: Split[] | undefined
-  /**
-   * @type array | undefined
-   */
   laps?: Lap[] | undefined
-  /**
-   * @type array | undefined
-   */
   best_efforts?: DetailedSegmentEffort[] | undefined
 }
 
@@ -1390,15 +1425,15 @@ export type UpdatableActivity = {
    */
   name?: string | undefined
   /**
-   * @description An enumeration of the types an activity may have. Note that this enumeration does not include new sport types (e.g. MountainBikeRide, EMountainBikeRide), activities with these sport types will have the corresponding activity type (e.g. Ride for MountainBikeRide, EBikeRide for EMountainBikeRide)
+   * @description Deprecated. Prefer to use sport_type. In a request where both type and sport_type are present, this field will be ignored
    * @type string | undefined
    */
-  type?: ActivityType | undefined
+  type?: ActivityTypeKey | undefined
   /**
    * @description An enumeration of the sport types an activity may have. Distinct from ActivityType in that it has new types (e.g. MountainBikeRide)
    * @type string | undefined
    */
-  sport_type?: SportType | undefined
+  sport_type?: SportTypeKey | undefined
   /**
    * @description Identifier for the gear associated with the activity. ‘none’ clears gear from activity
    * @type string | undefined
@@ -1419,6 +1454,7 @@ export type TimedZoneRange = ZoneRange & {
 
 /**
  * @description Stores the exclusive ranges representing zones and the time spent in each.
+ * @type array
  */
 export type TimedZoneDistribution = TimedZoneRange[]
 
@@ -1431,46 +1467,32 @@ export type ActivityZoneTypeEnumKey =
   (typeof activityZoneTypeEnum)[keyof typeof activityZoneTypeEnum]
 
 export type ActivityZone = {
-  /**
-   * @type integer | undefined
-   */
   score?: number | undefined
   /**
    * @description Stores the exclusive ranges representing zones and the time spent in each.
    * @type array | undefined
    */
   distribution_buckets?: TimedZoneDistribution | undefined
-  /**
-   * @type string | undefined
-   */
   type?: ActivityZoneTypeEnumKey | undefined
-  /**
-   * @type boolean | undefined
-   */
   sensor_based?: boolean | undefined
-  /**
-   * @type integer | undefined
-   */
   points?: number | undefined
-  /**
-   * @type boolean | undefined
-   */
   custom_zones?: boolean | undefined
-  /**
-   * @type integer | undefined
-   */
   max?: number | undefined
 }
 
 export type Comment = {
   /**
    * @description The unique identifier of this comment
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
    * @description The identifier of the activity this comment is related to
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   activity_id?: number | undefined
   /**
@@ -1481,7 +1503,9 @@ export type Comment = {
   athlete?: SummaryAthlete | undefined
   /**
    * @description The time at which this comment was created.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   created_at?: string | undefined
 }
@@ -1542,12 +1566,12 @@ export type DetailedGear = SummaryGear & {
 
 export type Waypoint = {
   /**
-   * @description A pair of latitude/longitude coordinates, represented as an array of 2 floating point numbers.
+   * @description The location along the route that the waypoint is closest to
    * @type array | undefined
    */
   latlng?: LatLng | undefined
   /**
-   * @description A pair of latitude/longitude coordinates, represented as an array of 2 floating point numbers.
+   * @description A location off of the route that the waypoint is (optional)
    * @type array | undefined
    */
   target_latlng?: LatLng | undefined
@@ -1568,7 +1592,9 @@ export type Waypoint = {
   description?: string | undefined
   /**
    * @description The number meters along the route that the waypoint is located
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance_into_route?: number | undefined
 }
@@ -1582,17 +1608,23 @@ export type Route = {
   description?: string | undefined
   /**
    * @description The route\'s distance, in meters
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   distance?: number | undefined
   /**
    * @description The route\'s elevation gain.
-   * @type number | undefined, float
+   *
+   * Format: `float`
+   * @type number | undefined
    */
   elevation_gain?: number | undefined
   /**
    * @description The unique identifier of this route
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
@@ -1600,9 +1632,6 @@ export type Route = {
    * @type string | undefined
    */
   id_str?: string | undefined
-  /**
-   * @type object | undefined
-   */
   map?: PolylineMap | undefined
   /**
    * @description The name of this route
@@ -1636,12 +1665,16 @@ export type Route = {
   sub_type?: number | undefined
   /**
    * @description The time at which the route was created
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   created_at?: string | undefined
   /**
    * @description The time at which the route was last updated
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   updated_at?: string | undefined
   /**
@@ -1664,7 +1697,9 @@ export type Route = {
 export type Upload = {
   /**
    * @description The unique identifier of the upload
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   id?: number | undefined
   /**
@@ -1689,7 +1724,9 @@ export type Upload = {
   status?: string | undefined
   /**
    * @description The identifier of the activity this upload resulted into
-   * @type integer | undefined, int64
+   *
+   * Format: `int64`
+   * @type integer | undefined
    */
   activity_id?: number | undefined
 }
@@ -1831,119 +1868,170 @@ export type StreamSet = {
   grade_smooth?: SmoothGradeStream | undefined
 }
 
-export type GetStatsPathParams = {
+export type GetStatsPath = {
   /**
    * @description The identifier of the athlete. Must match the authenticated athlete.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
 /**
- * @description Activity stats of the athlete.
+ * @description A set of rolled-up statistics and totals for an athlete
+ * @type object
  */
-export type GetStats200 = ActivityStats
+export type GetStatsStatus200 = ActivityStats
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetStatsError = Fault
+export type GetStatsStatusDefault = Fault
 
-export type GetStatsQueryResponse = GetStats200
+export type GetStatsOptions = {
+  body?: never | undefined
+  path: GetStatsPath
+  query?: never | undefined
+  headers?: never | undefined
+}
 
-export type GetStatsQuery = {
-  Response: GetStats200
-  PathParams: GetStatsPathParams
-  Errors: any
+export type GetStatsResponses = {
+  '200': GetStatsStatus200
+  default: GetStatsStatusDefault
 }
 
 /**
- * @description Profile information for the authenticated athlete.
+ * @description Union of all possible responses
  */
-export type GetLoggedInAthlete200 = DetailedAthlete
+export type GetStatsResponse = GetStatsStatus200 | GetStatsStatusDefault
+
+export type GetLoggedInAthleteStatus200 = DetailedAthlete
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetLoggedInAthleteError = Fault
+export type GetLoggedInAthleteStatusDefault = Fault
 
-export type GetLoggedInAthleteQueryResponse = GetLoggedInAthlete200
-
-export type GetLoggedInAthleteQuery = {
-  Response: GetLoggedInAthlete200
-  Errors: any
+export type GetLoggedInAthleteOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type UpdateLoggedInAthletePathParams = {
+export type GetLoggedInAthleteResponses = {
+  '200': GetLoggedInAthleteStatus200
+  default: GetLoggedInAthleteStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetLoggedInAthleteResponse =
+  GetLoggedInAthleteStatus200 | GetLoggedInAthleteStatusDefault
+
+export type UpdateLoggedInAthletePath = {
   /**
    * @description The weight of the athlete in kilograms.
-   * @type number, float
+   *
+   * Format: `float`
+   * @type number
    */
   weight: number
 }
 
-/**
- * @description Profile information for the authenticated athlete.
- */
-export type UpdateLoggedInAthlete200 = DetailedAthlete
+export type UpdateLoggedInAthleteStatus200 = DetailedAthlete
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type UpdateLoggedInAthleteError = Fault
+export type UpdateLoggedInAthleteStatusDefault = Fault
 
-export type UpdateLoggedInAthleteMutationResponse = UpdateLoggedInAthlete200
+export type UpdateLoggedInAthleteOptions = {
+  body?: never | undefined
+  path: UpdateLoggedInAthletePath
+  query?: never | undefined
+  headers?: never | undefined
+}
 
-export type UpdateLoggedInAthleteMutation = {
-  Response: UpdateLoggedInAthlete200
-  PathParams: UpdateLoggedInAthletePathParams
-  Errors: any
+export type UpdateLoggedInAthleteResponses = {
+  '200': UpdateLoggedInAthleteStatus200
+  default: UpdateLoggedInAthleteStatusDefault
 }
 
 /**
- * @description Heart rate and power zones.
+ * @description Union of all possible responses
  */
-export type GetLoggedInAthleteZones200 = Zones
+export type UpdateLoggedInAthleteResponse =
+  UpdateLoggedInAthleteStatus200 | UpdateLoggedInAthleteStatusDefault
+
+export type GetLoggedInAthleteZonesStatus200 = Zones
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetLoggedInAthleteZonesError = Fault
+export type GetLoggedInAthleteZonesStatusDefault = Fault
 
-export type GetLoggedInAthleteZonesQueryResponse = GetLoggedInAthleteZones200
-
-export type GetLoggedInAthleteZonesQuery = {
-  Response: GetLoggedInAthleteZones200
-  Errors: any
+export type GetLoggedInAthleteZonesOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetSegmentByIdPathParams = {
+export type GetLoggedInAthleteZonesResponses = {
+  '200': GetLoggedInAthleteZonesStatus200
+  default: GetLoggedInAthleteZonesStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetLoggedInAthleteZonesResponse =
+  GetLoggedInAthleteZonesStatus200 | GetLoggedInAthleteZonesStatusDefault
+
+export type GetSegmentByIdPath = {
   /**
    * @description The identifier of the segment.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description Representation of a segment.
- */
-export type GetSegmentById200 = DetailedSegment
+export type GetSegmentByIdStatus200 = DetailedSegment
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetSegmentByIdError = Fault
+export type GetSegmentByIdStatusDefault = Fault
 
-export type GetSegmentByIdQueryResponse = GetSegmentById200
-
-export type GetSegmentByIdQuery = {
-  Response: GetSegmentById200
-  PathParams: GetSegmentByIdPathParams
-  Errors: any
+export type GetSegmentByIdOptions = {
+  body?: never | undefined
+  path: GetSegmentByIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetLoggedInAthleteStarredSegmentsQueryParams = {
+export type GetSegmentByIdResponses = {
+  '200': GetSegmentByIdStatus200
+  default: GetSegmentByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetSegmentByIdResponse =
+  GetSegmentByIdStatus200 | GetSegmentByIdStatusDefault
+
+export type GetLoggedInAthleteStarredSegmentsQuery = {
   /**
    * @description Page number. Defaults to 1.
    * @type integer | undefined
@@ -1957,52 +2045,70 @@ export type GetLoggedInAthleteStarredSegmentsQueryParams = {
   per_page?: number | undefined
 }
 
-/**
- * @description List of the authenticated athlete\'s starred segments.
- */
-export type GetLoggedInAthleteStarredSegments200 = SummarySegment[]
+export type GetLoggedInAthleteStarredSegmentsStatus200 = SummarySegment[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetLoggedInAthleteStarredSegmentsError = Fault
+export type GetLoggedInAthleteStarredSegmentsStatusDefault = Fault
 
-export type GetLoggedInAthleteStarredSegmentsQueryResponse =
-  GetLoggedInAthleteStarredSegments200
-
-export type GetLoggedInAthleteStarredSegmentsQuery = {
-  Response: GetLoggedInAthleteStarredSegments200
-  QueryParams: GetLoggedInAthleteStarredSegmentsQueryParams
-  Errors: any
+export type GetLoggedInAthleteStarredSegmentsOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: GetLoggedInAthleteStarredSegmentsQuery | undefined
+  headers?: never | undefined
 }
 
-export type StarSegmentPathParams = {
+export type GetLoggedInAthleteStarredSegmentsResponses = {
+  '200': GetLoggedInAthleteStarredSegmentsStatus200
+  default: GetLoggedInAthleteStarredSegmentsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetLoggedInAthleteStarredSegmentsResponse =
+  | GetLoggedInAthleteStarredSegmentsStatus200
+  | GetLoggedInAthleteStarredSegmentsStatusDefault
+
+export type StarSegmentPath = {
   /**
    * @description The identifier of the segment to star.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description Representation of a segment.
- */
-export type StarSegment200 = DetailedSegment
+export type StarSegmentStatus200 = DetailedSegment
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type StarSegmentError = Fault
+export type StarSegmentStatusDefault = Fault
 
-export type StarSegmentMutationResponse = StarSegment200
-
-export type StarSegmentMutation = {
-  Response: StarSegment200
-  PathParams: StarSegmentPathParams
-  Errors: any
+export type StarSegmentOptions = {
+  body?: never | undefined
+  path: StarSegmentPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetEffortsBySegmentIdQueryParams = {
+export type StarSegmentResponses = {
+  '200': StarSegmentStatus200
+  default: StarSegmentStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type StarSegmentResponse =
+  StarSegmentStatus200 | StarSegmentStatusDefault
+
+export type GetEffortsBySegmentIdQuery = {
   /**
    * @description The identifier of the segment.
    * @type integer
@@ -2010,12 +2116,16 @@ export type GetEffortsBySegmentIdQueryParams = {
   segment_id: number
   /**
    * @description ISO 8601 formatted date time.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   start_date_local?: string | undefined
   /**
    * @description ISO 8601 formatted date time.
-   * @type string | undefined, date-time
+   *
+   * Format: `date-time`
+   * @type string | undefined
    */
   end_date_local?: string | undefined
   /**
@@ -2026,33 +2136,41 @@ export type GetEffortsBySegmentIdQueryParams = {
   per_page?: number | undefined
 }
 
-/**
- * @description List of segment efforts.
- */
-export type GetEffortsBySegmentId200 = DetailedSegmentEffort[]
+export type GetEffortsBySegmentIdStatus200 = DetailedSegmentEffort[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetEffortsBySegmentIdError = Fault
+export type GetEffortsBySegmentIdStatusDefault = Fault
 
-export type GetEffortsBySegmentIdQueryResponse = GetEffortsBySegmentId200
-
-export type GetEffortsBySegmentIdQuery = {
-  Response: GetEffortsBySegmentId200
-  QueryParams: GetEffortsBySegmentIdQueryParams
-  Errors: any
+export type GetEffortsBySegmentIdOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query: GetEffortsBySegmentIdQuery
+  headers?: never | undefined
 }
 
-export const exploreSegmentsQueryParamsActivityTypeEnum = {
+export type GetEffortsBySegmentIdResponses = {
+  '200': GetEffortsBySegmentIdStatus200
+  default: GetEffortsBySegmentIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetEffortsBySegmentIdResponse =
+  GetEffortsBySegmentIdStatus200 | GetEffortsBySegmentIdStatusDefault
+
+export const exploreSegmentsActivityType = {
   running: 'running',
   riding: 'riding',
 } as const
 
-export type ExploreSegmentsQueryParamsActivityTypeEnumKey =
-  (typeof exploreSegmentsQueryParamsActivityTypeEnum)[keyof typeof exploreSegmentsQueryParamsActivityTypeEnum]
+export type ExploreSegmentsActivityTypeKey =
+  (typeof exploreSegmentsActivityType)[keyof typeof exploreSegmentsActivityType]
 
-export type ExploreSegmentsQueryParams = {
+export type ExploreSegmentsQuery = {
   /**
    * @description The latitude and longitude for two points describing a rectangular boundary for the search: [southwest corner latitutde, southwest corner longitude, northeast corner latitude, northeast corner longitude]
    * @type array
@@ -2062,7 +2180,7 @@ export type ExploreSegmentsQueryParams = {
    * @description Desired activity type.
    * @type string | undefined
    */
-  activity_type?: ExploreSegmentsQueryParamsActivityTypeEnumKey | undefined
+  activity_type?: ExploreSegmentsActivityTypeKey | undefined
   /**
    * @description The minimum climbing category.
    * @minLength 0
@@ -2079,76 +2197,105 @@ export type ExploreSegmentsQueryParams = {
   max_cat?: number | undefined
 }
 
-/**
- * @description List of matching segments.
- */
-export type ExploreSegments200 = ExplorerResponse
+export type ExploreSegmentsStatus200 = ExplorerResponse
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type ExploreSegmentsError = Fault
+export type ExploreSegmentsStatusDefault = Fault
 
-export type ExploreSegmentsQueryResponse = ExploreSegments200
-
-export type ExploreSegmentsQuery = {
-  Response: ExploreSegments200
-  QueryParams: ExploreSegmentsQueryParams
-  Errors: any
+export type ExploreSegmentsOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query: ExploreSegmentsQuery
+  headers?: never | undefined
 }
 
-export type GetSegmentEffortByIdPathParams = {
+export type ExploreSegmentsResponses = {
+  '200': ExploreSegmentsStatus200
+  default: ExploreSegmentsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type ExploreSegmentsResponse =
+  ExploreSegmentsStatus200 | ExploreSegmentsStatusDefault
+
+export type GetSegmentEffortByIdPath = {
   /**
    * @description The identifier of the segment effort.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description Representation of a segment effort.
- */
-export type GetSegmentEffortById200 = DetailedSegmentEffort
+export type GetSegmentEffortByIdStatus200 = DetailedSegmentEffort
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetSegmentEffortByIdError = Fault
+export type GetSegmentEffortByIdStatusDefault = Fault
 
-export type GetSegmentEffortByIdQueryResponse = GetSegmentEffortById200
+export type GetSegmentEffortByIdOptions = {
+  body?: never | undefined
+  path: GetSegmentEffortByIdPath
+  query?: never | undefined
+  headers?: never | undefined
+}
 
-export type GetSegmentEffortByIdQuery = {
-  Response: GetSegmentEffortById200
-  PathParams: GetSegmentEffortByIdPathParams
-  Errors: any
+export type GetSegmentEffortByIdResponses = {
+  '200': GetSegmentEffortByIdStatus200
+  default: GetSegmentEffortByIdStatusDefault
 }
 
 /**
- * @description The activity\'s detailed representation.
+ * @description Union of all possible responses
  */
-export type CreateActivity201 = DetailedActivity
+export type GetSegmentEffortByIdResponse =
+  GetSegmentEffortByIdStatus200 | GetSegmentEffortByIdStatusDefault
+
+export type CreateActivityStatus201 = DetailedActivity
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type CreateActivityError = Fault
+export type CreateActivityStatusDefault = Fault
 
-export type CreateActivityMutationResponse = CreateActivity201
-
-export type CreateActivityMutation = {
-  Response: CreateActivity201
-  Errors: any
+export type CreateActivityOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetActivityByIdPathParams = {
+export type CreateActivityResponses = {
+  '201': CreateActivityStatus201
+  default: CreateActivityStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type CreateActivityResponse =
+  CreateActivityStatus201 | CreateActivityStatusDefault
+
+export type GetActivityByIdPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-export type GetActivityByIdQueryParams = {
+export type GetActivityByIdQuery = {
   /**
    * @description To include all segments efforts.
    * @type boolean | undefined
@@ -2156,55 +2303,71 @@ export type GetActivityByIdQueryParams = {
   include_all_efforts?: boolean | undefined
 }
 
-/**
- * @description The activity\'s detailed representation.
- */
-export type GetActivityById200 = DetailedActivity
+export type GetActivityByIdStatus200 = DetailedActivity
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetActivityByIdError = Fault
+export type GetActivityByIdStatusDefault = Fault
 
-export type GetActivityByIdQueryResponse = GetActivityById200
-
-export type GetActivityByIdQuery = {
-  Response: GetActivityById200
-  PathParams: GetActivityByIdPathParams
-  QueryParams: GetActivityByIdQueryParams
-  Errors: any
+export type GetActivityByIdOptions = {
+  body?: never | undefined
+  path: GetActivityByIdPath
+  query?: GetActivityByIdQuery | undefined
+  headers?: never | undefined
 }
 
-export type UpdateActivityByIdPathParams = {
+export type GetActivityByIdResponses = {
+  '200': GetActivityByIdStatus200
+  default: GetActivityByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetActivityByIdResponse =
+  GetActivityByIdStatus200 | GetActivityByIdStatusDefault
+
+export type UpdateActivityByIdPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description The activity\'s detailed representation.
- */
-export type UpdateActivityById200 = DetailedActivity
+export type UpdateActivityByIdStatus200 = DetailedActivity
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type UpdateActivityByIdError = Fault
+export type UpdateActivityByIdStatusDefault = Fault
 
-export type UpdateActivityByIdMutationRequest = UpdatableActivity
+export type UpdateActivityByIdBody = UpdatableActivity | undefined
 
-export type UpdateActivityByIdMutationResponse = UpdateActivityById200
-
-export type UpdateActivityByIdMutation = {
-  Response: UpdateActivityById200
-  Request: UpdateActivityByIdMutationRequest
-  PathParams: UpdateActivityByIdPathParams
-  Errors: any
+export type UpdateActivityByIdOptions = {
+  body: UpdateActivityByIdBody
+  path: UpdateActivityByIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetLoggedInAthleteActivitiesQueryParams = {
+export type UpdateActivityByIdResponses = {
+  '200': UpdateActivityByIdStatus200
+  default: UpdateActivityByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type UpdateActivityByIdResponse =
+  UpdateActivityByIdStatus200 | UpdateActivityByIdStatusDefault
+
+export type GetLoggedInAthleteActivitiesQuery = {
   /**
    * @description An epoch timestamp to use for filtering activities that have taken place before a certain time.
    * @type integer | undefined
@@ -2228,86 +2391,116 @@ export type GetLoggedInAthleteActivitiesQueryParams = {
   per_page?: number | undefined
 }
 
-/**
- * @description The authenticated athlete\'s activities
- */
-export type GetLoggedInAthleteActivities200 = SummaryActivity[]
+export type GetLoggedInAthleteActivitiesStatus200 = SummaryActivity[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetLoggedInAthleteActivitiesError = Fault
+export type GetLoggedInAthleteActivitiesStatusDefault = Fault
 
-export type GetLoggedInAthleteActivitiesQueryResponse =
-  GetLoggedInAthleteActivities200
-
-export type GetLoggedInAthleteActivitiesQuery = {
-  Response: GetLoggedInAthleteActivities200
-  QueryParams: GetLoggedInAthleteActivitiesQueryParams
-  Errors: any
+export type GetLoggedInAthleteActivitiesOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: GetLoggedInAthleteActivitiesQuery | undefined
+  headers?: never | undefined
 }
 
-export type GetLapsByActivityIdPathParams = {
+export type GetLoggedInAthleteActivitiesResponses = {
+  '200': GetLoggedInAthleteActivitiesStatus200
+  default: GetLoggedInAthleteActivitiesStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetLoggedInAthleteActivitiesResponse =
+  | GetLoggedInAthleteActivitiesStatus200
+  | GetLoggedInAthleteActivitiesStatusDefault
+
+export type GetLapsByActivityIdPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description Activity Laps.
- */
-export type GetLapsByActivityId200 = Lap[]
+export type GetLapsByActivityIdStatus200 = Lap[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetLapsByActivityIdError = Fault
+export type GetLapsByActivityIdStatusDefault = Fault
 
-export type GetLapsByActivityIdQueryResponse = GetLapsByActivityId200
-
-export type GetLapsByActivityIdQuery = {
-  Response: GetLapsByActivityId200
-  PathParams: GetLapsByActivityIdPathParams
-  Errors: any
+export type GetLapsByActivityIdOptions = {
+  body?: never | undefined
+  path: GetLapsByActivityIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetZonesByActivityIdPathParams = {
+export type GetLapsByActivityIdResponses = {
+  '200': GetLapsByActivityIdStatus200
+  default: GetLapsByActivityIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetLapsByActivityIdResponse =
+  GetLapsByActivityIdStatus200 | GetLapsByActivityIdStatusDefault
+
+export type GetZonesByActivityIdPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description Activity Zones.
- */
-export type GetZonesByActivityId200 = ActivityZone[]
+export type GetZonesByActivityIdStatus200 = ActivityZone[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetZonesByActivityIdError = Fault
+export type GetZonesByActivityIdStatusDefault = Fault
 
-export type GetZonesByActivityIdQueryResponse = GetZonesByActivityId200
-
-export type GetZonesByActivityIdQuery = {
-  Response: GetZonesByActivityId200
-  PathParams: GetZonesByActivityIdPathParams
-  Errors: any
+export type GetZonesByActivityIdOptions = {
+  body?: never | undefined
+  path: GetZonesByActivityIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetCommentsByActivityIdPathParams = {
+export type GetZonesByActivityIdResponses = {
+  '200': GetZonesByActivityIdStatus200
+  default: GetZonesByActivityIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetZonesByActivityIdResponse =
+  GetZonesByActivityIdStatus200 | GetZonesByActivityIdStatusDefault
+
+export type GetCommentsByActivityIdPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-export type GetCommentsByActivityIdQueryParams = {
+export type GetCommentsByActivityIdQuery = {
   /**
    * @description Deprecated. Prefer to use after_cursor.
    * @type integer | undefined
@@ -2332,93 +2525,43 @@ export type GetCommentsByActivityIdQueryParams = {
   after_cursor?: string | undefined
 }
 
-/**
- * @description Comments.
- */
-export type GetCommentsByActivityId200 = Comment[]
+export type GetCommentsByActivityIdStatus200 = Comment[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetCommentsByActivityIdError = Fault
+export type GetCommentsByActivityIdStatusDefault = Fault
 
-export type GetCommentsByActivityIdQueryResponse = GetCommentsByActivityId200
-
-export type GetCommentsByActivityIdQuery = {
-  Response: GetCommentsByActivityId200
-  PathParams: GetCommentsByActivityIdPathParams
-  QueryParams: GetCommentsByActivityIdQueryParams
-  Errors: any
+export type GetCommentsByActivityIdOptions = {
+  body?: never | undefined
+  path: GetCommentsByActivityIdPath
+  query?: GetCommentsByActivityIdQuery | undefined
+  headers?: never | undefined
 }
 
-export type GetKudoersByActivityIdPathParams = {
+export type GetCommentsByActivityIdResponses = {
+  '200': GetCommentsByActivityIdStatus200
+  default: GetCommentsByActivityIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetCommentsByActivityIdResponse =
+  GetCommentsByActivityIdStatus200 | GetCommentsByActivityIdStatusDefault
+
+export type GetKudoersByActivityIdPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
-
-export type GetKudoersByActivityIdQueryParams = {
-  /**
-   * @description Page number. Defaults to 1.
-   * @type integer | undefined
-   */
-  page?: number | undefined
-  /**
-   * @description Number of items per page. Defaults to 30.
-   * @default 30
-   * @type integer | undefined
-   */
-  per_page?: number | undefined
-}
-
-/**
- * @description Comments.
- */
-export type GetKudoersByActivityId200 = SummaryAthlete[]
-
-/**
- * @description Unexpected error.
- */
-export type GetKudoersByActivityIdError = Fault
-
-export type GetKudoersByActivityIdQueryResponse = GetKudoersByActivityId200
 
 export type GetKudoersByActivityIdQuery = {
-  Response: GetKudoersByActivityId200
-  PathParams: GetKudoersByActivityIdPathParams
-  QueryParams: GetKudoersByActivityIdQueryParams
-  Errors: any
-}
-
-export type GetClubByIdPathParams = {
-  /**
-   * @description The identifier of the club.
-   * @type integer, int64
-   */
-  id: number
-}
-
-/**
- * @description The detailed representation of a club.
- */
-export type GetClubById200 = DetailedClub
-
-/**
- * @description Unexpected error.
- */
-export type GetClubByIdError = Fault
-
-export type GetClubByIdQueryResponse = GetClubById200
-
-export type GetClubByIdQuery = {
-  Response: GetClubById200
-  PathParams: GetClubByIdPathParams
-  Errors: any
-}
-
-export type GetLoggedInAthleteClubsQueryParams = {
   /**
    * @description Page number. Defaults to 1.
    * @type integer | undefined
@@ -2432,25 +2575,109 @@ export type GetLoggedInAthleteClubsQueryParams = {
   per_page?: number | undefined
 }
 
-/**
- * @description A list of summary club representations.
- */
-export type GetLoggedInAthleteClubs200 = SummaryClub[]
+export type GetKudoersByActivityIdStatus200 = SummaryAthlete[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetLoggedInAthleteClubsError = Fault
+export type GetKudoersByActivityIdStatusDefault = Fault
 
-export type GetLoggedInAthleteClubsQueryResponse = GetLoggedInAthleteClubs200
-
-export type GetLoggedInAthleteClubsQuery = {
-  Response: GetLoggedInAthleteClubs200
-  QueryParams: GetLoggedInAthleteClubsQueryParams
-  Errors: any
+export type GetKudoersByActivityIdOptions = {
+  body?: never | undefined
+  path: GetKudoersByActivityIdPath
+  query?: GetKudoersByActivityIdQuery | undefined
+  headers?: never | undefined
 }
 
-export type GetGearByIdPathParams = {
+export type GetKudoersByActivityIdResponses = {
+  '200': GetKudoersByActivityIdStatus200
+  default: GetKudoersByActivityIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetKudoersByActivityIdResponse =
+  GetKudoersByActivityIdStatus200 | GetKudoersByActivityIdStatusDefault
+
+export type GetClubByIdPath = {
+  /**
+   * @description The identifier of the club.
+   *
+   * Format: `int64`
+   * @type integer
+   */
+  id: number
+}
+
+export type GetClubByIdStatus200 = DetailedClub
+
+/**
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
+ */
+export type GetClubByIdStatusDefault = Fault
+
+export type GetClubByIdOptions = {
+  body?: never | undefined
+  path: GetClubByIdPath
+  query?: never | undefined
+  headers?: never | undefined
+}
+
+export type GetClubByIdResponses = {
+  '200': GetClubByIdStatus200
+  default: GetClubByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetClubByIdResponse =
+  GetClubByIdStatus200 | GetClubByIdStatusDefault
+
+export type GetLoggedInAthleteClubsQuery = {
+  /**
+   * @description Page number. Defaults to 1.
+   * @type integer | undefined
+   */
+  page?: number | undefined
+  /**
+   * @description Number of items per page. Defaults to 30.
+   * @default 30
+   * @type integer | undefined
+   */
+  per_page?: number | undefined
+}
+
+export type GetLoggedInAthleteClubsStatus200 = SummaryClub[]
+
+/**
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
+ */
+export type GetLoggedInAthleteClubsStatusDefault = Fault
+
+export type GetLoggedInAthleteClubsOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: GetLoggedInAthleteClubsQuery | undefined
+  headers?: never | undefined
+}
+
+export type GetLoggedInAthleteClubsResponses = {
+  '200': GetLoggedInAthleteClubsStatus200
+  default: GetLoggedInAthleteClubsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetLoggedInAthleteClubsResponse =
+  GetLoggedInAthleteClubsStatus200 | GetLoggedInAthleteClubsStatusDefault
+
+export type GetGearByIdPath = {
   /**
    * @description The identifier of the gear.
    * @type string
@@ -2458,51 +2685,69 @@ export type GetGearByIdPathParams = {
   id: string
 }
 
-/**
- * @description A representation of the gear.
- */
-export type GetGearById200 = DetailedGear
+export type GetGearByIdStatus200 = DetailedGear
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetGearByIdError = Fault
+export type GetGearByIdStatusDefault = Fault
 
-export type GetGearByIdQueryResponse = GetGearById200
-
-export type GetGearByIdQuery = {
-  Response: GetGearById200
-  PathParams: GetGearByIdPathParams
-  Errors: any
+export type GetGearByIdOptions = {
+  body?: never | undefined
+  path: GetGearByIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetRouteByIdPathParams = {
+export type GetGearByIdResponses = {
+  '200': GetGearByIdStatus200
+  default: GetGearByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetGearByIdResponse =
+  GetGearByIdStatus200 | GetGearByIdStatusDefault
+
+export type GetRouteByIdPath = {
   /**
    * @description The identifier of the route.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description A representation of the route.
- */
-export type GetRouteById200 = Route
+export type GetRouteByIdStatus200 = Route
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetRouteByIdError = Fault
+export type GetRouteByIdStatusDefault = Fault
 
-export type GetRouteByIdQueryResponse = GetRouteById200
-
-export type GetRouteByIdQuery = {
-  Response: GetRouteById200
-  PathParams: GetRouteByIdPathParams
-  Errors: any
+export type GetRouteByIdOptions = {
+  body?: never | undefined
+  path: GetRouteByIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetRoutesByAthleteIdQueryParams = {
+export type GetRouteByIdResponses = {
+  '200': GetRouteByIdStatus200
+  default: GetRouteByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetRouteByIdResponse =
+  GetRouteByIdStatus200 | GetRouteByIdStatusDefault
+
+export type GetRoutesByAthleteIdQuery = {
   /**
    * @description Page number. Defaults to 1.
    * @type integer | undefined
@@ -2516,128 +2761,177 @@ export type GetRoutesByAthleteIdQueryParams = {
   per_page?: number | undefined
 }
 
-/**
- * @description A representation of the route.
- */
-export type GetRoutesByAthleteId200 = Route[]
+export type GetRoutesByAthleteIdStatus200 = Route[]
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetRoutesByAthleteIdError = Fault
+export type GetRoutesByAthleteIdStatusDefault = Fault
 
-export type GetRoutesByAthleteIdQueryResponse = GetRoutesByAthleteId200
-
-export type GetRoutesByAthleteIdQuery = {
-  Response: GetRoutesByAthleteId200
-  QueryParams: GetRoutesByAthleteIdQueryParams
-  Errors: any
+export type GetRoutesByAthleteIdOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: GetRoutesByAthleteIdQuery | undefined
+  headers?: never | undefined
 }
 
-export type GetRouteAsGPXPathParams = {
+export type GetRoutesByAthleteIdResponses = {
+  '200': GetRoutesByAthleteIdStatus200
+  default: GetRoutesByAthleteIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetRoutesByAthleteIdResponse =
+  GetRoutesByAthleteIdStatus200 | GetRoutesByAthleteIdStatusDefault
+
+export type GetRouteAsGPXPath = {
   /**
    * @description The identifier of the route.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description A GPX file with the route.
- */
-export type GetRouteAsGPX200 = unknown
+export type GetRouteAsGPXStatus200 = unknown
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetRouteAsGPXError = Fault
+export type GetRouteAsGPXStatusDefault = Fault
 
-export type GetRouteAsGPXQueryResponse = GetRouteAsGPX200
-
-export type GetRouteAsGPXQuery = {
-  Response: GetRouteAsGPX200
-  PathParams: GetRouteAsGPXPathParams
-  Errors: any
+export type GetRouteAsGPXOptions = {
+  body?: never | undefined
+  path: GetRouteAsGPXPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetRouteAsTCXPathParams = {
+export type GetRouteAsGPXResponses = {
+  '200': GetRouteAsGPXStatus200
+  default: GetRouteAsGPXStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetRouteAsGPXResponse =
+  GetRouteAsGPXStatus200 | GetRouteAsGPXStatusDefault
+
+export type GetRouteAsTCXPath = {
   /**
    * @description The identifier of the route.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description A TCX file with the route.
- */
-export type GetRouteAsTCX200 = unknown
+export type GetRouteAsTCXStatus200 = unknown
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetRouteAsTCXError = Fault
+export type GetRouteAsTCXStatusDefault = Fault
 
-export type GetRouteAsTCXQueryResponse = GetRouteAsTCX200
+export type GetRouteAsTCXOptions = {
+  body?: never | undefined
+  path: GetRouteAsTCXPath
+  query?: never | undefined
+  headers?: never | undefined
+}
 
-export type GetRouteAsTCXQuery = {
-  Response: GetRouteAsTCX200
-  PathParams: GetRouteAsTCXPathParams
-  Errors: any
+export type GetRouteAsTCXResponses = {
+  '200': GetRouteAsTCXStatus200
+  default: GetRouteAsTCXStatusDefault
 }
 
 /**
- * @description A representation of the created upload.
+ * @description Union of all possible responses
  */
-export type CreateUpload201 = Upload
+export type GetRouteAsTCXResponse =
+  GetRouteAsTCXStatus200 | GetRouteAsTCXStatusDefault
+
+export type CreateUploadStatus201 = Upload
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type CreateUploadError = Fault
+export type CreateUploadStatusDefault = Fault
 
-export type CreateUploadMutationResponse = CreateUpload201
-
-export type CreateUploadMutation = {
-  Response: CreateUpload201
-  Errors: any
+export type CreateUploadOptions = {
+  body?: never | undefined
+  path?: never | undefined
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetUploadByIdPathParams = {
+export type CreateUploadResponses = {
+  '201': CreateUploadStatus201
+  default: CreateUploadStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type CreateUploadResponse =
+  CreateUploadStatus201 | CreateUploadStatusDefault
+
+export type GetUploadByIdPath = {
   /**
    * @description The identifier of the upload.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   uploadId: number
 }
 
-/**
- * @description Representation of the upload.
- */
-export type GetUploadById200 = Upload
+export type GetUploadByIdStatus200 = Upload
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetUploadByIdError = Fault
+export type GetUploadByIdStatusDefault = Fault
 
-export type GetUploadByIdQueryResponse = GetUploadById200
-
-export type GetUploadByIdQuery = {
-  Response: GetUploadById200
-  PathParams: GetUploadByIdPathParams
-  Errors: any
+export type GetUploadByIdOptions = {
+  body?: never | undefined
+  path: GetUploadByIdPath
+  query?: never | undefined
+  headers?: never | undefined
 }
 
-export type GetActivityStreamsPathParams = {
+export type GetUploadByIdResponses = {
+  '200': GetUploadByIdStatus200
+  default: GetUploadByIdStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetUploadByIdResponse =
+  GetUploadByIdStatus200 | GetUploadByIdStatusDefault
+
+export type GetActivityStreamsPath = {
   /**
    * @description The identifier of the activity.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-export const getActivityStreamsQueryParamsKeysEnum = {
+export const getActivityStreamsKeysEnum = {
   time: 'time',
   distance: 'distance',
   latlng: 'latlng',
@@ -2651,15 +2945,15 @@ export const getActivityStreamsQueryParamsKeysEnum = {
   grade_smooth: 'grade_smooth',
 } as const
 
-export type GetActivityStreamsQueryParamsKeysEnumKey =
-  (typeof getActivityStreamsQueryParamsKeysEnum)[keyof typeof getActivityStreamsQueryParamsKeysEnum]
+export type GetActivityStreamsKeysEnumKey =
+  (typeof getActivityStreamsKeysEnum)[keyof typeof getActivityStreamsKeysEnum]
 
-export type GetActivityStreamsQueryParams = {
+export type GetActivityStreamsQuery = {
   /**
    * @description Desired stream types.
    * @type array
    */
-  keys: GetActivityStreamsQueryParamsKeysEnumKey[]
+  keys: GetActivityStreamsKeysEnumKey[]
   /**
    * @description Must be true.
    * @default true
@@ -2668,34 +2962,43 @@ export type GetActivityStreamsQueryParams = {
   key_by_type: boolean
 }
 
-/**
- * @description The set of requested streams.
- */
-export type GetActivityStreams200 = StreamSet
+export type GetActivityStreamsStatus200 = StreamSet
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetActivityStreamsError = Fault
+export type GetActivityStreamsStatusDefault = Fault
 
-export type GetActivityStreamsQueryResponse = GetActivityStreams200
-
-export type GetActivityStreamsQuery = {
-  Response: GetActivityStreams200
-  PathParams: GetActivityStreamsPathParams
-  QueryParams: GetActivityStreamsQueryParams
-  Errors: any
+export type GetActivityStreamsOptions = {
+  body?: never | undefined
+  path: GetActivityStreamsPath
+  query: GetActivityStreamsQuery
+  headers?: never | undefined
 }
 
-export type GetSegmentEffortStreamsPathParams = {
+export type GetActivityStreamsResponses = {
+  '200': GetActivityStreamsStatus200
+  default: GetActivityStreamsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetActivityStreamsResponse =
+  GetActivityStreamsStatus200 | GetActivityStreamsStatusDefault
+
+export type GetSegmentEffortStreamsPath = {
   /**
    * @description The identifier of the segment effort.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-export const getSegmentEffortStreamsQueryParamsKeysEnum = {
+export const getSegmentEffortStreamsKeysEnum = {
   time: 'time',
   distance: 'distance',
   latlng: 'latlng',
@@ -2709,15 +3012,15 @@ export const getSegmentEffortStreamsQueryParamsKeysEnum = {
   grade_smooth: 'grade_smooth',
 } as const
 
-export type GetSegmentEffortStreamsQueryParamsKeysEnumKey =
-  (typeof getSegmentEffortStreamsQueryParamsKeysEnum)[keyof typeof getSegmentEffortStreamsQueryParamsKeysEnum]
+export type GetSegmentEffortStreamsKeysEnumKey =
+  (typeof getSegmentEffortStreamsKeysEnum)[keyof typeof getSegmentEffortStreamsKeysEnum]
 
-export type GetSegmentEffortStreamsQueryParams = {
+export type GetSegmentEffortStreamsQuery = {
   /**
    * @description The types of streams to return.
    * @type array
    */
-  keys: GetSegmentEffortStreamsQueryParamsKeysEnumKey[]
+  keys: GetSegmentEffortStreamsKeysEnumKey[]
   /**
    * @description Must be true.
    * @default true
@@ -2726,48 +3029,57 @@ export type GetSegmentEffortStreamsQueryParams = {
   key_by_type: boolean
 }
 
-/**
- * @description The set of requested streams.
- */
-export type GetSegmentEffortStreams200 = StreamSet
+export type GetSegmentEffortStreamsStatus200 = StreamSet
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetSegmentEffortStreamsError = Fault
+export type GetSegmentEffortStreamsStatusDefault = Fault
 
-export type GetSegmentEffortStreamsQueryResponse = GetSegmentEffortStreams200
-
-export type GetSegmentEffortStreamsQuery = {
-  Response: GetSegmentEffortStreams200
-  PathParams: GetSegmentEffortStreamsPathParams
-  QueryParams: GetSegmentEffortStreamsQueryParams
-  Errors: any
+export type GetSegmentEffortStreamsOptions = {
+  body?: never | undefined
+  path: GetSegmentEffortStreamsPath
+  query: GetSegmentEffortStreamsQuery
+  headers?: never | undefined
 }
 
-export type GetSegmentStreamsPathParams = {
+export type GetSegmentEffortStreamsResponses = {
+  '200': GetSegmentEffortStreamsStatus200
+  default: GetSegmentEffortStreamsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetSegmentEffortStreamsResponse =
+  GetSegmentEffortStreamsStatus200 | GetSegmentEffortStreamsStatusDefault
+
+export type GetSegmentStreamsPath = {
   /**
    * @description The identifier of the segment.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-export const getSegmentStreamsQueryParamsKeysEnum = {
+export const getSegmentStreamsKeysEnum = {
   distance: 'distance',
   latlng: 'latlng',
   altitude: 'altitude',
 } as const
 
-export type GetSegmentStreamsQueryParamsKeysEnumKey =
-  (typeof getSegmentStreamsQueryParamsKeysEnum)[keyof typeof getSegmentStreamsQueryParamsKeysEnum]
+export type GetSegmentStreamsKeysEnumKey =
+  (typeof getSegmentStreamsKeysEnum)[keyof typeof getSegmentStreamsKeysEnum]
 
-export type GetSegmentStreamsQueryParams = {
+export type GetSegmentStreamsQuery = {
   /**
    * @description The types of streams to return.
    * @type array
    */
-  keys: GetSegmentStreamsQueryParamsKeysEnumKey[]
+  keys: GetSegmentStreamsKeysEnumKey[]
   /**
    * @description Must be true.
    * @default true
@@ -2776,47 +3088,64 @@ export type GetSegmentStreamsQueryParams = {
   key_by_type: boolean
 }
 
-/**
- * @description The set of requested streams.
- */
-export type GetSegmentStreams200 = StreamSet
+export type GetSegmentStreamsStatus200 = StreamSet
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetSegmentStreamsError = Fault
+export type GetSegmentStreamsStatusDefault = Fault
 
-export type GetSegmentStreamsQueryResponse = GetSegmentStreams200
-
-export type GetSegmentStreamsQuery = {
-  Response: GetSegmentStreams200
-  PathParams: GetSegmentStreamsPathParams
-  QueryParams: GetSegmentStreamsQueryParams
-  Errors: any
+export type GetSegmentStreamsOptions = {
+  body?: never | undefined
+  path: GetSegmentStreamsPath
+  query: GetSegmentStreamsQuery
+  headers?: never | undefined
 }
 
-export type GetRouteStreamsPathParams = {
+export type GetSegmentStreamsResponses = {
+  '200': GetSegmentStreamsStatus200
+  default: GetSegmentStreamsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetSegmentStreamsResponse =
+  GetSegmentStreamsStatus200 | GetSegmentStreamsStatusDefault
+
+export type GetRouteStreamsPath = {
   /**
    * @description The identifier of the route.
-   * @type integer, int64
+   *
+   * Format: `int64`
+   * @type integer
    */
   id: number
 }
 
-/**
- * @description The set of requested streams.
- */
-export type GetRouteStreams200 = StreamSet
+export type GetRouteStreamsStatus200 = StreamSet
 
 /**
- * @description Unexpected error.
+ * @description Encapsulates the errors that may be returned from the API.
+ * @type object
  */
-export type GetRouteStreamsError = Fault
+export type GetRouteStreamsStatusDefault = Fault
 
-export type GetRouteStreamsQueryResponse = GetRouteStreams200
-
-export type GetRouteStreamsQuery = {
-  Response: GetRouteStreams200
-  PathParams: GetRouteStreamsPathParams
-  Errors: any
+export type GetRouteStreamsOptions = {
+  body?: never | undefined
+  path: GetRouteStreamsPath
+  query?: never | undefined
+  headers?: never | undefined
 }
+
+export type GetRouteStreamsResponses = {
+  '200': GetRouteStreamsStatus200
+  default: GetRouteStreamsStatusDefault
+}
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetRouteStreamsResponse =
+  GetRouteStreamsStatus200 | GetRouteStreamsStatusDefault

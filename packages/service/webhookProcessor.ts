@@ -1,4 +1,4 @@
-import { HttpError } from '@trackfootball/open-api'
+import { HttpError, ResponseError } from '@trackfootball/open-api'
 import type {
   StravaWebhookEvent,
   createRepository,
@@ -56,7 +56,7 @@ export type WebhookProcessingResult =
   | { status: 'SKIPPED'; eventId: number }
 
 function errorDescription(error: unknown) {
-  if (error instanceof HttpError) {
+  if (error instanceof HttpError || error instanceof ResponseError) {
     return `http-${error.status}`
   }
   if (error instanceof ZodError) {

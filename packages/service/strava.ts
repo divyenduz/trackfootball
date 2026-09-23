@@ -271,7 +271,7 @@ export async function getStravaToken(
   }
 }
 
-async function getStravaAccessTokenHeaders(
+async function getStravaAccessToken(
   repository: ReturnType<typeof createRepository>,
   userId: number,
   config: StravaOAuthConfig,
@@ -280,9 +280,7 @@ async function getStravaAccessTokenHeaders(
   if (!stravaAccessToken) {
     throw new Error(`No Strava access token for user ${userId}`)
   }
-  return {
-    Authorization: `Bearer ${stravaAccessToken}`,
-  }
+  return stravaAccessToken
 }
 
 export async function checkStravaAccessToken(
@@ -291,19 +289,17 @@ export async function checkStravaAccessToken(
   config: StravaOAuthConfig,
 ) {
   try {
-    const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
+    const stravaAccessToken = await getStravaAccessToken(
       repository,
       userId,
       config,
     )
-    await getLoggedInAthleteActivities(
-      {
+    await getLoggedInAthleteActivities({
+      query: {
         per_page: 1,
       },
-      {
-        headers: stravaAccessTokenHeaders,
-      },
-    )
+      auth: stravaAccessToken,
+    })
     return true
   } catch (e) {
     console.error('Error: strava check failed')
@@ -318,20 +314,18 @@ export async function fetchStravaActivity(
   userId: number,
   config: StravaOAuthConfig,
 ) {
-  const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
+  const stravaAccessToken = await getStravaAccessToken(
     repository,
     userId,
     config,
   )
-  const activity = await getActivityById(
-    activityId,
-    {
+  const activity = await getActivityById({
+    path: { id: activityId },
+    query: {
       include_all_efforts: false,
     },
-    {
-      headers: stravaAccessTokenHeaders,
-    },
-  )
+    auth: stravaAccessToken,
+  })
   return stravaActivitySchema.parse(activity)
 }
 
@@ -341,22 +335,20 @@ export async function fetchStravaActivityGeoJson(
   userId: number,
   config: StravaOAuthConfig,
 ) {
-  const stravaAccessTokenHeaders = await getStravaAccessTokenHeaders(
+  const stravaAccessToken = await getStravaAccessToken(
     repository,
     userId,
     config,
   )
   const activityStreams = stravaActivityStreamsSchema.parse(
-    await getActivityStreams(
-      activityId,
-      {
+    await getActivityStreams({
+      path: { id: activityId },
+      query: {
         keys: ['latlng', 'time', 'heartrate'],
         key_by_type: true,
       },
-      {
-        headers: stravaAccessTokenHeaders,
-      },
-    ),
+      auth: stravaAccessToken,
+    }),
   )
 
   const activity = await fetchStravaActivity(
