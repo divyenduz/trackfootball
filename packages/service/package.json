@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
@@ -13,19 +13,9 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@trackfootball/postgres": "workspace:*",
-    "@trackfootball/open-api": "workspace:*",
     "@tmcw/togeojson": "catalog:",
-    "@turf/area": "catalog:",
-    "@turf/boolean-point-in-polygon": "catalog:",
-    "@turf/center": "catalog:",
-    "@turf/envelope": "catalog:",
-    "@turf/helpers": "catalog:",
-    "@turf/intersect": "catalog:",
     "@xmldom/xmldom": "catalog:",
     "geojson": "catalog:",
-    "tiny-invariant": "catalog:",
-    "ts-pattern": "catalog:",
-    "zod": "catalog:"
+    "ts-pattern": "catalog:"
   }
 }

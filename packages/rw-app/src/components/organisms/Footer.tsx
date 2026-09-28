@@ -35,14 +35,6 @@ export function Footer() {
             Contact Us
           </a>
         </nav>
-        <div className="mt-4 flex flex-wrap items-center justify-center">
-          <img
-            width={100}
-            height={50}
-            alt="Compatible with Strava logo"
-            src="/assets/strava/api_logo_cptblWith_strava_stack_white.svg"
-          ></img>
-        </div>
       </div>
     </div>
   )

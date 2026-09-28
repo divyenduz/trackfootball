@@ -57,9 +57,6 @@ export const featureCollectionLineStringSchema = z
   })
   .passthrough() as unknown as z.ZodType<FeatureCollection<LineString>>
 
-export const platformSchema = z.enum(['STRAVA'])
-export type Platform = z.infer<typeof platformSchema>
-
 export const postTypeSchema = z.enum(['STRAVA_ACTIVITY'])
 export type PostType = z.infer<typeof postTypeSchema>
 
@@ -118,40 +115,6 @@ export const fieldSchema = z.object({
 })
 export type Field = z.infer<typeof fieldSchema>
 
-export const socialLoginSchema = z.object({
-  id: z.number(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-  platform: platformSchema,
-  platformId: z.string(),
-  platformMeta: z.string(),
-  accessToken: z.string(),
-  refreshToken: z.string(),
-  userId: z.number(),
-  expiresAt: z.coerce.date().nullable(),
-  platformScope: z.string(),
-})
-export type SocialLogin = z.infer<typeof socialLoginSchema>
-
-export const stravaWebhookEventStatusSchema = z.enum([
-  'PENDING',
-  'ERRORED',
-  'COMPLETED',
-])
-export type StravaWebhookEventStatus = z.infer<
-  typeof stravaWebhookEventStatusSchema
->
-
-export const stravaWebhookEventSchema = z.object({
-  id: z.number(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-  status: stravaWebhookEventStatusSchema,
-  body: z.string(),
-  errors: z.array(z.string()).nullable(),
-})
-export type StravaWebhookEvent = z.infer<typeof stravaWebhookEventSchema>
-
 export const postSchema = z.object({
   id: z.number(),
   createdAt: z.coerce.date(),
@@ -176,27 +139,3 @@ export const postSchema = z.object({
   statusInfo: z.string(),
 })
 export type Post = z.infer<typeof postSchema>
-
-export type StravaWebhookEventSerializable = Omit<
-  StravaWebhookEvent,
-  'createdAt' | 'updatedAt' | 'errors'
-> & {
-  createdAt: string
-  updatedAt: string
-  errors: string[] | null
-}
-
-export const serializeStravaWebhookEvent = (
-  event: StravaWebhookEvent,
-): StravaWebhookEventSerializable => ({
-  ...event,
-  createdAt: event.createdAt.toISOString(),
-  updatedAt: event.updatedAt.toISOString(),
-  errors: (event.errors ?? []).map((error) => {
-    try {
-      return JSON.stringify(error)
-    } catch (stringifyError) {
-      return String(error)
-    }
-  }),
-})

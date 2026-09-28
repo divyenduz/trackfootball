@@ -10,13 +10,6 @@ import type { FeatureCollection, LineString } from 'geojson'
 import invariant from 'tiny-invariant'
 import { Sql } from 'postgres'
 
-const stringify = (value: number | string): string => {
-  if (typeof value === 'number') {
-    return value.toString()
-  }
-  return value
-}
-
 interface CreatePostInput {
   type: PostType
   key: string
@@ -138,101 +131,6 @@ export async function getPostWithUserAndFields(sql: Sql, id: number) {
     ...postWithData!,
     ...postMeta,
   }
-}
-
-export async function getPostByStravaId(sql: Sql, stravaId: number) {
-  const posts: TypedPost[] = await sql`
-    SELECT * from "Post"
-    WHERE "key" = ${stringify(stravaId)}
-    `
-  const post = posts[0]
-
-  if (!post) {
-    return null
-  }
-
-  return post
-}
-
-export async function getPostByStravaIdForUser(
-  sql: Sql,
-  stravaId: number,
-  userId: number,
-) {
-  const posts = await sql<Post[]>`
-    SELECT * FROM "Post"
-    WHERE "key" = ${stringify(stravaId)}
-      AND "type" = 'STRAVA_ACTIVITY'
-      AND "userId" = ${userId}
-  `
-  return posts[0] ?? null
-}
-
-export async function updatePostTitle(
-  sql: Sql,
-  stravaId: number,
-  title: string,
-) {
-  const posts: Post[] = await sql`
-    UPDATE "Post"
-    SET "text" = ${title}
-    WHERE "key" = ${stringify(stravaId)}
-    RETURNING *
-    `
-  const post = posts[0]
-
-  return post
-}
-
-export async function updatePostTitleForUser(
-  sql: Sql,
-  stravaId: number,
-  userId: number,
-  title: string,
-) {
-  const posts = await sql<Post[]>`
-    UPDATE "Post"
-    SET "text" = ${title}
-    WHERE "key" = ${stringify(stravaId)}
-      AND "type" = 'STRAVA_ACTIVITY'
-      AND "userId" = ${userId}
-    RETURNING *
-  `
-  return posts[0] ?? null
-}
-
-export async function deletePostBy(
-  sql: Sql,
-  stravaId: number,
-): Promise<Post | null> {
-  const key = `${stravaId}`
-  const posts: Post[] = await sql`
-    DELETE FROM "Post"
-    WHERE "key" = ${key}
-    RETURNING *
-    `
-  if (posts.length > 0) {
-    const post = posts[0]
-    invariant(post, 'expected post to exist')
-    return post
-  } else {
-    return null
-  }
-}
-
-export async function deletePostByStravaIdForUser(
-  sql: Sql,
-  stravaId: number,
-  userId: number,
-): Promise<Post | null> {
-  const posts = await sql<Post[]>`
-    DELETE FROM "Post"
-    WHERE "key" = ${stringify(stravaId)}
-      AND "type" = 'STRAVA_ACTIVITY'
-      AND "userId" = ${userId}
-    RETURNING *
-  `
-  return posts[0] ?? null
 }
 
 type FeedItemType = Omit<Post, 'geoJson' | 'sprints' | 'runs'> & {

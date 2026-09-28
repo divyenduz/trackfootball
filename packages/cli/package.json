@@ -12,10 +12,6 @@
   },
   "dependencies": {
     "@stricli/auto-complete": "catalog:",
-    "@stricli/core": "catalog:",
-    "@trackfootball/service": "workspace:*",
-    "@trackfootball/postgres": "workspace:*",
-    "postgres": "catalog:",
-    "tiny-invariant": "catalog:"
+    "@stricli/core": "catalog:"
   }
 }

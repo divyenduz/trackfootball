@@ -1,11 +1,4 @@
 import { RequestInfo } from 'rwsdk/worker'
-import { ShowToOwner } from '@/components/atoms/ShowToOwner'
-import {
-  CheckStravaState,
-  ConnectWithStravaWidget,
-} from '@/components/organisms/ConnectWithStravaWidget'
-import { env } from 'cloudflare:workers'
-import { checkStravaToken } from './checkStravaToken'
 
 export async function Athlete({ ctx, params }: RequestInfo) {
   const athlete = await ctx.repository.getUser(parseInt(params.id, 10))
@@ -27,18 +20,6 @@ export async function Athlete({ ctx, params }: RequestInfo) {
         </a>
       </div>
     )
-  }
-
-  const isOwner = ctx.user?.id === athlete.id
-  let stravaState: CheckStravaState = 'NOT_CONNECTED'
-  if (isOwner) {
-    const athleteSocialLogin = await ctx.repository.getUserStravaSocialLogin(
-      athlete.id,
-    )
-    stravaState = (await checkStravaToken({
-      ...athlete,
-      socialLogin: athleteSocialLogin ? [athleteSocialLogin] : [],
-    })) as CheckStravaState
   }
 
   const athleteName =
@@ -82,23 +63,6 @@ export async function Athlete({ ctx, params }: RequestInfo) {
         </div>
       </section>
 
-      <ShowToOwner ownerId={athlete.id} userId={ctx.user?.id}>
-        <section className="mt-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Strava connection
-            </h2>
-            <p className="mt-1 max-w-sm text-sm leading-6 text-gray-600">
-              Keep your football activities in sync with your athlete profile.
-            </p>
-          </div>
-          <ConnectWithStravaWidget
-            redirectTo="athlete"
-            backendApiUrl={env.BACKEND_API}
-            checkStravaState={stravaState}
-          />
-        </section>
-      </ShowToOwner>
     </div>
   )
 }
