@@ -12,6 +12,9 @@ catalogs:
     '@cloudflare/workers-types':
       specifier: 5.20260922.1
       version: 5.20260922.1
+    '@garmin/fitsdk':
+      specifier: ^21.217.0
+      version: 21.217.0
     '@stricli/auto-complete':
       specifier: 1.3.0
       version: 1.3.0
@@ -185,6 +188,9 @@ importers:
       '@trackfootball/postgres':
         specifier: workspace:*
         version: link:../postgres
+      '@trackfootball/service':
+        specifier: workspace:*
+        version: link:../service
       better-auth:
         specifier: 'catalog:'
         version: 1.7.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.0.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1)))
@@ -243,9 +249,15 @@ importers:
 
   packages/service:
     dependencies:
+      '@garmin/fitsdk':
+        specifier: 'catalog:'
+        version: 21.217.0
       '@tmcw/togeojson':
         specifier: 'catalog:'
         version: 7.1.2
+      '@trackfootball/postgres':
+        specifier: workspace:*
+        version: link:../postgres
       '@xmldom/xmldom':
         specifier: 'catalog:'
         version: 0.9.12
@@ -262,6 +274,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.13
+      postgres:
+        specifier: 'catalog:'
+        version: 3.4.9
       vitest:
         specifier: 'catalog:'
         version: 5.0.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1))
@@ -642,6 +657,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@garmin/fitsdk@21.217.0':
+    resolution: {integrity: sha512-oIkDo28Yrv8ZhJiOTBZWn8Cb9kIkcAx7oVfNtgqRuNvzbCyFWdLg1StUVECjIo9rbtpvTDuW8Jqd3PTnVapiAw==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -3446,6 +3464,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.1':
     optional: true
+
+  '@garmin/fitsdk@21.217.0': {}
 
   '@img/colour@1.1.0': {}
 

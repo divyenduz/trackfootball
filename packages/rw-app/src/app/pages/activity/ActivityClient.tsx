@@ -66,8 +66,16 @@ const formatStartTime = (startTime: Date | null) => {
 const getRoutePoints = (geoJson: Post['geoJson']) => {
   const allCoordinates =
     geoJson?.features
-      .flatMap((feature) => feature.geometry.coordinates)
-      .map(([longitude, latitude]) => ({ longitude, latitude }))
+      .flatMap((feature, segment) =>
+        feature.geometry.coordinates.map(
+          ([longitude, latitude], index, coordinates) => ({
+            longitude,
+            latitude,
+            segment,
+            endpoint: index === 0 || index === coordinates.length - 1,
+          }),
+        ),
+      )
       .filter(
         ({ longitude, latitude }) =>
           Number.isFinite(longitude) && Number.isFinite(latitude),
@@ -77,8 +85,7 @@ const getRoutePoints = (geoJson: Post['geoJson']) => {
 
   const sampleEvery = Math.max(1, Math.ceil(allCoordinates.length / 1_000))
   const coordinates = allCoordinates.filter(
-    (_, index) =>
-      index % sampleEvery === 0 || index === allCoordinates.length - 1,
+    (coordinate, index) => coordinate.endpoint || index % sampleEvery === 0,
   )
 
   const width = 640
@@ -88,9 +95,10 @@ const getRoutePoints = (geoJson: Post['geoJson']) => {
     coordinates.reduce((sum, coordinate) => sum + coordinate.latitude, 0) /
     coordinates.length
   const longitudeScale = Math.cos((meanLatitude * Math.PI) / 180)
-  const projected = coordinates.map(({ longitude, latitude }) => ({
+  const projected = coordinates.map(({ longitude, latitude, segment }) => ({
     x: longitude * longitudeScale,
     y: latitude,
+    segment,
   }))
   const xs = projected.map(({ x }) => x)
   const ys = projected.map(({ y }) => y)
@@ -110,9 +118,10 @@ const getRoutePoints = (geoJson: Post['geoJson']) => {
   const offsetX = (width - routeWidth * scale) / 2
   const offsetY = (height - routeHeight * scale) / 2
 
-  return projected.map(({ x, y }) => ({
+  return projected.map(({ x, y, segment }) => ({
     x: offsetX + (x - minX) * scale,
     y: height - (offsetY + (y - minY) * scale),
+    segment,
   }))
 }
 
@@ -279,17 +288,23 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
               <desc id="activity-route-description">
                 The GPS path from the start to the end of this activity.
               </desc>
-              <polyline
-                points={routePoints
-                  .map(({ x, y }) => `${x.toFixed(2)},${y.toFixed(2)}`)
-                  .join(' ')}
-                fill="none"
-                stroke="#9f1239"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                vectorEffect="non-scaling-stroke"
-              />
+              {Array.from(
+                new Set(routePoints.map((point) => point.segment)),
+              ).map((segment) => (
+                <polyline
+                  key={segment}
+                  points={routePoints
+                    .filter((point) => point.segment === segment)
+                    .map(({ x, y }) => `${x.toFixed(2)},${y.toFixed(2)}`)
+                    .join(' ')}
+                  fill="none"
+                  stroke="#9f1239"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+              ))}
               <circle
                 cx={routePoints[0]?.x}
                 cy={routePoints[0]?.y}

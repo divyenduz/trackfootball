@@ -4,16 +4,19 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/geojson": "catalog:",
     "@types/node": "catalog:",
+    "postgres": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@garmin/fitsdk": "catalog:",
     "@tmcw/togeojson": "catalog:",
+    "@trackfootball/postgres": "workspace:*",
     "@xmldom/xmldom": "catalog:",
     "geojson": "catalog:",
     "ts-pattern": "catalog:"

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="TrackFootball synthetic test fixture" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk><name>Sample football match</name>
+    <trkseg>
+      <trkpt lat="52.5200" lon="13.4050"><time>2026-09-28T10:00:00Z</time></trkpt>
+      <trkpt lat="52.5200" lon="13.4058"><time>2026-09-28T10:00:20Z</time></trkpt>
+      <trkpt lat="52.5204" lon="13.4058"><time>2026-09-28T10:00:40Z</time></trkpt>
+      <trkpt lat="52.5204" lon="13.4050"><time>2026-09-28T10:01:00Z</time></trkpt>
+      <trkpt lat="52.5201" lon="13.4054"><time>2026-09-28T10:01:20Z</time></trkpt>
+    </trkseg>
+    <trkseg>
+      <trkpt lat="52.5207" lon="13.4050"><time>2026-09-28T10:02:00Z</time></trkpt>
+      <trkpt lat="52.5207" lon="13.4058"><time>2026-09-28T10:02:20Z</time></trkpt>
+      <trkpt lat="52.5210" lon="13.4050"><time>2026-09-28T10:02:40Z</time></trkpt>
+      <trkpt lat="52.5210" lon="13.4058"><time>2026-09-28T10:03:00Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

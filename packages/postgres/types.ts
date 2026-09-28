@@ -57,7 +57,7 @@ export const featureCollectionLineStringSchema = z
   })
   .passthrough() as unknown as z.ZodType<FeatureCollection<LineString>>
 
-export const postTypeSchema = z.enum(['STRAVA_ACTIVITY'])
+export const postTypeSchema = z.enum(['STRAVA_ACTIVITY', 'UPLOADED_ACTIVITY'])
 export type PostType = z.infer<typeof postTypeSchema>
 
 export const postStatusSchema = z.enum([

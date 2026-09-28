@@ -75,7 +75,8 @@ CREATE TYPE public."PostStatus" AS ENUM (
 --
 
 CREATE TYPE public."PostType" AS ENUM (
-    'STRAVA_ACTIVITY'
+    'STRAVA_ACTIVITY',
+    'UPLOADED_ACTIVITY'
 );
 
 
@@ -1047,4 +1048,3 @@ CREATE EVENT TRIGGER pg_roll_handle_drop ON sql_drop
 --
 -- PostgreSQL database dump complete
 --
-
