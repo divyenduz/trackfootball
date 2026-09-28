@@ -17,16 +17,8 @@
     "@garmin/fitsdk": "catalog:",
     "@tmcw/togeojson": "catalog:",
     "@trackfootball/postgres": "workspace:*",
-    "@turf/area": "catalog:",
-    "@turf/boolean-point-in-polygon": "catalog:",
-    "@turf/center": "catalog:",
-    "@turf/envelope": "catalog:",
-    "@turf/helpers": "catalog:",
-    "@turf/intersect": "catalog:",
     "@xmldom/xmldom": "catalog:",
     "geojson": "catalog:",
-    "tiny-invariant": "catalog:",
-    "ts-pattern": "catalog:",
-    "zod": "catalog:"
+    "ts-pattern": "catalog:"
   }
 }
