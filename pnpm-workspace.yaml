@@ -4,6 +4,7 @@ packages:
 catalog:
   '@cloudflare/vite-plugin': 1.57.3
   '@cloudflare/workers-types': 5.20260922.1
+  '@garmin/fitsdk': ^21.217.0
   '@stricli/auto-complete': 1.3.0
   '@stricli/core': 1.3.0
   '@tailwindcss/vite': 4.3.3

@@ -18,6 +18,13 @@
   "limits": {
     "cpu_ms": 30000,
   },
+  "ratelimits": [
+    {
+      "name": "UPLOAD_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 },
+    },
+  ],
   "routes": [
     {
       "pattern": "trackfootball.app",

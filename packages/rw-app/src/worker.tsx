@@ -15,6 +15,8 @@ import { createAuth } from './auth/auth'
 import { Privacy } from './app/pages/compliance/Privacy'
 import { Terms } from './app/pages/compliance/Terms'
 import type { User } from '@trackfootball/postgres'
+import { uploadActivity } from '@trackfootball/service'
+import { Upload } from './app/pages/upload/Upload'
 
 export type AppContext = {
   user: User | null
@@ -101,6 +103,15 @@ const app = defineApp([
     const auth = createAuth()
     return auth.handler(request)
   }),
+  route('/api/activities/upload', ({ request, ctx }) =>
+    uploadActivity(request, {
+      userId: ctx.user?.id ?? null,
+      origin: env.HOMEPAGE_URL,
+      repository: ctx.repository,
+      allowUpload: async (userId) =>
+        (await env.UPLOAD_RATE_LIMITER.limit({ key: String(userId) })).success,
+    }),
+  ),
   render(Document, [
     layout(AppLayout, [
       route('/', ({ ctx }) => {
@@ -117,6 +128,7 @@ const app = defineApp([
       }),
       route('/home', Home),
       route('/dashboard', [needsAuth, Dashboard]),
+      route('/upload', [needsAuth, Upload]),
       route('/athlete/:id', [Athlete]),
       route('/activity/:id', [Activity]),
       route('/privacy', [Privacy]),

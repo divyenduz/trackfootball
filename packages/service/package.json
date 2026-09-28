@@ -4,17 +4,19 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/geojson": "catalog:",
     "@types/node": "catalog:",
+    "postgres": "catalog:",
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@trackfootball/postgres": "workspace:*",
+    "@garmin/fitsdk": "catalog:",
     "@tmcw/togeojson": "catalog:",
+    "@trackfootball/postgres": "workspace:*",
     "@turf/area": "catalog:",
     "@turf/boolean-point-in-polygon": "catalog:",
     "@turf/center": "catalog:",

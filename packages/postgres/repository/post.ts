@@ -17,6 +17,38 @@ interface CreatePostInput {
   userId: number
 }
 
+export async function createUploadedPost(
+  sql: Sql,
+  input: Omit<
+    UpdatePostCompleteInput,
+    'id' | 'totalSprintTime' | 'sprints' | 'runs'
+  > & {
+    userId: number
+    digest: string
+    text: string
+  },
+) {
+  const key = `upload:${input.userId}:${input.digest}`
+  // The unique source key makes retries (including concurrent requests) idempotent.
+  // Insert the complete activity in one statement: never expose a partial post.
+  const rows = await sql<{ id: number }[]>`
+    INSERT INTO "Post" (type, key, text, "userId", "updatedAt", "geoJson",
+      "startTime", "elapsedTime", "totalDistance", "averageSpeed", "maxSpeed",
+      sprints, runs, status)
+    VALUES ('UPLOADED_ACTIVITY', ${key}, ${input.text}, ${input.userId}, now(),
+      ${sql.json(input.geoJson as unknown as Parameters<Sql['json']>[0])},
+      ${input.startTime}, ${input.elapsedTime}, ${input.totalDistance},
+      ${input.averageSpeed}, ${input.maxSpeed}, '[]'::jsonb, '[]'::jsonb, 'COMPLETED')
+    ON CONFLICT (key, type) DO NOTHING RETURNING id
+  `
+  if (rows[0]) return { id: rows[0].id, duplicate: false }
+  const existing = await sql<{ id: number }[]>`
+    SELECT id FROM "Post" WHERE key = ${key} AND type = 'UPLOADED_ACTIVITY' AND "userId" = ${input.userId}
+  `
+  invariant(existing[0], 'Uploaded activity not found after conflict')
+  return { id: existing[0].id, duplicate: true }
+}
+
 export async function createPost(sql: Sql, input: CreatePostInput) {
   const data = {
     ...input,
@@ -52,14 +84,16 @@ async function getPostMeta(sql: Sql, id: number) {
     number_of_runs: number
   }> = await sql`
   WITH heart_rates AS (
-    SELECT jsonb_array_elements_text("geoJson" -> 'features' -> 0 -> 'properties' -> 'heartRates')::int as heart_rate FROM "Post" WHERE id=${id}
+    SELECT jsonb_array_elements_text(feature -> 'properties' -> 'heartRates')::int as heart_rate
+    FROM "Post", jsonb_array_elements("geoJson" -> 'features') AS feature WHERE id=${id}
   ),
   heart_rate_agg AS (
-    SELECT max(heart_rate) AS max_heart_rate, floor(avg(heart_rate)) AS average_heart_rate FROM heart_rates
+    SELECT max(heart_rate) AS max_heart_rate, floor(avg(heart_rate))::int AS average_heart_rate FROM heart_rates
   ),
   post_data AS (
     SELECT
-      jsonb_array_length("geoJson" -> 'features' -> 0 -> 'geometry' -> 'coordinates') as number_of_coordinates,
+      (SELECT sum(jsonb_array_length(feature -> 'geometry' -> 'coordinates'))::int
+        FROM jsonb_array_elements("geoJson" -> 'features') AS feature) as number_of_coordinates,
       jsonb_array_length("Post"."sprints") as number_of_sprints,
       jsonb_array_length("Post"."runs") as number_of_runs
     FROM "Post" WHERE id=${id}

@@ -15,6 +15,9 @@ export function getSql(connectionString: string) {
 
 export function createRepository(sql: ReturnType<typeof postgres>) {
   return {
+    createUploadedPost: (
+      input: Parameters<typeof postRepo.createUploadedPost>[1],
+    ) => postRepo.createUploadedPost(sql, input),
     createPost: (input: Parameters<typeof postRepo.createPost>[1]) =>
       postRepo.createPost(sql, input),
 

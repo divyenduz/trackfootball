@@ -144,6 +144,12 @@ export function FeedContainer({
         <h1 className="text-3xl font-semibold tracking-tight text-gray-950">
           Dashboard
         </h1>
+        <a
+          href="/upload"
+          className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-cardinal-900 px-4 py-2 font-semibold text-white"
+        >
+          Upload activity
+        </a>
       </div>
 
       {error && (
