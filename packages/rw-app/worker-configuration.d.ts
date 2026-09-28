@@ -5,11 +5,8 @@ interface __BaseEnv_Env {
 	ASSETS: Fetcher;
 	BACKEND_API: string;
 	DATABASE_URL: string;
-	STRAVA_CLIENT_ID: string;
-	STRAVA_CLIENT_SECRET: string;
 	HOMEPAGE_URL: string;
 	UNSAFE_AUTH_BYPASS_USER: string;
-	STRAVA_WEBHOOK_VERIFY_TOKEN: string;
 	BETTER_AUTH_URL: string;
 	BETTER_AUTH_SECRET: string;
 	GOOGLE_CLIENT_ID: string;
@@ -27,7 +24,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "BACKEND_API" | "DATABASE_URL" | "STRAVA_CLIENT_ID" | "STRAVA_CLIENT_SECRET" | "HOMEPAGE_URL" | "UNSAFE_AUTH_BYPASS_USER" | "STRAVA_WEBHOOK_VERIFY_TOKEN" | "BETTER_AUTH_URL" | "BETTER_AUTH_SECRET" | "GOOGLE_CLIENT_ID" | "GOOGLE_CLIENT_SECRET" | "DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "BACKEND_API" | "DATABASE_URL" | "HOMEPAGE_URL" | "UNSAFE_AUTH_BYPASS_USER" | "BETTER_AUTH_URL" | "BETTER_AUTH_SECRET" | "GOOGLE_CLIENT_ID" | "GOOGLE_CLIENT_SECRET" | "DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK">> {}
 }
 
 // Begin runtime types

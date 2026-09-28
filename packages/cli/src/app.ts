@@ -1,11 +1,9 @@
 import { buildApplication, buildRouteMap } from '@stricli/core'
-import { ActivityCommandRoute } from './commands/activity'
-import { WebhookCommandRoute } from './commands/webhook'
+import { CompletionsRoute } from './commands/completions'
 
 const routes = buildRouteMap({
   routes: {
-    activity: ActivityCommandRoute,
-    webhook: WebhookCommandRoute,
+    completions: CompletionsRoute,
   },
   aliases: {},
   docs: {

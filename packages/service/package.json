@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@trackfootball/postgres": "workspace:*",
-    "@trackfootball/open-api": "workspace:*",
     "@tmcw/togeojson": "catalog:",
     "@turf/area": "catalog:",
     "@turf/boolean-point-in-polygon": "catalog:",

@@ -25,8 +25,6 @@ $(resolve_env "BETTER_AUTH_URL")
 $(resolve_env "BACKEND_API")
 $(resolve_env "DATABASE_URL")
 $(resolve_env "COOKIE_DOMAIN")
-$(resolve_env "STRAVA_CLIENT_ID")
-$(resolve_env "STRAVA_CLIENT_SECRET")
 $(resolve_env "HOMEPAGE_URL")
 $(resolve_env "NO_COLOR")
 $(resolve_env "BETTER_AUTH_SECRET")
@@ -34,7 +32,6 @@ $(resolve_env "GOOGLE_CLIENT_ID")
 $(resolve_env "GOOGLE_CLIENT_SECRET")
 $(resolve_env "DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK")
 $(resolve_env "UNSAFE_AUTH_BYPASS_USER")
-$(resolve_env "STRAVA_WEBHOOK_VERIFY_TOKEN")
 EOF
 
 echo "Environment configuration generated in $OUTPUT_FILE"

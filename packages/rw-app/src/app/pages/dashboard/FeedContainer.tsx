@@ -224,50 +224,42 @@ export function FeedContainer({
             </div>
           </a>
 
-          <div
-            className="absolute right-3 top-3 sm:right-4 sm:top-4"
-            ref={openDropdown === post.id ? dropdownRef : null}
-          >
-            <button
-              ref={openDropdown === post.id ? actionsButtonRef : null}
-              type="button"
-              aria-label={`Actions for ${post.text || 'Football Activity'}`}
-              aria-controls={`activity-actions-${post.id}`}
-              aria-expanded={openDropdown === post.id}
-              className="flex size-11 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              onClick={() => {
-                setOpenDropdown(openDropdown === post.id ? null : post.id)
-              }}
+          {currentUser?.type === 'ADMIN' && (
+            <div
+              className="absolute right-3 top-3 sm:right-4 sm:top-4"
+              ref={openDropdown === post.id ? dropdownRef : null}
             >
-              <svg
-                aria-hidden="true"
-                className="size-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <button
+                ref={openDropdown === post.id ? actionsButtonRef : null}
+                type="button"
+                aria-label={`Actions for ${post.text || 'Football Activity'}`}
+                aria-controls={`activity-actions-${post.id}`}
+                aria-expanded={openDropdown === post.id}
+                className="flex size-11 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                onClick={() => {
+                  setOpenDropdown(openDropdown === post.id ? null : post.id)
+                }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 12h.01M12 12h.01M19 12h.01"
-                />
-              </svg>
-            </button>
-            {openDropdown === post.id && (
-              <div
-                id={`activity-actions-${post.id}`}
-                className="absolute right-0 z-10 mt-1 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
-              >
-                <a
-                  href={`https://strava.com/activities/${post.key}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block min-h-11 w-full px-4 py-3 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                <svg
+                  aria-hidden="true"
+                  className="size-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  View in Strava
-                </a>
-                {currentUser?.type === 'ADMIN' && (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 12h.01M12 12h.01M19 12h.01"
+                  />
+                </svg>
+              </button>
+              {openDropdown === post.id && (
+                <div
+                  id={`activity-actions-${post.id}`}
+                  className="absolute right-0 z-10 mt-1 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+                >
                   <button
                     type="button"
                     onClick={() => handleDelete(post.id)}
@@ -275,10 +267,10 @@ export function FeedContainer({
                   >
                     Delete activity
                   </button>
-                )}
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
+          )}
         </article>
       ))}
 

@@ -1,6 +1,6 @@
 # TrackFootball
 
-Track and visualize your football (soccer) activities using GPS data from Strava.
+Track and visualize your football (soccer) activities using GPS data.
 
 **[trackfootball.app](https://trackfootball.app)**
 
@@ -16,9 +16,8 @@ Track and visualize your football (soccer) activities using GPS data from Strava
 ```
 packages/
   rw-app/       # Web app (React + Cloudflare Workers + Vite)
-  service/      # Business logic (geo processing, Strava integration)
+  service/      # Business logic and geo processing
   postgres/     # Database layer
-  open-api/     # Generated API client (Kubb)
   cli/          # CLI tools
 ```
 
@@ -38,25 +37,15 @@ pnpm install
 pnpm run dev
 ```
 
-### Strava webhook setup
+### Activity imports
 
-Webhook delivery uses a secret URL path because Strava does not sign delivery
-requests. Configure `STRAVA_WEBHOOK_CALLBACK_SECRET` with a URL-safe,
-high-entropy secret, then register this callback URL with Strava:
+The Strava integration is unavailable. On 2026-09-28, an actual user-1 probe
+successfully refreshed the token (HTTP 200), but
+`GET /api/v3/athlete/activities?per_page=1` returned HTTP 403 with
+`Application.Status` reported as `Inactive`. This observation does not identify
+the cause of the application status.
 
-```text
-https://trackfootball.app/api/social/strava/webhook/callback/<secret>
-```
-
-Keep `STRAVA_WEBHOOK_VERIFY_TOKEN` for Strava's GET subscription handshake.
-After Strava creates the subscription, configure the returned positive integer
-as `STRAVA_WEBHOOK_SUBSCRIPTION_ID`. The Worker cron retries authenticated,
-unfinished events every five minutes; events received by the old unauthenticated
-endpoint are deliberately excluded from automatic replay.
-
-To retry an authenticated event after automatic retries are exhausted, run
-`trackfootball webhook reprocess <event-id>`. Explicit `ERRORED` events are
-atomically returned to the retry queue before processing.
+FIT and GPX file uploads are forthcoming as the replacement import path.
 
 ### Commands
 

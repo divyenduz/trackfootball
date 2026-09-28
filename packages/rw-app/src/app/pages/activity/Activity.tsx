@@ -53,16 +53,6 @@ export async function Activity({ ctx, params }: RequestInfo) {
           <span aria-hidden="true">←</span>
           {backLabel}
         </a>
-        <a
-          href={`https://strava.com/activities/${post.key}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg font-semibold text-cardinal-900 underline decoration-cardinal-900/30 underline-offset-4"
-        >
-          View in Strava
-          <span aria-hidden="true">↗</span>
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
       </nav>
       <ActivityClient post={post} />
     </div>
