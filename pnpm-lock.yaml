@@ -24,24 +24,6 @@ catalogs:
     '@tmcw/togeojson':
       specifier: 7.1.2
       version: 7.1.2
-    '@turf/area':
-      specifier: 7.4.0
-      version: 7.4.0
-    '@turf/boolean-point-in-polygon':
-      specifier: 7.4.0
-      version: 7.4.0
-    '@turf/center':
-      specifier: 7.4.0
-      version: 7.4.0
-    '@turf/envelope':
-      specifier: 7.4.0
-      version: 7.4.0
-    '@turf/helpers':
-      specifier: 7.4.0
-      version: 7.4.0
-    '@turf/intersect':
-      specifier: 7.4.0
-      version: 7.4.0
     '@types/geojson':
       specifier: 7946.0.16
       version: 7946.0.16
@@ -203,9 +185,6 @@ importers:
       '@trackfootball/postgres':
         specifier: workspace:*
         version: link:../postgres
-      '@trackfootball/service':
-        specifier: workspace:*
-        version: link:../service
       better-auth:
         specifier: 'catalog:'
         version: 1.7.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.0.1(@types/node@24.10.13)(vite@8.3.0(@types/node@24.10.13)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.0)(yaml@2.9.1)))
@@ -267,42 +246,15 @@ importers:
       '@tmcw/togeojson':
         specifier: 'catalog:'
         version: 7.1.2
-      '@trackfootball/postgres':
-        specifier: workspace:*
-        version: link:../postgres
-      '@turf/area':
-        specifier: 'catalog:'
-        version: 7.4.0
-      '@turf/boolean-point-in-polygon':
-        specifier: 'catalog:'
-        version: 7.4.0
-      '@turf/center':
-        specifier: 'catalog:'
-        version: 7.4.0
-      '@turf/envelope':
-        specifier: 'catalog:'
-        version: 7.4.0
-      '@turf/helpers':
-        specifier: 'catalog:'
-        version: 7.4.0
-      '@turf/intersect':
-        specifier: 'catalog:'
-        version: 7.4.0
       '@xmldom/xmldom':
         specifier: 'catalog:'
         version: 0.9.12
       geojson:
         specifier: 'catalog:'
         version: 0.5.0
-      tiny-invariant:
-        specifier: 'catalog:'
-        version: 1.3.3
       ts-pattern:
         specifier: 'catalog:'
         version: 5.9.0
-      zod:
-        specifier: 'catalog:'
-        version: 4.6.5
     devDependencies:
       '@types/geojson':
         specifier: 'catalog:'
@@ -1385,36 +1337,6 @@ packages:
   '@ts-morph/common@0.29.0':
     resolution: {integrity: sha512-35oUmphHbJvQ/+UTwFNme/t2p3FoKiGJ5auTjjpNTop2dyREspirjMy82PLSC1pnDJ8ah1GU98hwpVt64YXQsg==}
 
-  '@turf/area@7.4.0':
-    resolution: {integrity: sha512-B7q5f6QwKIxxbl4/L59lAYA+FF7h2hv6st96PuKue0TGCYGSxAG/lV8LHSPUSOuOrLywN4jytJcKK3vOFBs7Nw==}
-
-  '@turf/bbox-polygon@7.4.0':
-    resolution: {integrity: sha512-hF0ylAOhzwk9i7m/PCmTtg+TP5AnFb9B+bMXgEPIYd/C3BOVet1YaA8nF6ViN5bNF0GSkWFYivvclSgWbtZyqg==}
-
-  '@turf/bbox@7.4.0':
-    resolution: {integrity: sha512-yOX9lALc2GmjYUIE99+nRj7eZA7eDtx7Ixu/hrgIo+YqHvL1reaPVTC9rQWMHMm0pH0/WHjzk8uOpAHjptrudQ==}
-
-  '@turf/boolean-point-in-polygon@7.4.0':
-    resolution: {integrity: sha512-GQrHc6WSDHhf32GB/b9AGyOeC05AQ3nGN7ooWTrlCYefKn7X9/2wG9BNexF47AuyDq5jPdOvITVR26BLFWV+mA==}
-
-  '@turf/center@7.4.0':
-    resolution: {integrity: sha512-JVuTaIdnQtmTV8eQfVxqza1okKiaFzgVeIA6Xoy/u6aBMxg2+oBpS6GcHZkEqR8OapPWValB1AYYqimUSiyOXw==}
-
-  '@turf/envelope@7.4.0':
-    resolution: {integrity: sha512-BNpwP70dFElOrYAVxLvjd9kMnxdowJB0ojsTs2OTvaC8Hp+qfrVTzTK5ZZ6Dzix/UpgdRlC5cDrEmbXTdvDpjA==}
-
-  '@turf/helpers@7.4.0':
-    resolution: {integrity: sha512-7PAwLZqOdRzTI5g9bHvUwlloAXPDH/mlajtryk0tw4ZwGMtmXsAyF4QundsAMfy4u48Fyd3AUqMXY0SMxqJGWg==}
-
-  '@turf/intersect@7.4.0':
-    resolution: {integrity: sha512-n/wbZfDPoM1JKwrql8mHBoS9cdRWUC7/VE9IBZOttVPv8Guo0B6+Mzc2Z2e1PdIkSP/1R2yH6lxPpWMuuBfVEA==}
-
-  '@turf/invariant@7.4.0':
-    resolution: {integrity: sha512-OAsc3qdNx+tRqzWmMNFMnVlWWACIqnYqIejZKvb2oKkKPYJJrURPXZ6OdrGD58ljJMolLoqwIZGSx3VndaEjxg==}
-
-  '@turf/meta@7.4.0':
-    resolution: {integrity: sha512-3cLUvlEyDuSnMSzrjhaLAEiYR8xhbfWyTVQlrlEw40xL81d4KF4PqUWbjTXKpXZStdYbet2GCurl79KMypNw6g==}
-
   '@tybys/wasm-util@0.10.4':
     resolution: {integrity: sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A==}
 
@@ -1740,9 +1662,6 @@ packages:
     peerDependenciesMeta:
       zod:
         optional: true
-
-  bignumber.js@9.3.0:
-    resolution: {integrity: sha512-EM7aMFTXbptt/wZdMlBv2t8IViwQL+h6SLHosp8Yf0dqJMTnY6iL32opnAB6kAdL0SZPuvcAzFr31o0c/R3/RA==}
 
   blake3-wasm@2.1.5:
     resolution: {integrity: sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g==}
@@ -2646,12 +2565,6 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  point-in-polygon-hao@1.2.4:
-    resolution: {integrity: sha512-x2pcvXeqhRHlNRdhLs/tgFapAbSSe86wa/eqmj1G6pWftbEs5aVRJhRGM6FYSUERKu0PjekJzMq0gsI2XyiclQ==}
-
-  polyclip-ts@0.16.8:
-    resolution: {integrity: sha512-JPtKbDRuPEuAjuTdhR62Gph7Is2BS1Szx69CFOO3g71lpJDFo78k4tFyi+qFOMVPePEzdSKkpGU3NBXPHHjvKQ==}
-
   postcss@8.5.28:
     resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
     engines: {node: ^10 || ^12 || >=14}
@@ -2742,9 +2655,6 @@ packages:
   retry@0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
-
-  robust-predicates@3.0.2:
-    resolution: {integrity: sha512-IXgzBWvWQwE6PrDI05OvmXUIruQTcoMDzRsOd5CDvHCVLcLHMTSYvOK5Cm46kWqlV3yAbuSpBZdJ5oP5OUoStg==}
 
   rolldown@1.2.9:
     resolution: {integrity: sha512-hx/Pv0N1haXRb11qkfnK5MXB/iqr7i0yjWQqmO9uHqZpBgQSqzc8UsSnEpalsh+j1I8qQ2CkXAkJC8Br3dKSlg==}
@@ -2848,9 +2758,6 @@ packages:
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
-
-  splaytree-ts@1.0.2:
-    resolution: {integrity: sha512-0kGecIZNIReCSiznK3uheYB8sbstLjCZLiwcQwbmLhgHJj2gz6OnSPkVzJQCMnmEz1BQ4gPK59ylhBoEWOhGNA==}
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
@@ -4011,74 +3918,6 @@ snapshots:
       path-browserify: 1.0.1
       tinyglobby: 0.2.17
 
-  '@turf/area@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@turf/meta': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/bbox-polygon@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/bbox@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@turf/meta': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/boolean-point-in-polygon@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@turf/invariant': 7.4.0
-      '@types/geojson': 7946.0.16
-      point-in-polygon-hao: 1.2.4
-      tslib: 2.8.1
-
-  '@turf/center@7.4.0':
-    dependencies:
-      '@turf/bbox': 7.4.0
-      '@turf/helpers': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/envelope@7.4.0':
-    dependencies:
-      '@turf/bbox': 7.4.0
-      '@turf/bbox-polygon': 7.4.0
-      '@turf/helpers': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/helpers@7.4.0':
-    dependencies:
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/intersect@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@turf/meta': 7.4.0
-      '@types/geojson': 7946.0.16
-      polyclip-ts: 0.16.8
-      tslib: 2.8.1
-
-  '@turf/invariant@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/meta@7.4.0':
-    dependencies:
-      '@turf/helpers': 7.4.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
   '@tybys/wasm-util@0.10.4':
     dependencies:
       tslib: 2.8.1
@@ -4400,8 +4239,6 @@ snapshots:
       set-cookie-parser: 3.1.2
     optionalDependencies:
       zod: 4.6.5
-
-  bignumber.js@9.3.0: {}
 
   blake3-wasm@2.1.5: {}
 
@@ -5478,15 +5315,6 @@ snapshots:
 
   playwright-core@1.62.1: {}
 
-  point-in-polygon-hao@1.2.4:
-    dependencies:
-      robust-predicates: 3.0.2
-
-  polyclip-ts@0.16.8:
-    dependencies:
-      bignumber.js: 9.3.0
-      splaytree-ts: 1.0.2
-
   postcss@8.5.28:
     dependencies:
       nanoid: 3.3.19
@@ -5613,8 +5441,6 @@ snapshots:
   resolve-pkg-maps@1.0.0: {}
 
   retry@0.12.0: {}
-
-  robust-predicates@3.0.2: {}
 
   rolldown@1.2.9:
     dependencies:
@@ -5784,8 +5610,6 @@ snapshots:
 
   space-separated-tokens@2.0.2: {}
 
-  splaytree-ts@1.0.2: {}
-
   stackback@0.0.2: {}
 
   std-env@4.2.0: {}
@@ -5924,7 +5748,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  tslib@2.8.1: {}
+  tslib@2.8.1:
+    optional: true
 
   typed-query-selector@2.12.2: {}
 

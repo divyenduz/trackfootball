@@ -23,7 +23,6 @@
   "dependencies": {
     "@tailwindcss/vite": "catalog:",
     "@trackfootball/postgres": "workspace:*",
-    "@trackfootball/service": "workspace:*",
     "better-auth": "catalog:",
     "postgres": "catalog:",
     "react": "catalog:",
