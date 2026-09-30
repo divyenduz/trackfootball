@@ -30,7 +30,6 @@ export function Upload() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/octet-stream',
-          'X-Publish-Activity': 'public',
         },
         body: file,
       })
@@ -111,18 +110,6 @@ export function Upload() {
               are not supported.
             </p>
           </div>
-          <label className="flex items-start gap-3 rounded-lg bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-            <input
-              name="publish"
-              type="checkbox"
-              required
-              className="mt-1 size-4 shrink-0"
-            />
-            <span>
-              I understand that this activity, its GPS route, and my athlete
-              name will be public. I have permission to share this recording.
-            </span>
-          </label>
           <button
             type="submit"
             className="min-h-11 w-full rounded-lg bg-cardinal-900 px-5 py-3 font-semibold text-white disabled:cursor-wait sm:w-auto"

@@ -11,7 +11,7 @@ const request = (body = data, headers: Record<string, string> = {}) =>
     {
       method: 'POST',
       body,
-      headers: { origin, 'x-publish-activity': 'public', ...headers },
+      headers: { origin, ...headers },
     },
   )
 const dependencies = () => ({
@@ -46,7 +46,7 @@ describe('activity upload boundary', () => {
     expect(await repeated.json()).toEqual({ id: 42, duplicate: true })
   })
 
-  it('rejects anonymous, cross-origin, missing-consent and rate-limited requests before persistence', async () => {
+  it('rejects anonymous, cross-origin and rate-limited requests before persistence', async () => {
     const deps = dependencies()
     expect(
       (await uploadActivity(request(), { ...deps, userId: null })).status,
@@ -62,10 +62,6 @@ describe('activity upload boundary', () => {
     expect(
       (await uploadActivity(request(data, { origin: '' }), deps)).status,
     ).toBe(403)
-    expect(
-      (await uploadActivity(request(data, { 'x-publish-activity': '' }), deps))
-        .status,
-    ).toBe(400)
     deps.allowUpload.mockResolvedValue(false)
     expect((await uploadActivity(request(), deps)).status).toBe(429)
     expect(deps.repository.createUploadedPost).not.toHaveBeenCalled()

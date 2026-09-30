@@ -22,7 +22,7 @@ describe.skipIf(!url)('upload PostgreSQL integration', () => {
         {
           method: 'POST',
           body,
-          headers: { origin, 'x-publish-activity': 'public' },
+          headers: { origin },
         },
       ),
       { origin, userId, repository, allowUpload: async () => true },

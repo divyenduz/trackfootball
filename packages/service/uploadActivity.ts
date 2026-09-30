@@ -21,11 +21,6 @@ export async function uploadActivity(
   if (!deps.userId) return error('Sign in to upload an activity.', 401)
   if (request.headers.get('origin') !== new URL(deps.origin).origin)
     return error('Upload from the TrackFootball website.', 403)
-  if (request.headers.get('x-publish-activity') !== 'public')
-    return error(
-      'Confirm that this activity and its GPS route will be public.',
-      400,
-    )
   const url = new URL(request.url)
   const filename = url.searchParams.get('filename') ?? ''
   const text = url.searchParams.get('title')?.trim() || 'Football activity'
