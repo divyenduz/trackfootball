@@ -30,7 +30,6 @@ $(resolve_env "NO_COLOR")
 $(resolve_env "BETTER_AUTH_SECRET")
 $(resolve_env "GOOGLE_CLIENT_ID")
 $(resolve_env "GOOGLE_CLIENT_SECRET")
-$(resolve_env "DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK")
 $(resolve_env "UNSAFE_AUTH_BYPASS_USER")
 EOF
 

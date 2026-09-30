@@ -45,8 +45,7 @@ umask 077
     BETTER_AUTH_URL \
     BETTER_AUTH_SECRET \
     GOOGLE_CLIENT_ID \
-    GOOGLE_CLIENT_SECRET \
-    DISCORD_TRACKFOOTBALL_APPLICATION_EVENTS_WEBHOOK; do
+    GOOGLE_CLIENT_SECRET; do
     write_var "$name"
   done
 } > "$tmp_vars"
