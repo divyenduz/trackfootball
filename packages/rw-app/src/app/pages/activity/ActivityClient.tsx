@@ -301,9 +301,6 @@ export function ActivityClient({
           >
             Route trace
           </h2>
-          <p className="mt-1 text-sm text-gray-600">
-            GPS path recorded during this activity.
-          </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-slate-50">
             <svg
               viewBox="0 0 640 320"
