@@ -1,7 +1,7 @@
 import { RequestInfo } from 'rwsdk/worker'
 import { ActivityClient } from './ActivityClient'
 
-export async function Activity({ ctx, params }: RequestInfo) {
+export async function Activity({ ctx, params, request }: RequestInfo) {
   const post = await ctx.repository.getPostWithUserAndFields(
     parseInt(params.id, 10),
   )
@@ -34,6 +34,8 @@ export async function Activity({ ctx, params }: RequestInfo) {
       .map((name) => name?.trim())
       .filter(Boolean)
       .join(' ') || 'an athlete'
+  const openedExisting =
+    new URL(request.url).searchParams.get('upload') === 'existing'
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
@@ -54,7 +56,7 @@ export async function Activity({ ctx, params }: RequestInfo) {
           {backLabel}
         </a>
       </nav>
-      <ActivityClient post={post} />
+      <ActivityClient post={post} openedExisting={openedExisting} />
     </div>
   )
 }

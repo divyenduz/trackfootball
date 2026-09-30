@@ -33,12 +33,18 @@ export function Upload() {
         },
         body: file,
       })
-      const result = (await response.json()) as { id?: number; error?: string }
+      const result = (await response.json()) as {
+        id?: number
+        duplicate?: boolean
+        error?: string
+      }
       if (!response.ok || !result.id) {
         setError(result.error || 'Upload failed. Please try again.')
         return
       }
-      window.location.assign(`/activity/${result.id}`)
+      window.location.assign(
+        `/activity/${result.id}${result.duplicate ? '?upload=existing' : ''}`,
+      )
     } catch {
       setError(
         'Upload failed. Check your connection and try again. Re-uploading the same file will not create a duplicate.',
@@ -111,11 +117,11 @@ export function Upload() {
             {busy ? 'Uploading…' : 'Upload activity'}
           </button>
         </fieldset>
-        <p role="status" className="text-sm text-gray-600">
-          {busy
-            ? 'Reading your recording and saving the activity…'
-            : 'Uploading the same file again opens the existing activity.'}
-        </p>
+        {busy && (
+          <p role="status" className="text-sm text-gray-600">
+            Reading your recording and saving the activity…
+          </p>
+        )}
         {error && (
           <p
             role="alert"

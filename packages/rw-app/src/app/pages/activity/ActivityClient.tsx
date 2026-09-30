@@ -1,6 +1,7 @@
 'use client'
 
 import type { Post } from '@trackfootball/postgres'
+import { useEffect } from 'react'
 import invariant from 'tiny-invariant'
 
 type ActivityPost = Post & {
@@ -125,8 +126,25 @@ const getRoutePoints = (geoJson: Post['geoJson']) => {
   }))
 }
 
-export function ActivityClient({ post }: { post: ActivityPost }) {
+export function ActivityClient({
+  post,
+  openedExisting = false,
+}: {
+  post: ActivityPost
+  openedExisting?: boolean
+}) {
   invariant(post, `Post with id ${post.id} not found`)
+
+  useEffect(() => {
+    if (!openedExisting) return
+    const url = new URL(window.location.href)
+    url.searchParams.delete('upload')
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${url.pathname}${url.search}${url.hash}`,
+    )
+  }, [openedExisting])
 
   const activityTitle = post.text.trim() || 'Football Activity'
   const athleteName = getAthleteName(post.User.firstName, post.User.lastName)
@@ -166,6 +184,15 @@ export function ActivityClient({ post }: { post: ActivityPost }) {
 
   return (
     <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      {openedExisting && (
+        <p
+          role="status"
+          className="border-b border-green-200 bg-green-50 px-5 py-3 text-sm text-green-900 sm:px-8"
+        >
+          This activity was already uploaded, so we opened the existing
+          activity.
+        </p>
+      )}
       <header className="p-5 sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-cardinal-900">
           Activity
