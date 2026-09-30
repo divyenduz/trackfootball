@@ -137,7 +137,7 @@ describe('activity file normalization', () => {
     )
     expect(() =>
       parseActivityFile(fitFixture('activity', 2), 'match.fit'),
-    ).toThrow(/single-session/)
+    ).toThrow('Upload a single-session FIT activity, not a multisport file.')
   })
 
   it.each([

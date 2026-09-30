@@ -101,13 +101,8 @@ export function Upload() {
               type="file"
               accept=".fit,.gpx"
               required
-              aria-describedby="file-help"
               className="mt-2 block min-h-11 w-full min-w-0 rounded-lg border border-gray-300 p-2 text-sm file:mr-3 file:rounded file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:font-semibold"
             />
-            <p id="file-help" className="mt-2 text-sm leading-6 text-gray-600">
-              Timestamps are required. Planned routes and multisport FIT files
-              are not supported.
-            </p>
           </div>
           <button
             type="submit"
